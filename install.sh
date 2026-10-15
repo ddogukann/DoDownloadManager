@@ -95,6 +95,13 @@ if [ "$SKIP_YTDLP" -eq 0 ]; then
       warn "$(T "yt-dlp indirilemedi. Ayarlar ▸ Video ▸ İndir düğmesiyle sonra kurabilirsiniz." "Could not download yt-dlp. You can install it later in Settings ▸ Video.")"
     fi
   fi
+  if PYTHONPATH="$APPDIR" "$PY" -c "import sys; from ddm.video import js_runtime; sys.exit(0 if js_runtime() else 1)" 2>/dev/null; then
+    :
+  else
+    say "$(T "deno indiriliyor (YouTube için gerekli)" "Downloading deno (required for YouTube)")"
+    PYTHONPATH="$APPDIR" "$PY" -c "from ddm.video import update_deno; update_deno()" 2>/dev/null \
+      || warn "$(T "deno indirilemedi. Ayarlar ▸ Video bölümünden sonra kurabilirsiniz." "Could not download deno. You can install it later in Settings ▸ Video.")"
+  fi
 fi
 
 say "$(T "Firefox eklentisi paketleniyor" "Packaging the Firefox extension") → $EXTDIR"

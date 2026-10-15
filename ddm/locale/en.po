@@ -1042,91 +1042,91 @@ msgstr "Show a summary window when a download finishes"
 msgid "Boyut, süre, hız grafiği ve VirusTotal sonucu; Dosyayı aç / Klasörü aç"
 msgstr "Size, time, speed graph and VirusTotal result; Open file / Open folder"
 
-#: ddm/ui/prefs.py:127
+#: ddm/ui/prefs.py:126
 msgid "Varsayılan bağlantı sayısı"
 msgstr "Default connections"
 
-#: ddm/ui/prefs.py:129
+#: ddm/ui/prefs.py:128
 msgid "Hız sınırı (KB/s)"
 msgstr "Speed limit (KB/s)"
 
-#: ddm/ui/prefs.py:144
+#: ddm/ui/prefs.py:143
 msgid "Yeniden deneme"
 msgstr "Retries"
 
-#: ddm/ui/prefs.py:145
+#: ddm/ui/prefs.py:144
 msgid "Zaman aşımı (sn)"
 msgstr "Timeout (s)"
 
-#: ddm/ui/prefs.py:190
+#: ddm/ui/prefs.py:189
 msgid "En küçük dosya boyutu (MB)"
 msgstr "Minimum file size (MB)"
 
-#: ddm/ui/prefs.py:191
+#: ddm/ui/prefs.py:190
 msgid "Bunun altındaki dosyalar tek hattan iner"
 msgstr "Smaller files use a single link"
 
-#: ddm/ui/prefs.py:228
+#: ddm/ui/prefs.py:235
 msgid "Paralel parça (HLS/DASH)"
 msgstr "Parallel fragments (HLS/DASH)"
 
-#: ddm/ui/prefs.py:229
+#: ddm/ui/prefs.py:236
 msgid "Her videoyu kendi klasörüne indir"
 msgstr "Save each video into its own folder"
 
-#: ddm/ui/prefs.py:230
+#: ddm/ui/prefs.py:237
 msgid "Video Adı/Video Adı.mp4 şeklinde kaydedilir; doğrudan inen .mp4/.mkv dosyaları için de geçerli. Yalnız ses indirmeleri klasöre konmaz"
 msgstr "Saved as Video Title/Video Title.mp4; also applies to directly downloaded .mp4/.mkv files. Audio-only downloads are not put in a folder"
 
-#: ddm/ui/prefs.py:283
+#: ddm/ui/prefs.py:330
 msgid "İndirme sürerken uyku moduna geçme"
 msgstr "Don't suspend while downloading"
 
-#: ddm/ui/prefs.py:284
+#: ddm/ui/prefs.py:331
 msgid "Bilgisayar boşta kalsa da indirme bitene kadar uyumaz; ekran yine kararabilir"
 msgstr "The computer stays awake until downloads finish, even when idle; the screen can still blank"
 
-#: ddm/ui/prefs.py:320
+#: ddm/ui/prefs.py:367
 msgid "Sınır (KB/s)"
 msgstr "Limit (KB/s)"
 
-#: ddm/ui/prefs.py:344
+#: ddm/ui/prefs.py:391
 msgid "İndirilen dosyaları kontrol et"
 msgstr "Check downloaded files"
 
-#: ddm/ui/prefs.py:345
+#: ddm/ui/prefs.py:392
 msgid "Her indirme bitince VirusTotal sonucu listede gösterilir; zararlıysa uyarılırsın"
 msgstr "Each finished download shows its VirusTotal result in the list; you're warned if it's malicious"
 
-#: ddm/ui/prefs.py:347
+#: ddm/ui/prefs.py:394
 msgid "Checksum dosyalarını bul ve doğrula"
 msgstr "Find and verify checksum files"
 
-#: ddm/ui/prefs.py:348
+#: ddm/ui/prefs.py:395
 msgid "İndirme bitince aynı dizinde SHA256SUMS ya da dosya.sha256 aranır; varsa dosya otomatik doğrulanır"
 msgstr "When a download finishes, SHA256SUMS or file.sha256 is looked up next to it; if found, the file is verified automatically"
 
-#: ddm/ui/prefs.py:350
+#: ddm/ui/prefs.py:397
 msgid "Linki indirme başlamadan kontrol et"
 msgstr "Check the link before downloading"
 
-#: ddm/ui/prefs.py:351
+#: ddm/ui/prefs.py:398
 msgid "Link ya da alan adı zararlı işaretliyse indirme duraklatılıp sorulur. Link adresi VirusTotal'a gider"
 msgstr "If the link or domain is flagged, the download is paused and you are asked. The link address is sent to VirusTotal"
 
-#: ddm/ui/prefs.py:384
+#: ddm/ui/prefs.py:431
 msgid "Port"
 msgstr "Port"
 
-#: ddm/ui/prefs.py:386
+#: ddm/ui/prefs.py:433
 msgid "Tarayıcıdan gelenleri onayla"
 msgstr "Confirm downloads from the browser"
 
-#: ddm/ui/prefs.py:387
+#: ddm/ui/prefs.py:434
 msgid "Kapalıysa indirme pencere açılmadan hemen başlar"
 msgstr "When off, downloads start right away without a dialog"
 
-#: ddm/ui/prefs.py:398
+#: ddm/ui/prefs.py:445
 msgid "En küçük boyut (KB)"
 msgstr "Minimum size (KB)"
 
@@ -1150,251 +1150,271 @@ msgstr "Behavior"
 msgid "Dil · Language"
 msgstr "Language · Dil"
 
-#: ddm/ui/prefs.py:100
+#: ddm/ui/prefs.py:99
 msgid "Arayüz dili"
 msgstr "Interface language"
 
-#: ddm/ui/prefs.py:104
+#: ddm/ui/prefs.py:103
 msgid "Yeni dil yeniden başlatınca uygulanır"
 msgstr "The new language applies after a restart"
 
-#: ddm/ui/prefs.py:105
+#: ddm/ui/prefs.py:104
 msgid "İndirmeler duraklatılır ve kaldığı yerden sürer"
 msgstr "Downloads are paused and resume where they left off"
 
-#: ddm/ui/prefs.py:107
+#: ddm/ui/prefs.py:106
 msgid "Yeniden başlat"
 msgstr "Restart"
 
-#: ddm/ui/prefs.py:128
+#: ddm/ui/prefs.py:127
 msgid "Dosya başına paralel bağlantı. Sunucu 429/503 dönerse otomatik azaltılır"
 msgstr "Parallel connections per file. Reduced automatically if the server returns 429/503"
 
-#: ddm/ui/prefs.py:129
+#: ddm/ui/prefs.py:128
 msgid "0 = sınırsız"
 msgstr "0 = unlimited"
 
-#: ddm/ui/prefs.py:131
+#: ddm/ui/prefs.py:130
 msgid "Çoklu bağdaştırıcı"
 msgstr "Multiple adapters"
 
-#: ddm/ui/prefs.py:132
+#: ddm/ui/prefs.py:131
 msgid "Büyük dosyaların bağlantılarını birden fazla internet hattına dağıtır (örn. ev Wi-Fi'si + telefondan USB paylaşım). Aynı modeme bağlı Wi-Fi ve kablo hız kazandırmaz. yt-dlp videolarında çalışmaz."
 msgstr "Spreads the connections of large files across several internet links (e.g. home Wi-Fi + USB tethering from a phone). Wi-Fi and Ethernet on the same router give no gain. Not used for yt-dlp videos."
 
-#: ddm/ui/prefs.py:134
+#: ddm/ui/prefs.py:133
 msgid "Yeniden tara"
 msgstr "Rescan"
 
-#: ddm/ui/prefs.py:142
+#: ddm/ui/prefs.py:141
 msgid "Dayanıklılık"
 msgstr "Reliability"
 
-#: ddm/ui/prefs.py:146
+#: ddm/ui/prefs.py:145
 msgid "Kimlik"
 msgstr "Identity"
 
-#: ddm/ui/prefs.py:158
+#: ddm/ui/prefs.py:157
 msgid "Birden fazla bağdaştırıcıyla indir"
 msgstr "Download over multiple adapters"
 
-#: ddm/ui/prefs.py:200
+#: ddm/ui/prefs.py:199
 msgid "YouTube ve diğer sitelerden video indirme motoru"
 msgstr "Video download engine for YouTube and other sites"
 
-#: ddm/ui/prefs.py:202
+#: ddm/ui/prefs.py:201
 msgid "Sürüm"
 msgstr "Version"
 
-#: ddm/ui/prefs.py:203
+#: ddm/ui/prefs.py:202
 msgid "Güncelle"
 msgstr "Update"
 
-#: ddm/ui/prefs.py:216
+#: ddm/ui/prefs.py:213
+msgid "JavaScript çalışma ortamı"
+msgstr "JavaScript runtime"
+
+#: ddm/ui/prefs.py:214
+msgid "Kur"
+msgstr "Install"
+
+#: ddm/ui/prefs.py:223
 msgid "Varsayılanlar"
 msgstr "Defaults"
 
-#: ddm/ui/prefs.py:219
+#: ddm/ui/prefs.py:226
 msgid "Azami çözünürlük"
 msgstr "Maximum resolution"
 
-#: ddm/ui/prefs.py:246
+#: ddm/ui/prefs.py:255
 msgid "Kurulu değil"
 msgstr "Not installed"
 
-#: ddm/ui/prefs.py:279
+#: ddm/ui/prefs.py:267
+msgid "Kurulu değil — YouTube videoları için gerekli (deno)"
+msgstr "Not installed — required for YouTube videos (deno)"
+
+#: ddm/ui/prefs.py:326
 msgid "Güç ve zamanlama"
 msgstr "Power and schedule"
 
-#: ddm/ui/prefs.py:281
+#: ddm/ui/prefs.py:328
 msgid "Güç"
 msgstr "Power"
 
-#: ddm/ui/prefs.py:288
+#: ddm/ui/prefs.py:335
 msgid "Zamanlayıcı"
 msgstr "Scheduler"
 
-#: ddm/ui/prefs.py:289
+#: ddm/ui/prefs.py:336
 msgid "“Zamanla” denilen indirmeler yalnızca bu saatler arasında çalışır. Gece yarısını aşan aralıklar (23:00–06:00) da olur."
 msgstr "Downloads marked “Schedule” only run between these times. Windows past midnight (23:00–06:00) work too."
 
-#: ddm/ui/prefs.py:292
+#: ddm/ui/prefs.py:339
 msgid "Başlangıç"
 msgstr "Start"
 
-#: ddm/ui/prefs.py:292
+#: ddm/ui/prefs.py:339
 msgid "Bitiş"
 msgstr "End"
 
-#: ddm/ui/prefs.py:311
+#: ddm/ui/prefs.py:358
 msgid "Ölçülü bağlantı"
 msgstr "Metered connection"
 
-#: ddm/ui/prefs.py:312
+#: ddm/ui/prefs.py:359
 msgid "Telefondan internet paylaşımı gibi kotalı bağlantılarda ne yapılsın"
 msgstr "What to do on metered connections such as phone tethering"
 
-#: ddm/ui/prefs.py:314
+#: ddm/ui/prefs.py:361
 msgid "Bir şey yapma"
 msgstr "Nothing"
 
-#: ddm/ui/prefs.py:314
+#: ddm/ui/prefs.py:361
 msgid "İndirmeleri beklet"
 msgstr "Hold downloads"
 
-#: ddm/ui/prefs.py:314
+#: ddm/ui/prefs.py:361
 msgid "Hızı sınırla"
 msgstr "Limit speed"
 
-#: ddm/ui/prefs.py:323
+#: ddm/ui/prefs.py:370
 msgid "Güvenlik"
 msgstr "Security"
 
-#: ddm/ui/prefs.py:327
+#: ddm/ui/prefs.py:374
 msgid "Dosyanın kendisi gönderilmez: indirme bitince SHA-256 değeri, başlarken de link adresi sorgulanır. Ücretsiz anahtar: dakikada 4, günde 500 sorgu."
 msgstr "The file itself is never sent: its SHA-256 is looked up when it finishes, and the link when it starts. Free key: 4 lookups per minute, 500 per day."
 
-#: ddm/ui/prefs.py:330
+#: ddm/ui/prefs.py:377
 msgid "API anahtarı"
 msgstr "API key"
 
-#: ddm/ui/prefs.py:334
+#: ddm/ui/prefs.py:381
 msgid "Dene"
 msgstr "Test"
 
-#: ddm/ui/prefs.py:339
+#: ddm/ui/prefs.py:386
 msgid "Anahtarın yok mu?"
 msgstr "Don't have a key?"
 
-#: ddm/ui/prefs.py:340
+#: ddm/ui/prefs.py:387
 msgid "VirusTotal'da ücretsiz hesap aç, profil ▸ API Key bölümünden kopyala"
 msgstr "Create a free VirusTotal account and copy it from profile ▸ API Key"
 
-#: ddm/ui/prefs.py:346
+#: ddm/ui/prefs.py:393
 msgid "Bütünlük"
 msgstr "Integrity"
 
-#: ddm/ui/prefs.py:376
+#: ddm/ui/prefs.py:423
 msgid "Tarayıcı"
 msgstr "Browser"
 
-#: ddm/ui/prefs.py:378
+#: ddm/ui/prefs.py:425
 msgid "Köprü"
 msgstr "Bridge"
 
-#: ddm/ui/prefs.py:384
+#: ddm/ui/prefs.py:431
 msgid "Değişiklik yeniden başlatınca geçerli olur; eklenti ayarlarındaki portla aynı olmalı"
 msgstr "Takes effect after a restart; must match the port in the extension settings"
 
-#: ddm/ui/prefs.py:389
+#: ddm/ui/prefs.py:436
 msgid "Yakalama"
 msgstr "Capture"
 
-#: ddm/ui/prefs.py:390
+#: ddm/ui/prefs.py:437
 msgid "Firefox'ta başlayan indirmelerden hangilerinin DDM'ye devredileceği"
 msgstr "Which downloads started in Firefox are handed over to DDM"
 
-#: ddm/ui/prefs.py:392
+#: ddm/ui/prefs.py:439
 msgid "Dosya uzantıları (virgülle)"
 msgstr "File extensions (comma separated)"
 
-#: ddm/ui/prefs.py:398
+#: ddm/ui/prefs.py:445
 msgid "0 = boyut sınırı yok"
 msgstr "0 = no size limit"
 
-#: ddm/ui/prefs.py:400
+#: ddm/ui/prefs.py:447
 msgid "Eklenti"
 msgstr "Extension"
 
-#: ddm/ui/prefs.py:403
+#: ddm/ui/prefs.py:450
 msgid "Firefox eklentisi"
 msgstr "Firefox extension"
 
-#: ddm/ui/prefs.py:170
+#: ddm/ui/prefs.py:169
 msgid "ölçülü bağlantı — kota harcar"
 msgstr "metered connection — uses data quota"
 
-#: ddm/ui/prefs.py:185
+#: ddm/ui/prefs.py:184
 msgid "İkinci bir bağlantı (telefon USB paylaşımı, ikinci Wi-Fi adaptörü…) takınca burada görünür; yenile düğmesiyle tekrar tara."
 msgstr "A second connection (USB tethering, a second Wi-Fi adapter…) appears here once plugged in; rescan with the refresh button."
 
-#: ddm/ui/prefs.py:211
+#: ddm/ui/prefs.py:210
 msgid "bulunamadı — ayrı görüntü/ses akışları birleştirilemez (sudo apt install ffmpeg)"
 msgstr "not found — separate video/audio streams cannot be merged (sudo apt install ffmpeg)"
 
-#: ddm/ui/prefs.py:285
+#: ddm/ui/prefs.py:332
 msgid "Tümü bitince uyku / kapatma"
 msgstr "Suspend / power off when all finish"
 
-#: ddm/ui/prefs.py:286
+#: ddm/ui/prefs.py:333
 msgid "Ana menü ▸ Tümü bitince. Tek seferliktir; 60 sn geri sayımla iptal edilebilir"
 msgstr "Main menu ▸ When all finish. One-time; can be cancelled during a 60 s countdown"
 
-#: ddm/ui/prefs.py:341
+#: ddm/ui/prefs.py:388
 msgid "Hesap aç"
 msgstr "Sign up"
 
-#: ddm/ui/prefs.py:363
+#: ddm/ui/prefs.py:410
 msgid "Anahtar çalışıyor ✓"
 msgstr "Key works ✓"
 
-#: ddm/ui/prefs.py:363
+#: ddm/ui/prefs.py:410
 msgid "Beklenmeyen yanıt"
 msgstr "Unexpected response"
 
-#: ddm/ui/prefs.py:381
+#: ddm/ui/prefs.py:428
 msgid "127.0.0.1:{port} dinleniyor"
 msgstr "Listening on 127.0.0.1:{port}"
 
-#: ddm/ui/prefs.py:382
+#: ddm/ui/prefs.py:429
 msgid "Başlatılamadı: {error}"
 msgstr "Could not start: {error}"
 
-#: ddm/ui/prefs.py:383
+#: ddm/ui/prefs.py:430
 msgid "Durum"
 msgstr "Status"
 
-#: ddm/ui/prefs.py:99
-msgid "Sistem dili ({name})"
-msgstr "System language ({name})"
-
-#: ddm/ui/prefs.py:356
+#: ddm/ui/prefs.py:403
 msgid "Önce anahtarı girin"
 msgstr "Enter the key first"
 
-#: ddm/ui/prefs.py:184
+#: ddm/ui/prefs.py:98
+msgid "Sistem dili ({name})"
+msgstr "System language ({name})"
+
+#: ddm/ui/prefs.py:183
 msgid "Şu an internete çıkan {n} bağdaştırıcı var"
 msgstr "{n} adapter(s) currently connected to the internet"
 
-#: ddm/ui/prefs.py:272
+#: ddm/ui/prefs.py:291
+msgid "deno kuruldu"
+msgstr "deno installed"
+
+#: ddm/ui/prefs.py:319
 msgid "yt-dlp güncellendi"
 msgstr "yt-dlp updated"
 
-#: ddm/ui/prefs.py:293
+#: ddm/ui/prefs.py:340
 msgid "{title} (SS:DD)"
 msgstr "{title} (HH:MM)"
 
-#: ddm/ui/prefs.py:270
+#: ddm/ui/prefs.py:289
+msgid "deno indirilemedi: {error}"
+msgstr "Could not download deno: {error}"
+
+#: ddm/ui/prefs.py:317
 msgid "yt-dlp indirilemedi: {error}"
 msgstr "Could not download yt-dlp: {error}"
 
@@ -1722,19 +1742,23 @@ msgstr "{h} h {m:02d} min"
 msgid "{m} dk {s:02d} sn"
 msgstr "{m} min {s:02d} s"
 
-#: ddm/video.py:98
+#: ddm/video.py:168
 msgid "yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin."
 msgstr "yt-dlp not found. Install it in Settings ▸ Video."
 
-#: ddm/video.py:289
+#: ddm/video.py:362
 msgid "Bu içerik DRM korumalı, indirilemez"
 msgstr "This content is DRM-protected and cannot be downloaded"
 
-#: ddm/video.py:287
+#: ddm/video.py:364
+msgid "YouTube için JavaScript çalışma ortamı (deno) gerekli. Ayarlar ▸ Video bölümünden tek tıkla kurabilirsiniz."
+msgstr "YouTube needs a JavaScript runtime (deno). You can install it with one click in Settings ▸ Video."
+
+#: ddm/video.py:360
 msgid "yt-dlp çıkış kodu {code}"
 msgstr "yt-dlp exit code {code}"
 
-#: ddm/video.py:267
+#: ddm/video.py:345
 msgid "yt-dlp başlatılamadı: {error}"
 msgstr "Could not start yt-dlp: {error}"
 

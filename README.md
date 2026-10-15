@@ -59,7 +59,8 @@ The interface is available in **English** and **Turkish**. It follows your syste
 - Quality picker with the real resolutions of the page, MP4/MKV, audio only (MP3/M4A).
 - Optionally saves each video into its own folder (`Title/Title.mp4`).
 - HLS/DASH fragments are downloaded in parallel and merged with ffmpeg. Browser cookies are passed to yt-dlp for videos that need a login.
-- yt-dlp can be updated with one click. DRM-protected content cannot be downloaded.
+- yt-dlp can be updated with one click. YouTube needs a JavaScript runtime: DDM installs [deno](https://deno.com) for it (Settings ▸ Video), or uses an existing deno ≥ 2.3 / Node ≥ 22.
+- DRM-protected content cannot be downloaded.
 
 **Interface**
 - English and Turkish, following the system language by default. Switch in Settings ▸ General ▸ Language; the app restarts and downloads resume where they left off.
@@ -103,7 +104,7 @@ cd DoDownloadManager
 The script:
 - installs missing packages with `apt`: `python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-4.0`, `gir1.2-adw-1`, `python3-requests`, `ffmpeg`;
 - copies the app to `~/.local/share/ddm/app` and creates the `~/.local/bin/ddm` launcher and a desktop entry;
-- downloads the latest yt-dlp;
+- downloads the latest yt-dlp, and deno if no suitable JavaScript runtime is installed;
 - packages the extension as `~/.local/share/ddm/extension/ddm-firefox.xpi`.
 
 Options: `--no-apt`, `--no-ytdlp`. Uninstall with `./uninstall.sh` (`--purge` also removes settings and history; downloaded files are never touched).
@@ -213,5 +214,6 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 
 Third-party components are not bundled:
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (Unlicense) is downloaded from its official releases at install/update time.
+- [deno](https://github.com/denoland/deno) (MIT) is downloaded from its official releases when needed for YouTube.
 - [FFmpeg](https://ffmpeg.org) (LGPL/GPL) is installed from the Ubuntu archive.
 - GTK, libadwaita and PyGObject (LGPL) and [requests](https://github.com/psf/requests) (Apache 2.0) are used as system packages.

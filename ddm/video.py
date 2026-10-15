@@ -1,11 +1,14 @@
 import json
 import os
+import platform
+import re
 import shutil
 import signal
 import stat
 import subprocess
 import threading
 import time
+import zipfile
 from pathlib import Path
 
 import requests
@@ -15,6 +18,73 @@ from .engine import SpeedMeter
 from .i18n import _
 
 YTDLP_RELEASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
+DENO_RELEASE = "https://github.com/denoland/deno/releases/latest/download/deno-{arch}-unknown-linux-gnu.zip"
+FORMAT_MISSING = ("Requested format is not available", "Only images are available")
+
+
+def _tool_version(cmd):
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    m = re.search(r"(\d+)\.(\d+)\.(\d+)", out.stdout or "")
+    return tuple(int(x) for x in m.groups()) if m else None
+
+
+def deno_binary():
+    local = BIN_DIR / "deno"
+    if local.exists() and os.access(local, os.X_OK):
+        return str(local)
+    return shutil.which("deno")
+
+
+def js_runtime():
+    deno = deno_binary()
+    if deno:
+        version = _tool_version([deno, "--version"])
+        if version and version >= (2, 3, 0):
+            return "deno", deno, version
+    node = shutil.which("node") or shutil.which("nodejs")
+    if node:
+        version = _tool_version([node, "--version"])
+        if version and version >= (22, 0, 0):
+            return "node", node, version
+    qjs = shutil.which("qjs")
+    if qjs:
+        return "quickjs", qjs, None
+    return None
+
+
+def js_runtime_args():
+    rt = js_runtime()
+    return ["--js-runtimes", f"{rt[0]}:{rt[1]}"] if rt else []
+
+
+def update_deno(progress=None):
+    arch = {"x86_64": "x86_64", "amd64": "x86_64", "aarch64": "aarch64", "arm64": "aarch64"}.get(platform.machine().lower())
+    if not arch:
+        raise RuntimeError(platform.machine())
+    BIN_DIR.mkdir(parents=True, exist_ok=True)
+    archive = BIN_DIR / "deno.zip.download"
+    with requests.get(DENO_RELEASE.format(arch=arch), stream=True, timeout=(15, 60)) as r:
+        r.raise_for_status()
+        total = int(r.headers.get("Content-Length") or 0)
+        done = 0
+        with open(archive, "wb") as f:
+            for chunk in r.iter_content(65536):
+                f.write(chunk)
+                done += len(chunk)
+                if progress and total:
+                    progress(done / total)
+    tmp = BIN_DIR / "deno.download"
+    try:
+        with zipfile.ZipFile(archive) as z, z.open("deno") as src, open(tmp, "wb") as dst:
+            shutil.copyfileobj(src, dst)
+    finally:
+        archive.unlink(missing_ok=True)
+    tmp.chmod(tmp.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    os.replace(tmp, BIN_DIR / "deno")
+    return js_runtime()
 
 
 def ytdlp_binary(settings=None):
@@ -102,9 +172,16 @@ def probe_formats(url, settings, headers=None, cookies=None, timeout=90):
         cookie_file = TEMP_DIR / f"probe-{os.getpid()}-{threading.get_ident()}.cookies"
         write_cookie_file(cookie_file, cookies)
     try:
-        cmd = [exe, "-J", "--no-playlist", "--no-warnings", "--no-colors", *_common_args(headers, cookie_file), url]
+        cmd = [exe, "-J", "--no-playlist", "--no-warnings", "--no-colors", *js_runtime_args(),
+               *_common_args(headers, cookie_file), url]
         out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        if out.returncode != 0 and cookie_file and any(s in out.stderr for s in FORMAT_MISSING):
+            cmd = [exe, "-J", "--no-playlist", "--no-warnings", "--no-colors", *js_runtime_args(),
+                   *_common_args(headers, None), url]
+            out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         if out.returncode != 0:
+            if any(s in out.stderr for s in FORMAT_MISSING) and not js_runtime():
+                raise RuntimeError(_("YouTube için JavaScript çalışma ortamı (deno) gerekli. Ayarlar ▸ Video bölümünden tek tıkla kurabilirsiniz."))
             err = [l for l in out.stderr.splitlines() if l.startswith("ERROR")]
             raise RuntimeError((err[-1] if err else out.stderr.strip()[-300:]).replace("ERROR: ", ""))
         info = json.loads(out.stdout)
@@ -214,6 +291,7 @@ class VideoDownloader:
                    else "%(title).180B [%(id)s].%(ext)s"),
                "--windows-filenames" if opts.get("safe_names") else "--no-windows-filenames",
                *build_format_args(opts),
+               *js_runtime_args(),
                *_common_args(rec.get("headers"), cookie_file)]
         if self.rate_limit > 0:
             cmd += ["--limit-rate", str(self.rate_limit)]
@@ -258,24 +336,19 @@ class VideoDownloader:
             cookie_file = self.tmpdir / "cookies.txt"
             write_cookie_file(cookie_file, cookies)
         Path(self.record["directory"]).mkdir(parents=True, exist_ok=True)
-        errors = []
         try:
-            self.proc = subprocess.Popen(self._command(exe, cookie_file), stdout=subprocess.PIPE,
-                                         stderr=subprocess.STDOUT, text=True, bufsize=1,
-                                         start_new_session=True, errors="replace")
+            code, errors = self._attempt(exe, cookie_file)
+            if (code != 0 and cookie_file and not self.stop_event.is_set()
+                    and any(s in " ".join(errors) for s in FORMAT_MISSING)):
+                code, errors = self._attempt(exe, None)
         except OSError as e:
             return "error", _("yt-dlp başlatılamadı: {error}").format(error=e)
-        for raw in self.proc.stdout:
-            line = raw.rstrip("\n")
-            if line.startswith("ERROR:"):
-                errors.append(line[6:].strip())
-            self._parse(line)
-        code = self.proc.wait()
-        if cookie_file:
-            try:
-                cookie_file.unlink()
-            except OSError:
-                pass
+        finally:
+            if cookie_file:
+                try:
+                    cookie_file.unlink()
+                except OSError:
+                    pass
         if self.stop_event.is_set():
             return "paused", None
         if code == 0 and self.final_path:
@@ -287,7 +360,21 @@ class VideoDownloader:
         msg = errors[-1] if errors else _("yt-dlp çıkış kodu {code}").format(code=code)
         if "DRM" in msg:
             msg = _("Bu içerik DRM korumalı, indirilemez")
+        elif any(s in msg for s in FORMAT_MISSING) and not js_runtime():
+            msg = _("YouTube için JavaScript çalışma ortamı (deno) gerekli. Ayarlar ▸ Video bölümünden tek tıkla kurabilirsiniz.")
         return "error", msg
+
+    def _attempt(self, exe, cookie_file):
+        errors = []
+        self.proc = subprocess.Popen(self._command(exe, cookie_file), stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, text=True, bufsize=1,
+                                     start_new_session=True, errors="replace")
+        for raw in self.proc.stdout:
+            line = raw.rstrip("\n")
+            if line.startswith("ERROR:"):
+                errors.append(line[6:].strip())
+            self._parse(line)
+        return self.proc.wait(), errors
 
 
 def _num(v):

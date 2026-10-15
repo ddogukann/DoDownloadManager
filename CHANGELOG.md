@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1
+- **YouTube fix:** "Requested format is not available" errors. YouTube now requires a JavaScript runtime for yt-dlp; DDM installs and manages [deno](https://deno.com) (Settings ▸ Video ▸ JavaScript runtime, also done by `install.sh`). An existing deno ≥ 2.3 or Node ≥ 22 is used if present.
+- If a video fails with that error while browser cookies were sent, DDM retries once without cookies.
+
 ## 1.5.0 — extension 1.0.3
 - **English interface.** The app is now available in English and Turkish. It follows the system language by default; switch it in Settings ▸ General ▸ Language (the app restarts and downloads resume).
 - Number, size and time formats follow the language (`37% · 23.0 MB · 20 s` / `%37 · 23,0 MB · 20 sn`). GTK's own dialogs follow it too.

@@ -1,5 +1,5 @@
 APP_ID = "io.github.ddm.DoDownloadManager"
 APP_NAME = "DoDownloadManager"
 APP_SHORT = "DDM"
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 BRIDGE_PORT = 47821

@@ -7,7 +7,7 @@ from gi.repository import Adw, Gio, GLib, Gtk
 from .. import i18n
 from ..config import DATA_DIR
 from ..i18n import _
-from ..video import update_ytdlp, ytdlp_binary, ytdlp_version
+from ..video import js_runtime, update_deno, update_ytdlp, ytdlp_binary, ytdlp_version
 from ..netlanes import list_uplinks
 from .rules import RulesPage
 
@@ -210,6 +210,14 @@ class PreferencesDialog(Adw.PreferencesDialog):
         ff_row = Adw.ActionRow(title="ffmpeg", subtitle=ff or _("bulunamadı — ayrı görüntü/ses akışları birleştirilemez "
                                                                  "(sudo apt install ffmpeg)"))
         g.add(ff_row)
+        self.js_row = Adw.ActionRow(title=_("JavaScript çalışma ortamı"), subtitle=_("kontrol ediliyor…"))
+        self.js_btn = Gtk.Button(label=_("Kur"), valign=Gtk.Align.CENTER)
+        self.js_btn.connect("clicked", self._install_deno)
+        self.js_progress = Gtk.ProgressBar(valign=Gtk.Align.CENTER, visible=False)
+        self.js_progress.set_size_request(90, -1)
+        self.js_row.add_suffix(self.js_progress)
+        self.js_row.add_suffix(self.js_btn)
+        g.add(self.js_row)
         self._refresh_ytdlp()
 
         g = Adw.PreferencesGroup(title=_("Varsayılanlar"))
@@ -233,7 +241,9 @@ class PreferencesDialog(Adw.PreferencesDialog):
         def work():
             v = ytdlp_version(self.s)
             path = ytdlp_binary(self.s)
+            rt = js_runtime()
             GLib.idle_add(self._set_ytdlp, v, path)
+            GLib.idle_add(self._set_js, rt)
 
         threading.Thread(target=work, daemon=True).start()
 
@@ -245,6 +255,44 @@ class PreferencesDialog(Adw.PreferencesDialog):
             self.ytdlp_row.set_subtitle(_("Kurulu değil"))
             self.ytdlp_btn.set_label(_("İndir"))
         return False
+
+    def _set_js(self, rt):
+        if rt:
+            name, path, version = rt
+            ver = ".".join(map(str, version)) if version else ""
+            self.js_row.set_subtitle(GLib.markup_escape_text(" ".join(x for x in (name, ver) if x) + f" · {path}"))
+            self.js_btn.set_label(_("Güncelle"))
+            self.js_btn.set_visible(name == "deno")
+        else:
+            self.js_row.set_subtitle(_("Kurulu değil — YouTube videoları için gerekli (deno)"))
+            self.js_btn.set_label(_("Kur"))
+            self.js_btn.set_visible(True)
+        return False
+
+    def _install_deno(self, *_a):
+        self.js_btn.set_sensitive(False)
+        self.js_progress.set_visible(True)
+        self.js_progress.set_fraction(0)
+
+        def work():
+            try:
+                update_deno(lambda f: GLib.idle_add(self.js_progress.set_fraction, f))
+                err = None
+            except Exception as e:
+                err = str(e)
+            GLib.idle_add(done, err)
+
+        def done(err):
+            self.js_btn.set_sensitive(True)
+            self.js_progress.set_visible(False)
+            if err:
+                self.add_toast(Adw.Toast(title=_("deno indirilemedi: {error}").format(error=err[:120])))
+            else:
+                self.add_toast(Adw.Toast(title=_("deno kuruldu")))
+            self._refresh_ytdlp()
+            return False
+
+        threading.Thread(target=work, daemon=True).start()
 
     def _update_ytdlp(self, *_a):
         self.ytdlp_btn.set_sensitive(False)

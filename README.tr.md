@@ -63,6 +63,7 @@ Arayüz **Türkçe** ve **İngilizce**. Varsayılan olarak sistem dilini izler; 
 - HLS/DASH parçaları paralel indirilir. Görüntü ve ses ffmpeg ile birleştirilir.
 - Tarayıcı çerezleri yt-dlp'ye aktarılır, böylece giriş gerektiren videolar da indirilebilir.
 - yt-dlp, Ayarlar ▸ Video bölümünden tek tıkla güncellenir.
+- YouTube için JavaScript çalışma ortamı gerekir: DDM bunun için [deno](https://deno.com) kurar (Ayarlar ▸ Video), sistemde deno 2.3+ ya da Node 22+ varsa onu kullanır.
 - DRM korumalı içerik (Netflix, Disney+ vb.) indirilemez.
 
 **Arayüz**
@@ -122,7 +123,7 @@ Betik şunları yapar:
 - Eksik paketleri `apt` ile kurar: `python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-4.0`, `gir1.2-adw-1`, `python3-requests`, `ffmpeg`.
 - Uygulamayı `~/.local/share/ddm/app` altına kopyalar.
 - `~/.local/bin/ddm` başlatıcısını ve masaüstü girdisini oluşturur.
-- yt-dlp'nin güncel sürümünü indirir.
+- yt-dlp'nin güncel sürümünü, uygun bir JavaScript çalışma ortamı yoksa deno'yu da indirir.
 - Eklentiyi `~/.local/share/ddm/extension/ddm-firefox.xpi` olarak paketler.
 
 Seçenekler: `--no-apt` (paket kurulumunu atla), `--no-ytdlp`.
@@ -239,5 +240,6 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 
 Üçüncü taraf bileşenler pakete dahil değildir:
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (Unlicense) kurulumda ve güncellemede resmi sürüm sayfasından indirilir.
+- [deno](https://github.com/denoland/deno) (MIT) YouTube için gerektiğinde resmi sürüm sayfasından indirilir.
 - [FFmpeg](https://ffmpeg.org) (LGPL/GPL) Ubuntu paket deposundan kurulur.
 - GTK, libadwaita ve PyGObject (LGPL) ile [requests](https://github.com/psf/requests) (Apache 2.0) sistem paketleri olarak kullanılır.
