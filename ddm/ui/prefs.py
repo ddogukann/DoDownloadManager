@@ -4,7 +4,7 @@ import threading
 
 from gi.repository import Adw, Gio, GLib, Gtk
 
-from .. import i18n
+from .. import HOMEPAGE, i18n
 from ..config import DATA_DIR
 from ..i18n import _
 from ..video import js_runtime, update_deno, update_ytdlp, ytdlp_binary, ytdlp_version
@@ -90,6 +90,8 @@ class PreferencesDialog(Adw.PreferencesDialog):
         self._switch(g, "detail_on_start", _("İndirme başlayınca ayrıntı penceresini aç"))
         self._switch(g, "finish_popup", _("İndirme bitince özet penceresi göster"),
                      _("Boyut, süre, hız grafiği ve VirusTotal sonucu; Dosyayı aç / Klasörü aç"))
+        self._switch(g, "update_check", _("Yeni sürümleri denetle"),
+                     _("Günde bir kez GitHub'daki son sürüme bakar; yeni sürüm varsa haber verir"))
 
     def _language(self, page):
         g = Adw.PreferencesGroup(title=_("Dil · Language"))
@@ -446,14 +448,21 @@ class PreferencesDialog(Adw.PreferencesDialog):
 
         g = Adw.PreferencesGroup(title=_("Eklenti"))
         page.add(g)
-        ext_dir = DATA_DIR / "extension"
         row = Adw.ActionRow(title=_("Firefox eklentisi"),
-                            subtitle=GLib.markup_escape_text(str(ext_dir)))
-        btn = Gtk.Button(label=_("Klasörü aç"), valign=Gtk.Align.CENTER)
-        btn.connect("clicked", lambda *_a: Gtk.FileLauncher.new(Gio.File.new_for_path(str(ext_dir))).launch(
-            self.get_root(), None, None) if os.path.isdir(ext_dir) else None)
+                            subtitle=_("İmzalı eklenti (.xpi) GitHub Releases sayfasında; Firefox'a sürükleyip bırakın"))
+        btn = Gtk.Button(label=_("Releases sayfası"), valign=Gtk.Align.CENTER)
+        btn.connect("clicked", lambda *_a: Gtk.UriLauncher.new(f"{HOMEPAGE}/releases/latest").launch(
+            self.get_root(), None, None))
         row.add_suffix(btn)
         g.add(row)
+        ext_dir = DATA_DIR / "extension"
+        if os.path.isdir(ext_dir):
+            local = Adw.ActionRow(title=_("Yerel eklenti klasörü"), subtitle=GLib.markup_escape_text(str(ext_dir)))
+            fbtn = Gtk.Button(label=_("Klasörü aç"), valign=Gtk.Align.CENTER)
+            fbtn.connect("clicked", lambda *_a: Gtk.FileLauncher.new(Gio.File.new_for_path(str(ext_dir))).launch(
+                self.get_root(), None, None))
+            local.add_suffix(fbtn)
+            g.add(local)
 
     def _choose_dir(self, *_a):
         dialog = Gtk.FileDialog(title=_("İndirme klasörü"))

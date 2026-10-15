@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  deb:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION="$(sed -n 's/^VERSION = "\(.*\)"$/\1/p' ddm/__init__.py)"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match VERSION $VERSION in ddm/__init__.py"
+            exit 1
+          fi
+
+      - name: Check sources
+        run: |
+          python3 -m compileall -q ddm
+          python3 scripts/i18n.py check en
+
+      - name: Build .deb
+        run: ./packaging/build-deb.sh
+
+      - name: Release notes
+        run: python3 packaging/release-notes.py "$GITHUB_REF_NAME" > notes.md
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.deb --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.deb --title "DoDownloadManager ${GITHUB_REF_NAME#v}" --notes-file notes.md
+          fi

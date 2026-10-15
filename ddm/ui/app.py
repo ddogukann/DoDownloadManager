@@ -1,18 +1,22 @@
 import json
 import os
+import threading
+import time
+import shutil
 import sys
 from collections import deque
 from pathlib import Path
 
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
-from .. import APP_ID, APP_NAME, VERSION
+from .. import APP_ID, APP_NAME, HOMEPAGE, VERSION
 from ..bridge import Bridge, valid_url
 from ..i18n import N_, _, pct
 from ..config import CONFIG_DIR, DATA_DIR, Settings, bridge_token, ensure_dirs
 from ..manager import DownloadManager
 from ..tray import TrayIcon
 from ..util import filename_from_url, human_size
+from ..updates import CHECK_INTERVAL, fetch_latest, installed_from_deb, is_newer, plain_notes
 from ..virustotal import file_link
 from .add_dialog import AddDialog
 from .complete import CompleteWindow
@@ -68,6 +72,8 @@ class DDMApp(Adw.Application):
         self._held = False
         self._bg_notice_shown = False
         self.restart_requested = False
+        self._update_info = None
+        self._update_toasted = False
         self.add_main_option("background", ord("b"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
                              _("Pencere açmadan arka planda başlat"), None)
         self.add_main_option("video", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
@@ -108,6 +114,8 @@ class DDMApp(Adw.Application):
         GLib.idle_add(self._apply_metered, False)
         self.manager.schedule()
         GLib.timeout_add(1500, self._withdraw_stale)
+        GLib.timeout_add_seconds(20, self._update_tick)
+        GLib.timeout_add_seconds(3600, self._update_tick)
 
     def do_shutdown(self):
         if self.tray:
@@ -268,6 +276,98 @@ class DDMApp(Adw.Application):
             w._notif_hooked = True
             w.connect("notify::is-active", lambda win, _p: self.withdraw_all() if win.is_active() else None)
         w.present()
+        if self._update_info and not self._update_toasted:
+            GLib.idle_add(self._update_toast)
+
+    def _update_tick(self):
+        if self.settings.get("update_check") and time.time() - float(self.settings.get("update_last") or 0) > CHECK_INTERVAL:
+            self.check_updates(manual=False)
+        return True
+
+    def check_updates(self, manual=False):
+        def work():
+            try:
+                info, error = fetch_latest(), None
+            except Exception as e:
+                info, error = None, str(e)
+            GLib.idle_add(self._on_update, info, error, manual)
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _on_update(self, info, error, manual):
+        if error is None:
+            self.settings.set("update_last", time.time())
+        if not info or not is_newer(info["tag"]):
+            if manual and self.window is not None:
+                self.window.toast(_("Güncelleme denetlenemedi: {error}").format(error=error[:80]) if error
+                                  else _("DDM güncel ({version})").format(version=VERSION))
+            return False
+        self._update_info = info
+        if manual:
+            self.show_update_dialog()
+            return False
+        if info["tag"] == self.settings.get("update_skip"):
+            self._update_info = None
+            return False
+        if self.window is not None and self.window.get_visible():
+            self._update_toast()
+        elif self.settings.get("update_notified") != info["tag"]:
+            self.settings.set("update_notified", info["tag"])
+            n = Gio.Notification.new(_("DDM {version} çıktı").format(version=info["version"]))
+            n.set_body(_("Yeni sürümün ayrıntıları için tıklayın"))
+            n.set_icon(Gio.ThemedIcon.new(APP_ID))
+            n.set_default_action("app.show-update")
+            self.send_notification("update", n)
+        return False
+
+    def _update_toast(self):
+        info = self._update_info
+        if not info or self.window is None or self._update_toasted:
+            return False
+        self._update_toasted = True
+        t = Adw.Toast(title=_("DDM {version} çıktı").format(version=info["version"]), button_label=_("Ayrıntı"),
+                      timeout=0)
+        t.connect("button-clicked", lambda *_a: self.show_update_dialog())
+        self.window.toasts.add_toast(t)
+        return False
+
+    def show_update_dialog(self):
+        info = self._update_info
+        self.withdraw_notification("update")
+        if not info:
+            return
+        self.present_window()
+        how = (_("İndirilen .deb dosyasını çift tıklayarak kurabilirsiniz. Ayarlarınız ve indirmeleriniz korunur.")
+               if installed_from_deb() else
+               _("Yeni sürümü indirip klasörde ./install.sh çalıştırın. Ayarlarınız ve indirmeleriniz korunur."))
+        notes = plain_notes(info.get("notes"))
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        if notes:
+            label = Gtk.Label(label=notes, wrap=True, xalign=0, selectable=True, margin_start=4, margin_end=4)
+            scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, propagate_natural_height=True,
+                                        max_content_height=260)
+            scroll.set_child(label)
+            box.append(scroll)
+        dlg = Adw.AlertDialog(heading=_("DDM {version} çıktı").format(version=info["version"]),
+                              body=_("Kullandığınız sürüm: {current}").format(current=VERSION) + "\n" + how,
+                              extra_child=box)
+        dlg.add_response("skip", _("Bu sürümü atla"))
+        dlg.add_response("later", _("Sonra"))
+        dlg.add_response("download", _("İndir"))
+        dlg.set_response_appearance("download", Adw.ResponseAppearance.SUGGESTED)
+        dlg.set_default_response("download")
+        dlg.set_close_response("later")
+
+        def resp(d, r):
+            if r == "download":
+                deb = info.get("deb")
+                self.open_uri(deb["url"] if deb and installed_from_deb() else info["url"])
+            elif r == "skip":
+                self.settings.set("update_skip", info["tag"])
+                self._update_info = None
+
+        dlg.connect("response", resp)
+        dlg.present(self.window)
 
     def _notif_file(self):
         return DATA_DIR / "notifications.json"
@@ -360,6 +460,8 @@ class DDMApp(Adw.Application):
             "pause-all": lambda *_a: self.manager.pause_all(),
             "resume-all": lambda *_a: self.manager.resume_all(),
             "clear-finished": lambda *_a: self.manager.clear_finished(),
+            "check-updates": lambda *_a: self.check_updates(manual=True),
+            "show-update": lambda *_a: self.show_update_dialog(),
         }
         for name, cb in simple.items():
             a = Gio.SimpleAction.new(name, None)
@@ -680,7 +782,7 @@ class DDMApp(Adw.Application):
         about = Adw.AboutDialog(application_name=APP_NAME, application_icon=APP_ID, version=VERSION,
                                 developer_name="Doğukan",
                                 comments=_("Çok bağlantılı indirme yöneticisi · Firefox eklentisi · yt-dlp ile video"),
-                                website="https://github.com/ddogukann/DoDownloadManager",
+                                website=HOMEPAGE, issue_url=f"{HOMEPAGE}/issues",
                                 license_type=Gtk.License.GPL_3_0)
         about.present(self.window)
 
@@ -750,7 +852,7 @@ class DDMApp(Adw.Application):
             autostart.mkdir(parents=True, exist_ok=True)
             exe = os.path.expanduser("~/.local/bin/ddm")
             if not os.path.exists(exe):
-                exe = f"{sys.executable} -m ddm"
+                exe = shutil.which("ddm") or f"{sys.executable} -m ddm"
             target.write_text(
                 "[Desktop Entry]\nType=Application\n"
                 f"Name={APP_NAME}\nExec={exe} --background\nIcon={APP_ID}\n"

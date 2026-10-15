@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.ddm.DoDownloadManager</id>
+  <name>DoDownloadManager</name>
+  <summary>Multi-connection download manager with video downloads</summary>
+  <summary xml:lang="tr">Video indirme destekli çok bağlantılı indirme yöneticisi</summary>
+  <developer id="io.github.ddogukann">
+    <name>Doğukan</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>DoDownloadManager (DDM) splits downloads into parallel connections, resumes them after restarts and downloads videos with yt-dlp.</p>
+    <ul>
+      <li>IDM-style dynamic segmenting with automatic back-off on busy servers</li>
+      <li>Bonding of several internet connections, such as Wi-Fi and USB tethering</li>
+      <li>Resuming downloads whose link expired with a fresh link</li>
+      <li>VirusTotal checks and automatic checksum verification</li>
+      <li>Rules, archive extraction, scheduler and metered connection handling</li>
+      <li>Firefox extension that hands browser downloads over to DDM</li>
+    </ul>
+    <p xml:lang="tr">DoDownloadManager (DDM) indirmeleri paralel bağlantılara böler, yeniden başlatmalardan sonra kaldığı yerden sürdürür ve yt-dlp ile video indirir.</p>
+  </description>
+  <launchable type="desktop-id">io.github.ddm.DoDownloadManager.desktop</launchable>
+  <url type="homepage">https://github.com/ddogukann/DoDownloadManager</url>
+  <url type="bugtracker">https://github.com/ddogukann/DoDownloadManager/issues</url>
+  <url type="vcs-browser">https://github.com/ddogukann/DoDownloadManager</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/ddogukann/DoDownloadManager/main/docs/en/main.png</image>
+      <caption>Main window</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ddogukann/DoDownloadManager/main/docs/en/detail.png</image>
+      <caption>Download details</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/ddogukann/DoDownloadManager/main/docs/en/complete.png</image>
+      <caption>Finished download</caption>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>Network</category>
+    <category>FileTransfer</category>
+  </categories>
+  <keywords>
+    <keyword>download</keyword>
+    <keyword>yt-dlp</keyword>
+    <keyword>video</keyword>
+  </keywords>
+  <content_rating type="oars-1.1"/>
+  <requires>
+    <display_length compare="ge">720</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <releases>
+    <release version="@VERSION@" date="@DATE@"/>
+  </releases>
+</component>

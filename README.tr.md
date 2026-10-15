@@ -113,6 +113,22 @@ Arayüz **Türkçe** ve **İngilizce**. Varsayılan olarak sistem dilini izler; 
 
 Gereksinim: Ubuntu 24.04 veya üstü (GTK 4.12+, libadwaita 1.5+).
 
+### .deb paketi (önerilen)
+
+[Son sürüm](https://github.com/ddogukann/DoDownloadManager/releases/latest) sayfasından `dodownloadmanager_<sürüm>_all.deb` dosyasını indirip açın ya da şunu çalıştırın:
+
+```bash
+sudo apt install ./dodownloadmanager_*_all.deb
+```
+
+Ardından Ayarlar ▸ Video bölümünden yt-dlp'yi ve JavaScript çalışma ortamını (deno) tek tıkla kurun. Bunlar ev klasörünüzde tutulur, böylece DDM onları kendisi güncelleyebilir.
+
+Yeni sürüm çıktığında DDM haber verir (Ayarlar ▸ Genel ▸ *Yeni sürümleri denetle* ya da ana menü ▸ *Güncellemeleri denetle*). Yeni .deb'i eskisinin üstüne kurmak ayarlarınızı ve indirmelerinizi korur. Kaldırmak için: `sudo apt remove dodownloadmanager`.
+
+DDM'yi daha önce `install.sh` ile kurduysanız önce `./uninstall.sh` çalıştırın; ayarlarınız ve geçmişiniz korunur.
+
+### Kaynak koddan
+
 ```bash
 git clone https://github.com/ddogukann/DoDownloadManager.git
 cd DoDownloadManager
@@ -149,6 +165,18 @@ Ubuntu'daki snap Firefox ile sorunsuz çalışır. Eklenti uygulamaya native mes
 Kurulumdan sonra eklentiyi kullanmak için:
 - Medya taraması istediğiniz sitede araç çubuğundaki DDM simgesine tıklayın ve **Bu sitede medya taraması** anahtarını açın.
 - Hangi dosya uzantılarının yakalanacağını ve en küçük boyutu DDM ▸ Ayarlar ▸ Tarayıcı bölümünden belirleyin.
+
+## Sürüm yayınlama
+
+1. `ddm/__init__.py` içindeki `VERSION` değerini güncelleyin ve `CHANGELOG.md` dosyasına `## <sürüm>` bölümü ekleyin.
+2. Commit'leyip etiketi gönderin:
+   ```bash
+   git tag v1.6.0
+   git push origin main --tags
+   ```
+3. GitHub Actions etiketin `VERSION` ile aynı olduğunu kontrol eder, `.deb` paketini `packaging/build-deb.sh` ile derler ve CHANGELOG bölümünü açıklama yaparak bir release yayınlar. Release zaten varsa (örneğin imzalı `.xpi` ile) `.deb` ona eklenir.
+
+Paketi kendi bilgisayarınızda derlemek için: `./packaging/build-deb.sh` (çıktı `dist/` klasöründe).
 
 ## Çeviri
 
@@ -228,6 +256,7 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 - VirusTotal açıksa indirilen dosyanın SHA-256 değeri, indirme linki ve alan adı VirusTotal'a gönderilir. Dosyanın kendisi yalnızca *VirusTotal'a yükle ve tara* seçildiğinde, onay alınarak yüklenir.
 - Checksum doğrulaması için dosyanın indiği sunucudan `SHA256SUMS` gibi küçük dosyalar istenir.
 - API anahtarı ve ayarlar yalnızca `~/.config/ddm/` içinde, sadece sizin okuyabileceğiniz izinlerle saklanır.
+- DDM günde bir kez GitHub API'sinden son sürüm numarasını sorar. Sizinle ya da indirmelerinizle ilgili hiçbir bilgi gönderilmez. Ayarlar ▸ Genel bölümünden kapatılabilir.
 
 ## Notlar
 

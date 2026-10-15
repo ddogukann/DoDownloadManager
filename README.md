@@ -95,6 +95,22 @@ The interface is available in **English** and **Turkish**. It follows your syste
 
 Requires Ubuntu 24.04 or newer (GTK 4.12+, libadwaita 1.5+).
 
+### .deb package (recommended)
+
+Download `dodownloadmanager_<version>_all.deb` from the [latest release](https://github.com/ddogukann/DoDownloadManager/releases/latest) and open it, or run:
+
+```bash
+sudo apt install ./dodownloadmanager_*_all.deb
+```
+
+Then open Settings ▸ Video and install yt-dlp and the JavaScript runtime (deno) with one click. They are kept in your home folder so DDM can update them itself.
+
+DDM tells you when a new version is out (Settings ▸ General ▸ *Check for new versions*, or main menu ▸ *Check for updates*). Installing the new .deb over the old one keeps your settings and downloads. Remove it with `sudo apt remove dodownloadmanager`.
+
+If you installed DDM with `install.sh` before, run `./uninstall.sh` first; your settings and history are kept.
+
+### From source
+
 ```bash
 git clone https://github.com/ddogukann/DoDownloadManager.git
 cd DoDownloadManager
@@ -123,6 +139,18 @@ Release Firefox only installs extensions signed by Mozilla. Three options:
 3. **Developer Edition / Nightly:** set `xpinstall.signatures.required = false` in `about:config` and install the `.xpi` directly.
 
 The snap Firefox on Ubuntu works fine: the extension talks to DDM over `127.0.0.1` instead of native messaging.
+
+## Releasing
+
+1. Update `VERSION` in `ddm/__init__.py` and add a `## <version>` section to `CHANGELOG.md`.
+2. Commit, then tag and push:
+   ```bash
+   git tag v1.6.0
+   git push origin main --tags
+   ```
+3. GitHub Actions checks that the tag matches `VERSION`, builds the `.deb` with `packaging/build-deb.sh` and publishes a release with the changelog section as notes. If the release already exists (for example with a signed `.xpi`), the `.deb` is added to it.
+
+To build the package locally: `./packaging/build-deb.sh` (output in `dist/`).
 
 ## Translating
 
@@ -201,6 +229,7 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 - DDM sends nothing to the developer. There is no telemetry.
 - With VirusTotal enabled, the file's SHA-256, the download URL and its domain are sent to VirusTotal. The file itself is uploaded only when you choose *upload and scan* and confirm.
 - For checksum verification, small files such as `SHA256SUMS` are requested from the server the file came from.
+- Once a day DDM asks the GitHub API for the latest release number. Nothing about you or your downloads is sent. Turn it off in Settings ▸ General.
 - The API key and settings stay in `~/.config/ddm/`, readable only by you.
 
 ## Notes

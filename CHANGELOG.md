@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+- **.deb package.** Every release now ships `dodownloadmanager_<version>_all.deb`, built automatically by GitHub Actions when a `v*` tag is pushed. It installs the app system-wide with its dependencies, a desktop entry, AppStream metadata and a man page.
+- **Update notifications.** DDM checks GitHub once a day and shows the new version with its release notes; the version can be skipped. Manual check in the main menu. Can be turned off in Settings ▸ General.
+- Settings ▸ Browser links to the signed Firefox extension on the Releases page.
+
 ## 1.5.2
 - License changed from MIT to GPL-3.0-or-later.
 

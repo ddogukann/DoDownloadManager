@@ -1,0 +1,35 @@
+.TH DDM 1 "2026" "DoDownloadManager" "User Commands"
+.SH NAME
+ddm \- multi-connection download manager
+.SH SYNOPSIS
+.B ddm
+[\fIOPTION\fR...] [\fIURL\fR...]
+.SH DESCRIPTION
+DoDownloadManager (DDM) splits downloads into parallel connections, resumes them
+after restarts and downloads videos with yt-dlp. If DDM is already running, the
+command is forwarded to the running instance.
+.SH OPTIONS
+.TP
+.BR \-b ", " \-\-background
+Start in the background without opening a window.
+.TP
+.B \-\-video
+Download the given links as videos with yt-dlp.
+.TP
+.B \-\-now
+Add the given links to the queue without a confirmation dialog.
+.TP
+.BR \-n ", " \-\-new
+Open the new download dialog.
+.TP
+.BR \-q ", " \-\-quit
+Quit the running instance.
+.SH FILES
+.TP
+.I ~/.config/ddm/settings.json
+Settings.
+.TP
+.I ~/.local/share/ddm/downloads.db
+Download history and segment state.
+.SH SEE ALSO
+https://github.com/ddogukann/DoDownloadManager

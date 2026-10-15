@@ -96,6 +96,7 @@ class MainWindow(Adw.ApplicationWindow):
         menu.append_section(None, sec)
         sec = Gio.Menu()
         sec.append(_("Ayarlar"), "app.preferences")
+        sec.append(_("Güncellemeleri denetle"), "app.check-updates")
         sec.append(_("DoDownloadManager hakkında"), "app.about")
         menu.append_section(None, sec)
         sec = Gio.Menu()
