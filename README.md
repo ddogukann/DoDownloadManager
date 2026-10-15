@@ -210,7 +210,9 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 
 ## License
 
-[MIT](LICENSE). Free to use, modify and redistribute as long as the license notice is kept.
+Copyright (C) 2026 Doğukan
+
+[GNU General Public License v3.0 or later](LICENSE). You are free to use, study, modify and share DDM. If you distribute it or a modified version, you must keep the copyright notice, license it under the same GPL terms and make its source code available.
 
 Third-party components are not bundled:
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (Unlicense) is downloaded from its official releases at install/update time.

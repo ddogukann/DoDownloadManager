@@ -681,7 +681,7 @@ class DDMApp(Adw.Application):
                                 developer_name="Doğukan",
                                 comments=_("Çok bağlantılı indirme yöneticisi · Firefox eklentisi · yt-dlp ile video"),
                                 website="https://github.com/ddogukann/DoDownloadManager",
-                                license_type=Gtk.License.MIT_X11)
+                                license_type=Gtk.License.GPL_3_0)
         about.present(self.window)
 
     def _launch(self, path, folder=False):

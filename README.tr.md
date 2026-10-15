@@ -236,7 +236,9 @@ curl -H "X-DDM-Token: $(cat ~/.config/ddm/token)" \
 
 ## Lisans
 
-[MIT](LICENSE). Ücretsizdir; kullanabilir, değiştirebilir ve dağıtabilirsiniz, yeter ki lisans metni korunsun.
+Copyright (C) 2026 Doğukan
+
+[GNU Genel Kamu Lisansı v3.0 veya sonrası](LICENSE). DDM'yi ücretsiz kullanabilir, inceleyebilir, değiştirebilir ve paylaşabilirsiniz. DDM'yi ya da değiştirilmiş bir sürümünü dağıtırsanız telif bildirimini korumanız, aynı GPL koşullarıyla lisanslamanız ve kaynak kodunu da sunmanız gerekir.
 
 Üçüncü taraf bileşenler pakete dahil değildir:
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (Unlicense) kurulumda ve güncellemede resmi sürüm sayfasından indirilir.

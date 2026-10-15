@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.5.2
+- License changed from MIT to GPL-3.0-or-later.
+
 ## 1.5.1
 - **YouTube fix:** "Requested format is not available" errors. YouTube now requires a JavaScript runtime for yt-dlp; DDM installs and manages [deno](https://deno.com) (Settings ▸ Video ▸ JavaScript runtime, also done by `install.sh`). An existing deno ≥ 2.3 or Node ≥ 22 is used if present.
 - If a video fails with that error while browser cookies were sent, DDM retries once without cookies.
