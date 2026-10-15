@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="options">
+  <h1>DDM ayarları</h1>
+
+  <section>
+    <h2>Bağlantı</h2>
+    <div class="card">
+      <div class="field">
+        <span class="text"><span class="title">Uygulama portu</span><span class="sub">DDM ▸ Ayarlar ▸ Tarayıcı ile aynı olmalı</span></span>
+        <input type="number" id="port" min="1024" max="65535">
+      </div>
+      <div class="field">
+        <span id="status" class="sub">—</span>
+        <button id="test" class="small">Bağlantıyı dene</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>İndirmeler</h2>
+    <div class="card">
+      <label class="row switch">
+        <span class="text"><span class="title">Firefox indirmelerini yakala</span><span class="sub">Uzantı listesi uygulama ayarlarından gelir</span></span>
+        <input type="checkbox" id="capture"><span class="slider"></span>
+      </label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Medya taraması</h2>
+    <div class="card">
+      <label class="row switch">
+        <span class="text"><span class="title">Video üstünde “İndir” düğmesi</span></span>
+        <input type="checkbox" id="overlay"><span class="slider"></span>
+      </label>
+      <label class="row switch">
+        <span class="text"><span class="title">Tüm sitelerde tara</span><span class="sub">Kapalıyken yalnızca aşağıdaki sitelerde çalışır</span></span>
+        <input type="checkbox" id="allSites"><span class="slider"></span>
+      </label>
+    </div>
+    <h2 style="margin-top:14px">Tarama açık siteler</h2>
+    <ul id="sites" class="list sites"></ul>
+    <p id="no-sites" class="hint">Henüz site yok. Bir sitede araç çubuğundaki DDM düğmesinden açabilirsiniz.</p>
+  </section>
+
+  <script src="shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

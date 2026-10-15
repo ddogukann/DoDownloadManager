@@ -1,0 +1,67 @@
+{
+  "manifest_version": 2,
+  "name": "DoDownloadManager",
+  "short_name": "DDM",
+  "version": "1.0.2",
+  "description": "Firefox indirmelerini DDM'ye devreder, izin verilen sitelerde videoları bulur ve indirme seçeneği sunar.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ddm@dodownloadmanager.local",
+      "strict_min_version": "115.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "downloads",
+    "cookies",
+    "storage",
+    "contextMenus",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "shared.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "browser_action": {
+    "default_title": "DDM",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": false
+  }
+}

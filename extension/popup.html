@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body class="popup">
+  <header class="top">
+    <img src="icons/icon-32.png" alt="" width="22" height="22">
+    <div class="brand">
+      <strong>DDM</strong>
+      <span id="app-status" class="status"><i></i><span>kontrol ediliyor…</span></span>
+    </div>
+    <button id="open-options" class="icon" title="Ayarlar">
+      <svg viewBox="0 0 16 16"><path fill="currentColor" d="M6.6 1h2.8l.4 1.9 1.1.5 1.7-1 2 2-1 1.7.5 1.1 1.9.4v2.8l-1.9.4-.5 1.1 1 1.7-2 2-1.7-1-1.1.5-.4 1.9H6.6l-.4-1.9-1.1-.5-1.7 1-2-2 1-1.7-.5-1.1L0 9.4V6.6l1.9-.4.5-1.1-1-1.7 2-2 1.7 1 1.1-.5zM8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5"/></svg>
+    </button>
+  </header>
+
+  <div id="offline" class="notice" hidden>
+    DDM uygulaması çalışmıyor. Uygulamayı açın; tarayıcı indirmeleri o sırada Firefox'ta kalır.
+  </div>
+
+  <section class="card">
+    <label class="row switch">
+      <span class="text">
+        <span class="title">Bu sitede medya taraması</span>
+        <span id="host" class="sub"></span>
+      </span>
+      <input type="checkbox" id="site-toggle">
+      <span class="slider"></span>
+    </label>
+  </section>
+
+  <section id="page-video" class="card" hidden>
+    <button id="download-page" class="primary wide">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 3h2v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6zM5 19h14v2H5z"/></svg>
+      Sayfadaki videoyu indir
+    </button>
+    <p class="hint">yt-dlp ile; kaliteyi uygulamada seçersiniz.</p>
+  </section>
+
+  <section id="media-section" hidden>
+    <h2>Bulunan medya <span id="media-count" class="count"></span></h2>
+    <ul id="media" class="list"></ul>
+  </section>
+
+  <p id="scan-hint" class="hint center" hidden>Bu sitede tarama kapalı. Açarsanız sayfadaki videolar burada listelenir.</p>
+  <p id="empty-hint" class="hint center" hidden>Henüz medya bulunmadı. Videoyu oynatmayı deneyin.</p>
+
+  <section id="dl-section" hidden>
+    <h2>Son indirmeler</h2>
+    <ul id="downloads" class="list compact"></ul>
+  </section>
+
+  <footer>
+    <label class="row switch small">
+      <span class="text"><span class="title">Firefox indirmelerini yakala</span></span>
+      <input type="checkbox" id="capture-toggle">
+      <span class="slider"></span>
+    </label>
+  </footer>
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
