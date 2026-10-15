@@ -6,6 +6,9 @@ DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
 CONF="${XDG_CONFIG_HOME:-$HOME/.config}"
 PURGE=0
 [ "${1:-}" = "--purge" ] && PURGE=1
+TR=0
+case "${LANGUAGE:-${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}}" in tr*) TR=1 ;; esac
+T() { if [ "$TR" -eq 1 ]; then printf '%s' "$1"; else printf '%s' "$2"; fi; }
 
 "$HOME/.local/bin/ddm" --quit >/dev/null 2>&1 || true
 
@@ -17,7 +20,7 @@ rm -rf "$DATA/ddm/app" "$DATA/ddm/extension"
 
 if [ "$PURGE" -eq 1 ]; then
   rm -rf "$DATA/ddm" "$CONF/ddm"
-  echo "DDM ve tüm ayarları/geçmişi kaldırıldı. İndirilen dosyalara dokunulmadı."
+  echo "$(T "DDM ve tüm ayarları/geçmişi kaldırıldı. İndirilen dosyalara dokunulmadı." "DDM and all its settings/history were removed. Downloaded files were not touched.")"
 else
-  echo "DDM kaldırıldı. Ayarlar ve indirme geçmişi duruyor (silmek için: ./uninstall.sh --purge)."
+  echo "$(T "DDM kaldırıldı. Ayarlar ve indirme geçmişi duruyor (silmek için: ./uninstall.sh --purge)." "DDM was removed. Settings and download history were kept (to delete them: ./uninstall.sh --purge).")"
 fi

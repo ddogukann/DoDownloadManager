@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlsplit, urlunsplit
 
 import requests
 
+from .i18n import _
 from .util import unique_path
 from .virustotal import BUSY_STATES
 
@@ -103,7 +104,7 @@ def _safe_zip_extract(zf, dest):
     for info in zf.infolist():
         target = os.path.realpath(os.path.join(dest, info.filename))
         if not (target == root or target.startswith(root + os.sep)):
-            raise ValueError(f"Arşivde güvensiz yol: {info.filename}")
+            raise ValueError(_("Arşivde güvensiz yol: {name}").format(name=info.filename))
     zf.extractall(dest)
 
 
@@ -125,11 +126,11 @@ def extract_archive(path, stop=None):
         elif name.endswith(SEVENZ_SUFFIXES):
             exe = shutil.which("7z") or shutil.which("7zz") or shutil.which("7za")
             if not exe:
-                raise RuntimeError("7z kurulu değil (sudo apt install 7zip)")
+                raise RuntimeError(_("7z kurulu değil (sudo apt install 7zip)"))
             out = subprocess.run([exe, "x", "-y", f"-o{tmp}", str(path)], capture_output=True, text=True)
             if out.returncode != 0:
                 raise RuntimeError((out.stderr or out.stdout).strip().splitlines()[-1] if (out.stderr or out.stdout)
-                                   else f"7z çıkış kodu {out.returncode}")
+                                   else _("7z çıkış kodu {code}").format(code=out.returncode))
             if name.endswith((".tar.zst", ".tzst")):
                 inner = [p for p in tmp.iterdir() if p.suffix == ".tar"]
                 if len(inner) == 1:
@@ -137,7 +138,7 @@ def extract_archive(path, stop=None):
                         tf.extractall(tmp, filter="data")
                     inner[0].unlink()
         else:
-            raise RuntimeError("Desteklenmeyen arşiv türü")
+            raise RuntimeError(_("Desteklenmeyen arşiv türü"))
         entries = list(tmp.iterdir())
         if len(entries) == 1 and entries[0].is_dir():
             dest = unique_path(parent, entries[0].name)
@@ -212,7 +213,7 @@ class PostProcessor:
         vt = rec.get("vt") or {}
         if vt.get("verdict") == "malicious" or vt.get("mismatch"):
             self.manager.set_post(did, {"action": "skipped",
-                                        "reason": "Dosya güvenli görünmediği için otomatik işlem yapılmadı"})
+                                        "reason": _("Dosya güvenli görünmediği için otomatik işlem yapılmadı")})
             return
         path = rec.get("path")
         if rule.get("extract") and path and is_archive(path) and os.path.exists(path):
@@ -230,7 +231,7 @@ class PostProcessor:
                 if rule.get("open"):
                     self.manager.emit_simple("post_open_path", did, dest)
             except Exception as e:
-                self.manager.set_post(did, {"action": "error", "reason": f"Arşiv açılamadı: {e}"})
+                self.manager.set_post(did, {"action": "error", "reason": _("Arşiv açılamadı: {error}").format(error=e)})
             return
         if rule.get("open") and path and os.path.exists(path):
             self.manager.set_post(did, {"action": "opened", "rule": rule.get("name")})

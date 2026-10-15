@@ -19,7 +19,7 @@ async function render() {
     name.textContent = k;
     const btn = document.createElement("button");
     btn.className = "small";
-    btn.textContent = "Kaldır";
+    btn.textContent = t("remove");
     btn.addEventListener("click", async () => {
       const cur = await getSettings();
       const sites = Object.assign({}, cur.sites);
@@ -33,9 +33,11 @@ async function render() {
 }
 
 async function test() {
-  $("status").textContent = "Deneniyor…";
+  $("status").textContent = t("testing");
   const info = await browser.runtime.sendMessage({ type: "ping" });
-  $("status").textContent = info ? `Bağlı · ${info.app} ${info.version}${info.ytdlp ? " · yt-dlp hazır" : " · yt-dlp yok"}` : "Uygulamaya ulaşılamadı";
+  $("status").textContent = info
+    ? `${t("connectedTo", [info.app, info.version])} · ${info.ytdlp ? t("ytdlpReady") : t("ytdlpMissing")}`
+    : t("cannotReachApp");
 }
 
 $("port").addEventListener("change", async e => {
@@ -50,5 +52,6 @@ $("overlay").addEventListener("change", e => browser.storage.local.set({ overlay
 $("allSites").addEventListener("change", e => browser.storage.local.set({ allSites: e.target.checked }));
 $("test").addEventListener("click", test);
 
+applyI18n();
 render();
 test();

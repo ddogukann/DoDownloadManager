@@ -2,6 +2,7 @@ import os
 
 from gi.repository import Adw, Gio, GLib, Gtk, Pango
 
+from ..i18n import _
 from ..util import human_eta, human_size, human_speed
 from .items import vt_display
 from .widgets import SpeedGraph, chip, set_chip, stat_tile
@@ -17,7 +18,7 @@ class CompleteWindow(Adw.Window):
         self.stats = stats or {}
         self.set_default_size(440, -1)
         self.set_resizable(False)
-        self.set_title("İndirme tamamlandı")
+        self.set_title(_("İndirme tamamlandı"))
 
         tv = Adw.ToolbarView()
         header = Adw.HeaderBar(show_title=False)
@@ -31,7 +32,7 @@ class CompleteWindow(Adw.Window):
         badge = Gtk.Image(icon_name="object-select-symbolic", pixel_size=30, halign=Gtk.Align.CENTER)
         badge.add_css_class("ddm-done-badge")
         box.append(badge)
-        title = Gtk.Label(label="İndirme tamamlandı")
+        title = Gtk.Label(label=_("İndirme tamamlandı"))
         title.add_css_class("title-2")
         box.append(title)
         self.name = Gtk.Label(wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR, justify=Gtk.Justification.CENTER,
@@ -44,11 +45,11 @@ class CompleteWindow(Adw.Window):
         box.append(self.folder)
 
         grid = Gtk.Grid(column_spacing=8, row_spacing=8, column_homogeneous=True, margin_top=4)
-        t1, self.v_size = stat_tile("Boyut")
-        t2, self.v_time = stat_tile("Süre")
+        t1, self.v_size = stat_tile(_("Boyut"))
+        t2, self.v_time = stat_tile(_("Süre"))
         self.cap_time = t2.get_last_child()
-        t3, self.v_avg = stat_tile("Ortalama hız")
-        t4, self.v_peak = stat_tile("En yüksek hız")
+        t3, self.v_avg = stat_tile(_("Ortalama hız"))
+        t4, self.v_peak = stat_tile(_("En yüksek hız"))
         grid.attach(t1, 0, 0, 1, 1)
         grid.attach(t2, 1, 0, 1, 1)
         grid.attach(t3, 0, 1, 1, 1)
@@ -69,10 +70,10 @@ class CompleteWindow(Adw.Window):
         box.append(chips)
 
         buttons = Gtk.Box(spacing=8, homogeneous=True, margin_top=4)
-        folder_btn = Gtk.Button(label="Klasörü aç")
+        folder_btn = Gtk.Button(label=_("Klasörü aç"))
         folder_btn.add_css_class("pill")
         folder_btn.connect("clicked", self._open_folder)
-        open_btn = Gtk.Button(label="Dosyayı aç")
+        open_btn = Gtk.Button(label=_("Dosyayı aç"))
         self.open_btn = open_btn
         self.folder_btn = folder_btn
         open_btn.add_css_class("pill")
@@ -83,11 +84,11 @@ class CompleteWindow(Adw.Window):
         box.append(buttons)
 
         foot = Gtk.Box(spacing=6)
-        self.never = Gtk.CheckButton(label="Bir daha gösterme", hexpand=True)
+        self.never = Gtk.CheckButton(label=_("Bir daha gösterme"), hexpand=True)
         self.never.add_css_class("caption")
         self.never.connect("toggled", lambda b: app.settings.set("finish_popup", not b.get_active()))
         foot.append(self.never)
-        details = Gtk.Button(label="Ayrıntılar")
+        details = Gtk.Button(label=_("Ayrıntılar"))
         details.add_css_class("flat")
         details.add_css_class("caption")
         details.connect("clicked", self._details)
@@ -99,14 +100,14 @@ class CompleteWindow(Adw.Window):
         self._timer = GLib.timeout_add(1000, self._refresh)
         self.connect("close-request", self._on_close)
 
-    def _on_close(self, *_):
+    def _on_close(self, *_a):
         if self._timer:
             GLib.source_remove(self._timer)
             self._timer = None
         self.app.complete_windows.pop(self.did, None)
         return False
 
-    def _open_folder(self, *_):
+    def _open_folder(self, *_a):
         rec = self.app.manager.get(self.did) or {}
         dest = (rec.get("post") or {}).get("dest")
         if dest and os.path.isdir(dest):
@@ -115,7 +116,7 @@ class CompleteWindow(Adw.Window):
             self.app.open_folder(self.did)
         self.close()
 
-    def _open_file(self, *_):
+    def _open_file(self, *_a):
         rec = self.app.manager.get(self.did) or {}
         post = rec.get("post") or {}
         if post.get("action") == "extracted" and post.get("dest") and os.path.isdir(post["dest"]):
@@ -124,7 +125,7 @@ class CompleteWindow(Adw.Window):
             self.app.open_file(self.did)
         self.close()
 
-    def _details(self, *_):
+    def _details(self, *_a):
         self.app.show_details(self.did)
         self.close()
 
@@ -148,9 +149,9 @@ class CompleteWindow(Adw.Window):
         self.graph.set_visible(len(hist) >= 4)
         conns = self.stats.get("max_conns") or 0
         if conns > 1 and rec["kind"] != "video":
-            self.cap_time.set_label(f"Süre · {conns} bağlantı")
+            self.cap_time.set_label(_("Süre · {n} bağlantı").format(n=conns))
         elif rec["kind"] == "video":
-            self.cap_time.set_label("Süre · yt-dlp")
+            self.cap_time.set_label(_("Süre · yt-dlp"))
         self._fill_vt(rec)
 
     def _fill_vt(self, rec):
@@ -167,22 +168,22 @@ class CompleteWindow(Adw.Window):
         if ck == "ok":
             set_chip(self.chip_check, f"{name} ✓", "success")
         elif ck == "bad":
-            set_chip(self.chip_check, f"{name} ✕ uyuşmuyor", "error")
+            set_chip(self.chip_check, _("{name} ✕ uyuşmuyor").format(name=name), "error")
         elif ck == "searching":
-            set_chip(self.chip_check, "checksum aranıyor…", "dim")
+            set_chip(self.chip_check, _("checksum aranıyor…"), "dim")
         else:
             set_chip(self.chip_check, "", None)
         self.chip_check.set_tooltip_text(vt.get("checksum_src") or None)
         act = post.get("action")
         if act == "extracted":
-            self.open_btn.set_label("Açılan klasörü aç")
-            self.folder_btn.set_label("Konumu göster")
-            set_chip(self.chip_post, "arşiv açıldı" + (" · arşiv silindi" if post.get("archive_deleted") else ""), "accent")
+            self.open_btn.set_label(_("Açılan klasörü aç"))
+            self.folder_btn.set_label(_("Konumu göster"))
+            set_chip(self.chip_post, _("arşiv açıldı") + (" · " + _("arşiv silindi") if post.get("archive_deleted") else ""), "accent")
             self.chip_post.set_tooltip_text(post.get("dest"))
         elif act == "extracting":
-            set_chip(self.chip_post, "arşiv açılıyor…", "dim")
+            set_chip(self.chip_post, _("arşiv açılıyor…"), "dim")
         elif act in ("skipped", "error"):
-            set_chip(self.chip_post, "otomatik işlem yapılmadı", "warning")
+            set_chip(self.chip_post, _("otomatik işlem yapılmadı"), "warning")
             self.chip_post.set_tooltip_text(post.get("reason"))
         else:
             set_chip(self.chip_post, "", None)

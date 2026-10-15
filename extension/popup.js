@@ -24,8 +24,8 @@ function setStatus(app) {
   s.classList.toggle("ok", !!app);
   s.classList.toggle("bad", !app);
   s.querySelector("span").textContent = app
-    ? `Bağlı · v${app.version}${app.active ? ` · ${app.active} etkin` : ""}`
-    : "Uygulama çalışmıyor";
+    ? t("connectedVersion", [app.version]) + (app.active ? ` · ${t("activeCount", [String(app.active)])}` : "")
+    : t("appNotRunning");
   $("offline").hidden = !!app;
 }
 
@@ -33,11 +33,11 @@ async function send(payload, btn) {
   const original = btn ? Array.from(btn.childNodes, n => n.cloneNode(true)) : null;
   if (btn) {
     btn.disabled = true;
-    btn.textContent = "Gönderiliyor…";
+    btn.textContent = t("sending");
   }
   const res = await browser.runtime.sendMessage({ type: "popup-download", tabId, payload });
   if (btn) {
-    btn.textContent = res && res.ok ? "Gönderildi ✓" : "Hata";
+    btn.textContent = res && res.ok ? t("sent") : t("error");
     btn.classList.toggle("done", !!(res && res.ok));
     setTimeout(() => {
       btn.replaceChildren(...original);
@@ -65,7 +65,7 @@ function renderMedia() {
     const meta = el("span", "meta", [it.size ? humanSize(it.size) : "", hostOf(it.url)].filter(Boolean).join(" · "));
     info.append(name, meta);
     const btn = el("button", "small");
-    btn.textContent = "İndir";
+    btn.textContent = t("download");
     btn.addEventListener("click", () => send({
       url: it.url, kind: it.kind, referer: it.pageUrl || state.url, pageUrl: it.pageUrl || state.url
     }, btn));
@@ -76,17 +76,17 @@ function renderMedia() {
 
 function render() {
   setStatus(state.app);
-  $("host").textContent = state.host || "bu sayfa";
+  $("host").textContent = state.host || t("thisPage");
   const toggle = $("site-toggle");
   toggle.checked = state.enabled;
   toggle.disabled = !state.host || state.allSites;
-  if (state.allSites) $("host").textContent = `${state.host} · tüm sitelerde açık`;
+  if (state.allSites) $("host").textContent = t("onAllSites", [state.host]);
   $("capture-toggle").checked = state.capture;
   $("page-video").hidden = !(state.host && (state.videoSite || (state.enabled && (state.items || []).some(i => i.kind === "video"))));
   renderMedia();
 }
 
-const STATUS = { queued: "Sırada", running: "İndiriliyor", paused: "Duraklatıldı", done: "Tamamlandı", error: "Hata" };
+const STATUS = { queued: t("statusQueued"), running: t("statusRunning"), paused: t("statusPaused"), done: t("statusDone"), error: t("statusError") };
 
 async function refreshDownloads() {
   const list = await browser.runtime.sendMessage({ type: "popup-downloads" });
@@ -109,10 +109,10 @@ async function refreshDownloads() {
     info.append(bar);
     const bits = [STATUS[d.status] || d.status];
     if (d.status === "running" && d.speed) bits.push(`${humanSize(Math.round(d.speed))}/s`);
-    if (d.total) bits.push(d.status === "done" ? humanSize(d.total) : `%${pct}`);
+    if (d.total) bits.push(d.status === "done" ? humanSize(d.total) : pctText(pct));
     if (d.status === "error" && d.error) bits.push(d.error);
     const vt = d.vt || {};
-    if (vt.mismatch) bits.push("≠ hash uyuşmuyor");
+    if (vt.mismatch) bits.push(t("hashMismatch"));
     else if (vt.verdict === "clean") bits.push(`VT ✓ 0/${vt.total}`);
     else if (vt.verdict === "suspicious") bits.push(`VT ⚠ ${vt.malicious}/${vt.total}`);
     else if (vt.verdict === "malicious") bits.push(`VT ✕ ${vt.malicious}/${vt.total}`);
@@ -121,7 +121,7 @@ async function refreshDownloads() {
     if (d.status === "running" || d.status === "queued" || d.status === "paused" || d.status === "error") {
       const action = d.status === "running" || d.status === "queued" ? "pause" : "resume";
       const b = el("button", "icon small", action === "pause" ? "❚❚" : "▶");
-      b.title = action === "pause" ? "Duraklat" : "Devam et";
+      b.title = action === "pause" ? t("pause") : t("resume");
       b.addEventListener("click", async () => {
         await browser.runtime.sendMessage({ type: "popup-action", id: d.id, action });
         refreshDownloads();
@@ -131,6 +131,8 @@ async function refreshDownloads() {
     ul.append(li);
   }
 }
+
+applyI18n();
 
 async function load() {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });

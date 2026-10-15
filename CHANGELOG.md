@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 — extension 1.0.3
+- **English interface.** The app is now available in English and Turkish. It follows the system language by default; switch it in Settings ▸ General ▸ Language (the app restarts and downloads resume).
+- Number, size and time formats follow the language (`37% · 23.0 MB · 20 s` / `%37 · 23,0 MB · 20 sn`). GTK's own dialogs follow it too.
+- The Firefox extension follows Firefox's language (English or Turkish). Re-sign it: new version 1.0.3.
+- Install, uninstall and signing scripts print messages in English or Turkish depending on the terminal language.
+- `scripts/i18n.py` to find untranslated strings and add new ones to `ddm/locale/*.po`.
+
 ## 1.4.0 — extension 1.0.2
 - **Multiple adapters:** spread connections of large files across several internet links (`SO_BINDTODEVICE`), with automatic failover and stall detection.
 - **Firefox:** downloads are captured as soon as response headers arrive (`webRequest`), so small files are no longer missed. Needs the new `webRequestBlocking` permission; re-sign the extension.

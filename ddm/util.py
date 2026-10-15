@@ -3,27 +3,29 @@ import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+from .i18n import _, decimal
+
 CATEGORIES = [
-    ("all", "Tümü", "folder-download-symbolic"),
-    ("active", "Devam eden", "media-playback-start-symbolic"),
-    ("done", "Tamamlanan", "object-select-symbolic"),
-    ("video", "Video", "video-x-generic-symbolic"),
-    ("audio", "Müzik", "audio-x-generic-symbolic"),
-    ("archive", "Arşiv", "package-x-generic-symbolic"),
-    ("document", "Belge", "x-office-document-symbolic"),
-    ("program", "Program", "application-x-executable-symbolic"),
-    ("image", "Resim", "image-x-generic-symbolic"),
-    ("other", "Diğer", "text-x-generic-symbolic"),
+    ("all", _("Tümü"), "folder-download-symbolic"),
+    ("active", _("Devam eden"), "media-playback-start-symbolic"),
+    ("done", _("Tamamlanan"), "object-select-symbolic"),
+    ("video", _("Video"), "video-x-generic-symbolic"),
+    ("audio", _("Müzik"), "audio-x-generic-symbolic"),
+    ("archive", _("Arşiv"), "package-x-generic-symbolic"),
+    ("document", _("Belge"), "x-office-document-symbolic"),
+    ("program", _("Program"), "application-x-executable-symbolic"),
+    ("image", _("Resim"), "image-x-generic-symbolic"),
+    ("other", _("Diğer"), "text-x-generic-symbolic"),
 ]
 
 CATEGORY_FOLDERS = {
-    "video": "Video",
-    "audio": "Müzik",
-    "archive": "Arşiv",
-    "document": "Belge",
-    "program": "Program",
-    "image": "Resim",
-    "other": "Diğer",
+    "video": _("Video"),
+    "audio": _("Müzik"),
+    "archive": _("Arşiv"),
+    "document": _("Belge"),
+    "program": _("Program"),
+    "image": _("Resim"),
+    "other": _("Diğer"),
 }
 
 _EXT_MAP = {
@@ -46,7 +48,8 @@ def category_for(name):
     return "other"
 
 
-def sanitize_filename(name, fallback="indirme"):
+def sanitize_filename(name, fallback=None):
+    fallback = fallback or _("indirme")
     name = _INVALID.sub("_", (name or "").strip()).strip(". ")
     if not name:
         name = fallback
@@ -111,7 +114,7 @@ def human_size(n):
     f = float(n)
     for u in units:
         if f < 1024 or u == units[-1]:
-            return f"{f:.0f} {u}" if u == "B" else f"{f:.1f} {u}".replace(".", ",")
+            return f"{f:.0f} {u}" if u == "B" else decimal(f"{f:.1f} {u}")
         f /= 1024
     return str(n)
 
@@ -129,10 +132,10 @@ def human_eta(seconds):
     h, rem = divmod(seconds, 3600)
     m, s = divmod(rem, 60)
     if h:
-        return f"{h} sa {m:02d} dk"
+        return _("{h} sa {m:02d} dk").format(h=h, m=m)
     if m:
-        return f"{m} dk {s:02d} sn"
-    return f"{s} sn"
+        return _("{m} dk {s:02d} sn").format(m=m, s=s)
+    return _("{s} sn").format(s=s)
 
 
 VIDEO_SITE_HINTS = (

@@ -12,6 +12,7 @@ import requests
 
 from .config import BIN_DIR, TEMP_DIR
 from .engine import SpeedMeter
+from .i18n import _
 
 YTDLP_RELEASE = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
 
@@ -94,7 +95,7 @@ def _common_args(headers, cookie_file):
 def probe_formats(url, settings, headers=None, cookies=None, timeout=90):
     exe = ytdlp_binary(settings)
     if not exe:
-        raise RuntimeError("yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin.")
+        raise RuntimeError(_("yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin."))
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
     cookie_file = None
     if cookies:
@@ -170,7 +171,7 @@ class VideoDownloader:
                 os.killpg(p.pid, signal.SIGINT)
             except OSError:
                 pass
-            for _ in range(50):
+            for _try in range(50):
                 if p.poll() is not None:
                     return
                 time.sleep(0.1)
@@ -249,7 +250,7 @@ class VideoDownloader:
     def run(self):
         exe = ytdlp_binary(self.settings)
         if not exe:
-            return "error", "yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin."
+            return "error", _("yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin.")
         self.tmpdir.mkdir(parents=True, exist_ok=True)
         cookie_file = None
         cookies = (self.record.get("options") or {}).get("cookies")
@@ -263,7 +264,7 @@ class VideoDownloader:
                                          stderr=subprocess.STDOUT, text=True, bufsize=1,
                                          start_new_session=True, errors="replace")
         except OSError as e:
-            return "error", f"yt-dlp başlatılamadı: {e}"
+            return "error", _("yt-dlp başlatılamadı: {error}").format(error=e)
         for raw in self.proc.stdout:
             line = raw.rstrip("\n")
             if line.startswith("ERROR:"):
@@ -283,9 +284,9 @@ class VideoDownloader:
         if code == 0:
             self.cleanup()
             return "done", None
-        msg = errors[-1] if errors else f"yt-dlp çıkış kodu {code}"
+        msg = errors[-1] if errors else _("yt-dlp çıkış kodu {code}").format(code=code)
         if "DRM" in msg:
-            msg = "Bu içerik DRM korumalı, indirilemez"
+            msg = _("Bu içerik DRM korumalı, indirilemez")
         return "error", msg
 
 

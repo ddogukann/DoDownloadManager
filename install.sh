@@ -10,13 +10,16 @@ BINDIR="$DATA/ddm/bin"
 LAUNCHER="$HOME/.local/bin/ddm"
 SKIP_YTDLP=0
 SKIP_APT=0
+TR=0
+case "${LANGUAGE:-${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}}" in tr*) TR=1 ;; esac
+T() { if [ "$TR" -eq 1 ]; then printf '%s' "$1"; else printf '%s' "$2"; fi; }
 
 for arg in "$@"; do
   case "$arg" in
     --no-ytdlp) SKIP_YTDLP=1 ;;
     --no-apt) SKIP_APT=1 ;;
     -h|--help)
-      echo "Kullanım: ./install.sh [--no-apt] [--no-ytdlp]"
+      echo "$(T "Kullanım" "Usage"): ./install.sh [--no-apt] [--no-ytdlp]"
       exit 0 ;;
   esac
 done
@@ -31,7 +34,7 @@ if [ "$SKIP_APT" -eq 0 ]; then
     dpkg -s "$p" >/dev/null 2>&1 || MISSING+=("$p")
   done
   if [ "${#MISSING[@]}" -gt 0 ]; then
-    say "Eksik paketler kuruluyor: ${MISSING[*]}"
+    say "$(T "Eksik paketler kuruluyor" "Installing missing packages"): ${MISSING[*]}"
     sudo apt-get update -q
     sudo apt-get install -y "${MISSING[@]}"
   fi
@@ -44,7 +47,7 @@ for cand in /usr/bin/python3 /usr/bin/python3.13 /usr/bin/python3.12 /usr/bin/py
     break
   fi
 done
-[ -n "$PY" ] || { echo "python3-gi bulunamadı. sudo apt install python3-gi"; exit 1; }
+[ -n "$PY" ] || { echo "$(T "python3-gi bulunamadı" "python3-gi not found"). sudo apt install python3-gi"; exit 1; }
 
 "$PY" - <<'PY'
 import sys
@@ -53,10 +56,10 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gtk
 if (Gtk.get_major_version(), Gtk.get_minor_version()) < (4, 12) or Adw.get_minor_version() < 5:
-    sys.exit("GTK 4.12+ ve libadwaita 1.5+ gerekli (Ubuntu 24.04 veya üstü).")
+    sys.exit("GTK 4.12+ / libadwaita 1.5+ (Ubuntu 24.04+)")
 PY
 
-say "Uygulama kopyalanıyor → $APPDIR"
+say "$(T "Uygulama kopyalanıyor" "Copying the app") → $APPDIR"
 rm -rf "$APPDIR"
 mkdir -p "$APPDIR" "$HOME/.local/bin" "$BINDIR"
 cp -r "$SRC/ddm" "$APPDIR/"
@@ -69,7 +72,7 @@ exec $PY -m ddm "\$@"
 EOF
 chmod +x "$LAUNCHER"
 
-say "Masaüstü girdisi ve simge kuruluyor"
+say "$(T "Masaüstü girdisi ve simge kuruluyor" "Installing desktop entry and icons")"
 install -Dm644 "$SRC/data/$APP_ID.svg" "$DATA/icons/hicolor/scalable/apps/$APP_ID.svg"
 install -Dm644 "$SRC/data/$APP_ID-symbolic.svg" "$DATA/icons/hicolor/symbolic/apps/$APP_ID-symbolic.svg"
 install -Dm644 "$SRC/extension/icons/icon-128.png" "$DATA/icons/hicolor/128x128/apps/$APP_ID.png"
@@ -80,21 +83,21 @@ command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -q -t "$DAT
 
 if [ "$SKIP_YTDLP" -eq 0 ]; then
   if [ -x "$BINDIR/yt-dlp" ]; then
-    say "yt-dlp güncelleniyor"
-    "$BINDIR/yt-dlp" -U >/dev/null 2>&1 || warn "yt-dlp güncellenemedi (uygulama içinden tekrar deneyebilirsiniz)"
+    say "$(T "yt-dlp güncelleniyor" "Updating yt-dlp")"
+    "$BINDIR/yt-dlp" -U >/dev/null 2>&1 || warn "$(T "yt-dlp güncellenemedi (uygulama içinden tekrar deneyebilirsiniz)" "Could not update yt-dlp (you can retry from the app)")"
   else
-    say "yt-dlp indiriliyor"
+    say "$(T "yt-dlp indiriliyor" "Downloading yt-dlp")"
     if curl -fsSL -o "$BINDIR/yt-dlp.tmp" https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp; then
       chmod +x "$BINDIR/yt-dlp.tmp"
       mv "$BINDIR/yt-dlp.tmp" "$BINDIR/yt-dlp"
     else
       rm -f "$BINDIR/yt-dlp.tmp"
-      warn "yt-dlp indirilemedi. Ayarlar ▸ Video ▸ İndir düğmesiyle sonra kurabilirsiniz."
+      warn "$(T "yt-dlp indirilemedi. Ayarlar ▸ Video ▸ İndir düğmesiyle sonra kurabilirsiniz." "Could not download yt-dlp. You can install it later in Settings ▸ Video.")"
     fi
   fi
 fi
 
-say "Firefox eklentisi paketleniyor → $EXTDIR"
+say "$(T "Firefox eklentisi paketleniyor" "Packaging the Firefox extension") → $EXTDIR"
 rm -rf "$EXTDIR"
 mkdir -p "$EXTDIR"
 cp -r "$SRC/extension" "$EXTDIR/unpacked"
@@ -112,15 +115,27 @@ PY
 
 case ":$PATH:" in
   *":$HOME/.local/bin:"*) ;;
-  *) warn "~/.local/bin PATH içinde değil; yeni bir oturum açın ya da PATH'e ekleyin." ;;
+  *) warn "$(T "~/.local/bin PATH içinde değil; yeni bir oturum açın ya da PATH'e ekleyin." "~/.local/bin is not in PATH; log in again or add it to PATH.")" ;;
 esac
 
+if [ "$TR" -eq 1 ]; then
 cat <<EOF
 
 $(printf '\033[1;32m')Kurulum tamamlandı.$(printf '\033[0m')
 
   Uygulama:   Etkinlikler ▸ "DoDownloadManager"   ya da   ddm
   Eklenti:    $EXTDIR/ddm-firefox.xpi
-              (kurulum seçenekleri için README.md ▸ "Firefox eklentisi")
+              (kurulum seçenekleri için README.tr.md ▸ "Firefox eklentisi")
 
 EOF
+else
+cat <<EOF
+
+$(printf '\033[1;32m')Installation complete.$(printf '\033[0m')
+
+  App:        Activities ▸ "DoDownloadManager"   or   ddm
+  Extension:  $EXTDIR/ddm-firefox.xpi
+              (see README.md ▸ "Firefox extension" for install options)
+
+EOF
+fi

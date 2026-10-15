@@ -6,6 +6,7 @@ from gi.repository import Adw, Gio, GLib, Gtk
 
 from ..bridge import valid_url
 from ..engine import probe
+from ..i18n import _, pct
 from ..util import category_for, human_size, is_stream_manifest, looks_like_video_page
 from ..video import probe_formats, ytdlp_binary
 
@@ -22,23 +23,23 @@ class AddDialog(Adw.Dialog):
         self._probe_source = None
         self._probe_token = 0
         self._video_choices = []
-        self.set_title("İndirme ekle")
+        self.set_title(_("İndirme ekle"))
         self.set_content_width(580)
 
         toolbar = Adw.ToolbarView()
         header = Adw.HeaderBar()
         header.set_show_end_title_buttons(False)
         header.set_show_start_title_buttons(False)
-        cancel = Gtk.Button(label="Vazgeç")
-        cancel.connect("clicked", lambda *_: self.close())
+        cancel = Gtk.Button(label=_("Vazgeç"))
+        cancel.connect("clicked", lambda *_a: self.close())
         header.pack_start(cancel)
-        self.start_btn = Gtk.Button(label="İndir")
+        self.start_btn = Gtk.Button(label=_("İndir"))
         self.start_btn.add_css_class("suggested-action")
-        self.start_btn.connect("clicked", lambda *_: self._submit(True))
+        self.start_btn.connect("clicked", lambda *_a: self._submit(True))
         header.pack_end(self.start_btn)
-        later = Gtk.Button(label="Sonra")
-        later.set_tooltip_text("Duraklatılmış olarak listeye ekle")
-        later.connect("clicked", lambda *_: self._submit(False))
+        later = Gtk.Button(label=_("Sonra"))
+        later.set_tooltip_text(_("Duraklatılmış olarak listeye ekle"))
+        later.connect("clicked", lambda *_a: self._submit(False))
         header.pack_end(later)
         toolbar.add_top_bar(header)
 
@@ -48,39 +49,39 @@ class AddDialog(Adw.Dialog):
 
         main = Adw.PreferencesGroup()
         page.add(main)
-        self.url_row = Adw.EntryRow(title="Adres")
+        self.url_row = Adw.EntryRow(title=_("Adres"))
         self.url_row.set_text(self.request.get("url") or "")
         self.url_row.connect("changed", self._on_url_changed)
-        self.url_row.connect("entry-activated", lambda *_: self._submit(True))
+        self.url_row.connect("entry-activated", lambda *_a: self._submit(True))
         main.add(self.url_row)
 
-        self.name_row = Adw.EntryRow(title="Dosya adı")
+        self.name_row = Adw.EntryRow(title=_("Dosya adı"))
         if self.request.get("filename"):
             self.name_row.set_text(self.request["filename"])
         main.add(self.name_row)
 
-        self.dir_row = Adw.ActionRow(title="Klasör")
+        self.dir_row = Adw.ActionRow(title=_("Klasör"))
         self.dir_row.set_subtitle_selectable(True)
         choose = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER)
         choose.add_css_class("flat")
-        choose.set_tooltip_text("Klasör seç")
+        choose.set_tooltip_text(_("Klasör seç"))
         choose.connect("clicked", self._choose_dir)
         self.dir_row.add_suffix(choose)
         main.add(self.dir_row)
 
-        self.info_row = Adw.ActionRow(title="Bilgi", subtitle="—")
+        self.info_row = Adw.ActionRow(title=_("Bilgi"), subtitle="—")
         self.spinner = Gtk.Spinner()
         self.info_row.add_suffix(self.spinner)
         main.add(self.info_row)
 
-        self.dup_row = Adw.ActionRow(title="Bu link listede zaten var")
+        self.dup_row = Adw.ActionRow(title=_("Bu link listede zaten var"))
         self.dup_row.add_prefix(Gtk.Image(icon_name="dialog-warning-symbolic"))
         self.dup_row.set_visible(False)
         main.add(self.dup_row)
 
-        self.resume_row = Adw.ActionRow(title="Yarım kalan indirmeyle eşleşiyor")
+        self.resume_row = Adw.ActionRow(title=_("Yarım kalan indirmeyle eşleşiyor"))
         self.resume_row.add_prefix(Gtk.Image(icon_name="emblem-synchronizing-symbolic"))
-        resume_btn = Gtk.Button(label="Kaldığı yerden sürdür", valign=Gtk.Align.CENTER)
+        resume_btn = Gtk.Button(label=_("Kaldığı yerden sürdür"), valign=Gtk.Align.CENTER)
         resume_btn.add_css_class("suggested-action")
         resume_btn.connect("clicked", self._resume_candidate)
         self.resume_row.add_suffix(resume_btn)
@@ -88,39 +89,40 @@ class AddDialog(Adw.Dialog):
         self._candidate = None
         main.add(self.resume_row)
 
-        opts = Adw.PreferencesGroup(title="Seçenekler")
+        opts = Adw.PreferencesGroup(title=_("Seçenekler"))
         page.add(opts)
-        self.video_row = Adw.SwitchRow(title="Video olarak indir",
-                                       subtitle="Sayfadaki videoyu yt-dlp ile indirir (YouTube, HLS, DASH…)")
+        self.video_row = Adw.SwitchRow(title=_("Video olarak indir"),
+                                       subtitle=_("Sayfadaki videoyu yt-dlp ile indirir (YouTube, HLS, DASH…)"))
         self.video_row.connect("notify::active", self._on_video_toggled)
         opts.add(self.video_row)
 
         self.sched_row = Adw.SwitchRow(
-            title="Zamanlanmış saatte indir",
-            subtitle=f"{self.settings.get('sched_start')}–{self.settings.get('sched_end')} arası · Ayarlar ▸ Güç ve zamanlama")
+            title=_("Zamanlanmış saatte indir"),
+            subtitle=_("{start}–{end} arası · Ayarlar ▸ Güç ve zamanlama").format(
+                start=self.settings.get("sched_start"), end=self.settings.get("sched_end")))
         opts.add(self.sched_row)
 
         self.conn_row = Adw.SpinRow.new_with_range(1, 16, 1)
-        self.conn_row.set_title("Bağlantı sayısı")
+        self.conn_row.set_title(_("Bağlantı sayısı"))
         self.conn_row.set_value(int(self.settings.get("connections") or 8))
         opts.add(self.conn_row)
 
-        self.video_group = Adw.PreferencesGroup(title="Video")
+        self.video_group = Adw.PreferencesGroup(title=_("Video"))
         page.add(self.video_group)
         self.quality_model = Gtk.StringList()
-        self.quality_row = Adw.ComboRow(title="Kalite", model=self.quality_model)
+        self.quality_row = Adw.ComboRow(title=_("Kalite"), model=self.quality_model)
         self.video_group.add(self.quality_row)
-        self.container_row = Adw.ComboRow(title="Kapsayıcı", model=Gtk.StringList.new(["MP4", "MKV"]))
+        self.container_row = Adw.ComboRow(title=_("Kapsayıcı"), model=Gtk.StringList.new(["MP4", "MKV"]))
         self.container_row.set_selected(0 if (self.settings.get("video_container") or "mp4") == "mp4" else 1)
         self.video_group.add(self.container_row)
-        self.own_folder_row = Adw.SwitchRow(title="Kendi klasörüne indir", subtitle="Video Adı/Video Adı.mp4")
+        self.own_folder_row = Adw.SwitchRow(title=_("Kendi klasörüne indir"), subtitle=_("Video Adı/Video Adı.mp4"))
         self.own_folder_row.set_active(bool(self.settings.get("video_own_folder")))
         self.video_group.add(self.own_folder_row)
         self.quality_row.connect("notify::selected", self._on_quality_changed)
         self._fill_default_qualities()
 
-        self.ytdlp_warn = Adw.ActionRow(title="yt-dlp kurulu değil",
-                                        subtitle="Ayarlar ▸ Video bölümünden tek tıkla indirebilirsiniz")
+        self.ytdlp_warn = Adw.ActionRow(title=_("yt-dlp kurulu değil"),
+                                        subtitle=_("Ayarlar ▸ Video bölümünden tek tıkla indirebilirsiniz"))
         self.ytdlp_warn.add_prefix(Gtk.Image(icon_name="dialog-warning-symbolic"))
         self.video_group.add(self.ytdlp_warn)
 
@@ -151,12 +153,12 @@ class AddDialog(Adw.Dialog):
         clip.read_text_async(None, done)
 
     def _fill_default_qualities(self, heights=None, has_audio=True):
-        self._video_choices = [{"height": 0, "label": "En iyi"}]
+        self._video_choices = [{"height": 0, "label": _("En iyi")}]
         for h in heights or HEIGHTS:
             self._video_choices.append({"height": h, "label": f"{h}p"})
         if has_audio:
-            self._video_choices.append({"audio_only": True, "label": "Yalnız ses (MP3)"})
-            self._video_choices.append({"audio_only": True, "audio_format": "m4a", "label": "Yalnız ses (M4A)"})
+            self._video_choices.append({"audio_only": True, "label": _("Yalnız ses (MP3)")})
+            self._video_choices.append({"audio_only": True, "audio_format": "m4a", "label": _("Yalnız ses (M4A)")})
         self.quality_model.splice(0, self.quality_model.get_n_items(), [c["label"] for c in self._video_choices])
         want = int(self.settings.get("video_max_height") or 1080)
         idx = 0
@@ -166,7 +168,7 @@ class AddDialog(Adw.Dialog):
                 break
         self.quality_row.set_selected(idx)
 
-    def _on_quality_changed(self, *_):
+    def _on_quality_changed(self, *_a):
         choice = self._current_choice()
         self.container_row.set_sensitive(not choice.get("audio_only"))
         if hasattr(self, "own_folder_row"):
@@ -179,7 +181,7 @@ class AddDialog(Adw.Dialog):
             return self._video_choices[i]
         return {"height": 0}
 
-    def _on_video_toggled(self, *_):
+    def _on_video_toggled(self, *_a):
         video = self.video_row.get_active()
         self.video_group.set_visible(video)
         self.conn_row.set_visible(not video)
@@ -198,8 +200,8 @@ class AddDialog(Adw.Dialog):
         d = self.custom_dir or str(self.app.manager.default_directory(self._category()))
         self.dir_row.set_subtitle(GLib.markup_escape_text(d))
 
-    def _choose_dir(self, *_):
-        dialog = Gtk.FileDialog(title="İndirme klasörü")
+    def _choose_dir(self, *_a):
+        dialog = Gtk.FileDialog(title=_("İndirme klasörü"))
         current = self.custom_dir or str(self.app.manager.default_directory(self._category()))
         if os.path.isdir(current):
             dialog.set_initial_folder(Gio.File.new_for_path(current))
@@ -215,7 +217,7 @@ class AddDialog(Adw.Dialog):
 
         dialog.select_folder(self.get_root(), None, done)
 
-    def _on_url_changed(self, *_):
+    def _on_url_changed(self, *_a):
         url = self.url_row.get_text().strip()
         if self.request.get("kind") is None and url:
             want = looks_like_video_page(url) or is_stream_manifest(url)
@@ -237,17 +239,17 @@ class AddDialog(Adw.Dialog):
         token = self._probe_token
         self.dup_row.set_visible(bool(url and self.app.manager.find_active_by_url(url)))
         if not valid_url(url):
-            self.info_row.set_subtitle("Geçerli bir http(s) adresi girin" if url else "—")
+            self.info_row.set_subtitle(_("Geçerli bir http(s) adresi girin") if url else "—")
             self.start_btn.set_sensitive(False)
             self.spinner.stop()
             return False
         self.start_btn.set_sensitive(True)
         video = self.video_row.get_active()
         if video and not ytdlp_binary(self.settings):
-            self.info_row.set_subtitle("yt-dlp gerekli")
+            self.info_row.set_subtitle(_("yt-dlp gerekli"))
             return False
         self.spinner.start()
-        self.info_row.set_subtitle("Bilgi alınıyor…")
+        self.info_row.set_subtitle(_("Bilgi alınıyor…"))
         headers = dict(self.request.get("headers") or {})
         cookies = self.request.get("cookies")
 
@@ -272,7 +274,7 @@ class AddDialog(Adw.Dialog):
         if kind == "error":
             msg = data
             if "HTTPError" in msg or "Max retries" in msg or "Connection" in msg:
-                msg = "Sunucuya ulaşılamadı — yine de deneyebilirsiniz"
+                msg = _("Sunucuya ulaşılamadı — yine de deneyebilirsiniz")
             self.info_row.set_subtitle(GLib.markup_escape_text(msg[:300]))
             return False
         if kind == "video":
@@ -282,7 +284,7 @@ class AddDialog(Adw.Dialog):
                 h, m = divmod(m, 60)
                 bits.append(f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}")
             if data.get("is_live"):
-                bits.append("canlı yayın")
+                bits.append(_("canlı yayın"))
             self.info_row.set_subtitle(GLib.markup_escape_text(" · ".join(bits)))
             self.request["title"] = data["title"]
             if data.get("heights"):
@@ -292,10 +294,10 @@ class AddDialog(Adw.Dialog):
         if data.get("total") is not None:
             parts.append(human_size(data["total"]))
         else:
-            parts.append("boyut bilinmiyor")
-        parts.append("devam ettirilebilir" if data.get("ranges") else "parçalı indirme desteklenmiyor")
+            parts.append(_("boyut bilinmiyor"))
+        parts.append(_("devam ettirilebilir") if data.get("ranges") else _("parçalı indirme desteklenmiyor"))
         if data.get("is_html"):
-            parts.append("dikkat: link bir web sayfası")
+            parts.append(_("dikkat: link bir web sayfası"))
         self.info_row.set_subtitle(GLib.markup_escape_text(" · ".join(parts)))
         if not self.name_row.get_text().strip() and data.get("filename"):
             self.name_row.set_text(data["filename"])
@@ -307,15 +309,16 @@ class AddDialog(Adw.Dialog):
             cand = self.app.manager.find_resume_candidate(data["filename"], data.get("total"))
         self._candidate = cand
         if cand:
-            pct = int((cand.get("downloaded") or 0) * 100 / cand["total"]) if cand.get("total") else 0
+            done_pct = int((cand.get("downloaded") or 0) * 100 / cand["total"]) if cand.get("total") else 0
             self.resume_row.set_subtitle(GLib.markup_escape_text(
-                f"{cand.get('filename')} · %{pct} indirilmişti ({human_size(cand.get('downloaded'))}). "
-                "Bu linkle yeniden indirmek yerine kaldığı yerden devam edebilirsin."))
+                f"{cand.get('filename')} · "
+                + _("{pct} indirilmişti ({amount}).").format(pct=pct(done_pct), amount=human_size(cand.get("downloaded")))
+                + " " + _("Bu linkle yeniden indirmek yerine kaldığı yerden devam edebilirsin.")))
         self.resume_row.set_visible(bool(cand))
         self._refresh_dir()
         return False
 
-    def _resume_candidate(self, *_):
+    def _resume_candidate(self, *_a):
         cand = self._candidate
         if not cand:
             return
@@ -324,7 +327,7 @@ class AddDialog(Adw.Dialog):
                                      self.request.get("page_url"))
         self.close()
         if self.app.window:
-            self.app.window.toast(f"{cand.get('filename')} yeni linkle kaldığı yerden sürüyor")
+            self.app.window.toast(_("{name} yeni linkle kaldığı yerden sürüyor").format(name=cand.get("filename")))
 
     def _submit(self, start):
         url = self.url_row.get_text().strip()

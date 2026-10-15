@@ -7,6 +7,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.connection import HTTPConnection
 
+from .i18n import _
+
 SO_BINDTODEVICE = getattr(socket, "SO_BINDTODEVICE", 25)
 SKIP_PREFIXES = ("lo", "docker", "br-", "veth", "virbr", "vnet", "tailscale", "tun", "tap", "wg", "zt", "lxc", "podman", "cni", "flannel")
 SYS_NET = Path("/sys/class/net")
@@ -68,12 +70,12 @@ def _kind(name):
     if (SYS_NET / name / "wireless").exists() or (SYS_NET / name / "phy80211").exists():
         return "wifi", "Wi-Fi"
     if name.startswith(("enx", "usb", "rndis")):
-        return "usb", "USB internet paylaşımı"
+        return "usb", _("USB internet paylaşımı")
     if name.startswith(("wwan", "wwp", "ppp")):
-        return "mobile", "Mobil modem"
+        return "mobile", _("Mobil modem")
     if name.startswith(("en", "eth")):
-        return "ethernet", "Kablolu"
-    return "other", "Ağ"
+        return "ethernet", _("Kablolu")
+    return "other", _("Ağ")
 
 
 def _ipv4(name):

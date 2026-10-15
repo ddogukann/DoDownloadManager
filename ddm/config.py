@@ -43,6 +43,7 @@ def _xdg_download_dir():
 
 
 DEFAULTS = {
+    "language": "auto",
     "download_dir": str(_xdg_download_dir()),
     "category_subfolders": False,
     "max_active": 3,

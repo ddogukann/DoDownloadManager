@@ -1,22 +1,27 @@
 [Desktop Entry]
 Type=Application
 Name=DoDownloadManager
-GenericName=İndirme Yöneticisi
-Comment=Çok bağlantılı indirme yöneticisi, video indirme ve Firefox entegrasyonu
+GenericName=Download Manager
+GenericName[tr]=İndirme Yöneticisi
+Comment=Multi-connection download manager with video downloads and Firefox integration
+Comment[tr]=Çok bağlantılı indirme yöneticisi, video indirme ve Firefox entegrasyonu
 Exec=@EXEC@ %U
 Icon=io.github.ddm.DoDownloadManager
 Terminal=false
 Categories=Network;FileTransfer;GTK;
-Keywords=download;indir;idm;yt-dlp;video;
+Keywords=download;manager;idm;yt-dlp;video;
+Keywords[tr]=indir;indirme;yönetici;idm;yt-dlp;video;
 StartupNotify=true
 DBusActivatable=false
 SingleMainWindow=true
 Actions=new-download;quit;
 
 [Desktop Action new-download]
-Name=Yeni indirme
+Name=New download
+Name[tr]=Yeni indirme
 Exec=@EXEC@ --new
 
 [Desktop Action quit]
-Name=Çık
+Name=Quit
+Name[tr]=Çık
 Exec=@EXEC@ --quit

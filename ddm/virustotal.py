@@ -9,6 +9,8 @@ from urllib.parse import urlsplit
 
 import requests
 
+from .i18n import _
+
 API_BASE = os.environ.get("DDM_VT_API_BASE", "https://www.virustotal.com/api/v3")
 GUI_BASE = "https://www.virustotal.com/gui"
 EICAR_SHA256 = "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
@@ -19,7 +21,9 @@ BUSY_STATES = ("hashing", "queued", "checking", "uploading", "analyzing")
 
 
 class VTError(Exception):
-    pass
+    def __init__(self, message, auth=False):
+        super().__init__(message)
+        self.auth = auth
 
 
 def summarize(stats):
@@ -97,16 +101,16 @@ class VTClient:
                                          timeout=(15, 120), **kw)
             except requests.RequestException as e:
                 if attempt == attempts - 1:
-                    raise VTError("VirusTotal'a ulaşılamadı") from e
+                    raise VTError(_("VirusTotal'a ulaşılamadı")) from e
                 time.sleep(5 * (attempt + 1))
                 continue
             if r.status_code == 404:
                 return None
             if r.status_code in (401, 403):
-                raise VTError("VirusTotal API anahtarı geçersiz")
+                raise VTError(_("VirusTotal API anahtarı geçersiz"), auth=True)
             if r.status_code == 429:
                 if attempt >= 4:
-                    raise VTError("VirusTotal kotası doldu, daha sonra tekrar denenecek")
+                    raise VTError(_("VirusTotal kotası doldu, daha sonra tekrar denenecek"))
                 if stop is not None:
                     stop.wait(60)
                 else:
@@ -116,9 +120,9 @@ class VTClient:
                 time.sleep(10)
                 continue
             if r.status_code >= 400:
-                raise VTError(f"VirusTotal hatası ({r.status_code})")
+                raise VTError(_("VirusTotal hatası ({code})").format(code=r.status_code))
             return r.json()
-        raise VTError("VirusTotal yanıt vermedi")
+        raise VTError(_("VirusTotal yanıt vermedi"))
 
     def file_report(self, digest):
         data = self.request("GET", f"/files/{digest}")
@@ -155,29 +159,29 @@ class VTClient:
     def upload(self, path, stop=None):
         size = os.path.getsize(path)
         if size > MAX_UPLOAD:
-            raise VTError("VirusTotal 650 MB üzerindeki dosyaları kabul etmiyor")
+            raise VTError(_("VirusTotal 650 MB üzerindeki dosyaları kabul etmiyor"))
         target = "/files"
         if size > SMALL_UPLOAD:
             data = self.request("GET", "/files/upload_url", stop)
             target = (data or {}).get("data")
             if not target:
-                raise VTError("Yükleme adresi alınamadı")
+                raise VTError(_("Yükleme adresi alınamadı"))
         data = None
         last_error = None
-        for _ in range(3):
+        for _attempt in range(3):
             try:
                 with open(path, "rb") as f:
                     data = self.request("POST", target, stop, attempts=1, files={"file": (os.path.basename(path), f)})
                 break
             except VTError as e:
                 last_error = e
-                if "anahtarı" in str(e):
+                if e.auth:
                     raise
         if data is None and last_error is not None:
             raise last_error
         analysis = (data or {}).get("data", {}).get("id")
         if not analysis:
-            raise VTError("Yükleme kabul edilmedi")
+            raise VTError(_("Yükleme kabul edilmedi"))
         return analysis
 
     def analysis(self, analysis_id, stop=None):
@@ -256,7 +260,7 @@ class VTService:
             try:
                 sha, md5 = hash_file(path, want_md5=bool(expected.get("md5")), stop=self.stop_event)
             except OSError as e:
-                self.on_patch(did, {"state": "error", "error": f"Dosya okunamadı: {e.strerror or e}"})
+                self.on_patch(did, {"state": "error", "error": _("Dosya okunamadı: {error}").format(error=e.strerror or e)})
                 continue
             if sha is None:
                 return
@@ -337,5 +341,5 @@ class VTService:
                 self.on_patch(did, dict(result, source="yükleme"))
                 return
             self.stop_event.wait(max(20, self.min_interval))
-        self.on_patch(did, {"state": "analyzing", "error": "Analiz uzun sürüyor; sonucu VirusTotal sayfasından izleyin",
+        self.on_patch(did, {"state": "analyzing", "error": _("Analiz uzun sürüyor; sonucu VirusTotal sayfasından izleyin"),
                             "link": file_link(digest)})

@@ -2,24 +2,26 @@ import os
 
 from gi.repository import Adw, Gio, GLib, Gtk
 
+from ..i18n import _
+
 
 def rule_summary(rule):
     bits = []
     if rule.get("exts"):
-        bits.append(f"uzantı: {rule['exts']}")
+        bits.append(_("uzantı: {v}").format(v=rule["exts"]))
     if rule.get("host"):
-        bits.append(f"site: {rule['host']}")
+        bits.append(_("site: {v}").format(v=rule["host"]))
     if rule.get("contains"):
-        bits.append(f"adında: “{rule['contains']}”")
+        bits.append(_("adında: “{v}”").format(v=rule["contains"]))
     target = []
     if rule.get("folder"):
         target.append(f"→ {rule['folder']}")
     acts = []
     if rule.get("extract"):
-        acts.append("arşivi aç" + (" ve sil" if rule.get("delete_archive") else ""))
+        acts.append(_("arşivi aç ve sil") if rule.get("delete_archive") else _("arşivi aç"))
     if rule.get("open"):
-        acts.append("bitince aç")
-    text = " · ".join(bits) or "koşul yok"
+        acts.append(_("bitince aç"))
+    text = " · ".join(bits) or _("koşul yok")
     if target:
         text += "  " + " ".join(target)
     if acts:
@@ -34,15 +36,15 @@ class RuleEditor(Adw.Dialog):
         self.index = index
         self.on_saved = on_saved
         rule = dict(rule or {})
-        self.set_title("Kuralı düzenle" if index is not None else "Yeni kural")
+        self.set_title(_("Kuralı düzenle") if index is not None else _("Yeni kural"))
         self.set_content_width(520)
 
         tv = Adw.ToolbarView()
         header = Adw.HeaderBar(show_start_title_buttons=False, show_end_title_buttons=False)
-        cancel = Gtk.Button(label="Vazgeç")
-        cancel.connect("clicked", lambda *_: self.close())
+        cancel = Gtk.Button(label=_("Vazgeç"))
+        cancel.connect("clicked", lambda *_a: self.close())
         header.pack_start(cancel)
-        self.save_btn = Gtk.Button(label="Kaydet")
+        self.save_btn = Gtk.Button(label=_("Kaydet"))
         self.save_btn.add_css_class("suggested-action")
         self.save_btn.connect("clicked", self._save)
         header.pack_end(self.save_btn)
@@ -51,53 +53,53 @@ class RuleEditor(Adw.Dialog):
         tv.set_content(page)
         self.set_child(tv)
 
-        g = Adw.PreferencesGroup(title="Ne zaman", description="Doldurulan koşulların hepsi tutmalı")
+        g = Adw.PreferencesGroup(title=_("Ne zaman"), description=_("Doldurulan koşulların hepsi tutmalı"))
         page.add(g)
-        self.name = Adw.EntryRow(title="Kural adı")
+        self.name = Adw.EntryRow(title=_("Kural adı"))
         self.name.set_text(rule.get("name") or "")
-        self.exts = Adw.EntryRow(title="Uzantılar (örn. deb, rpm, tar.gz)")
+        self.exts = Adw.EntryRow(title=_("Uzantılar (örn. deb, rpm, tar.gz)"))
         self.exts.set_text(rule.get("exts") or "")
-        self.host = Adw.EntryRow(title="Site (örn. github.com)")
+        self.host = Adw.EntryRow(title=_("Site (örn. github.com)"))
         self.host.set_text(rule.get("host") or "")
-        self.contains = Adw.EntryRow(title="Dosya adında geçen")
+        self.contains = Adw.EntryRow(title=_("Dosya adında geçen"))
         self.contains.set_text(rule.get("contains") or "")
         for w in (self.name, self.exts, self.host, self.contains):
             g.add(w)
 
-        g = Adw.PreferencesGroup(title="Ne yapılsın")
+        g = Adw.PreferencesGroup(title=_("Ne yapılsın"))
         page.add(g)
         self.folder = rule.get("folder") or ""
-        self.folder_row = Adw.ActionRow(title="Klasör", subtitle=GLib.markup_escape_text(self.folder or "varsayılan"))
+        self.folder_row = Adw.ActionRow(title=_("Klasör"), subtitle=GLib.markup_escape_text(self.folder or _("varsayılan")))
         pick = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER)
         pick.add_css_class("flat")
         pick.connect("clicked", self._pick)
-        clear = Gtk.Button(icon_name="edit-clear-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Varsayılana dön")
+        clear = Gtk.Button(icon_name="edit-clear-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Varsayılana dön"))
         clear.add_css_class("flat")
-        clear.connect("clicked", lambda *_: self._set_folder(""))
+        clear.connect("clicked", lambda *_a: self._set_folder(""))
         self.folder_row.add_suffix(clear)
         self.folder_row.add_suffix(pick)
         g.add(self.folder_row)
-        self.extract = Adw.SwitchRow(title="Arşivse otomatik aç",
-                                     subtitle="zip, tar.gz, tar.xz… · 7z/rar için 7zip paketi gerekir")
+        self.extract = Adw.SwitchRow(title=_("Arşivse otomatik aç"),
+                                     subtitle=_("zip, tar.gz, tar.xz… · 7z/rar için 7zip paketi gerekir"))
         self.extract.set_active(bool(rule.get("extract")))
-        self.delete = Adw.SwitchRow(title="Açtıktan sonra arşivi sil")
+        self.delete = Adw.SwitchRow(title=_("Açtıktan sonra arşivi sil"))
         self.delete.set_active(bool(rule.get("delete_archive")))
-        self.open = Adw.SwitchRow(title="Bitince aç", subtitle="Arşivse açılan klasörü, değilse dosyayı açar")
+        self.open = Adw.SwitchRow(title=_("Bitince aç"), subtitle=_("Arşivse açılan klasörü, değilse dosyayı açar"))
         self.open.set_active(bool(rule.get("open")))
         for w in (self.extract, self.delete, self.open):
             g.add(w)
-        g.add(Adw.ActionRow(title="Güvenlik", subtitle="VirusTotal zararlı derse ya da checksum tutmazsa "
-                                                      "arşiv açılmaz ve dosya otomatik açılmaz"))
-        self.extract.connect("notify::active", lambda *_: self.delete.set_sensitive(self.extract.get_active()))
+        g.add(Adw.ActionRow(title=_("Güvenlik"), subtitle=_("VirusTotal zararlı derse ya da checksum tutmazsa "
+                                                         "arşiv açılmaz ve dosya otomatik açılmaz")))
+        self.extract.connect("notify::active", lambda *_a: self.delete.set_sensitive(self.extract.get_active()))
         self.delete.set_sensitive(self.extract.get_active())
         self.enabled = rule.get("enabled", True)
 
     def _set_folder(self, path):
         self.folder = path
-        self.folder_row.set_subtitle(GLib.markup_escape_text(path or "varsayılan"))
+        self.folder_row.set_subtitle(GLib.markup_escape_text(path or _("varsayılan")))
 
-    def _pick(self, *_):
-        dlg = Gtk.FileDialog(title="Kural klasörü")
+    def _pick(self, *_a):
+        dlg = Gtk.FileDialog(title=_("Kural klasörü"))
         start = os.path.expanduser(self.folder or self.settings.get("download_dir"))
         if os.path.isdir(start):
             dlg.set_initial_folder(Gio.File.new_for_path(start))
@@ -114,9 +116,9 @@ class RuleEditor(Adw.Dialog):
 
         dlg.select_folder(self.get_root(), None, done)
 
-    def _save(self, *_):
+    def _save(self, *_a):
         rule = {
-            "name": self.name.get_text().strip() or "Kural",
+            "name": self.name.get_text().strip() or _("Kural"),
             "exts": ", ".join(e.strip().lstrip(".") for e in self.exts.get_text().split(",") if e.strip()),
             "host": self.host.get_text().strip().lower().removeprefix("www."),
             "contains": self.contains.get_text().strip(),
@@ -142,20 +144,20 @@ class RuleEditor(Adw.Dialog):
 
 class RulesPage(Adw.PreferencesPage):
     def __init__(self, dialog, settings):
-        super().__init__(title="Kurallar", icon_name="view-list-bullet-symbolic")
+        super().__init__(title=_("Kurallar"), icon_name="view-list-bullet-symbolic")
         self.dialog = dialog
         self.settings = settings
         self.group = Adw.PreferencesGroup(
-            title="Kurallar",
-            description="Yukarıdan aşağı ilk eşleşen kural uygulanır. Ekleme penceresinde elle klasör seçersen kural klasörü kullanılmaz.")
-        add = Gtk.Button(icon_name="list-add-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Kural ekle")
+            title=_("Kurallar"),
+            description=_("Yukarıdan aşağı ilk eşleşen kural uygulanır. Ekleme penceresinde elle klasör seçersen kural klasörü kullanılmaz."))
+        add = Gtk.Button(icon_name="list-add-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Kural ekle"))
         add.add_css_class("flat")
-        add.connect("clicked", lambda *_: self._edit(None))
+        add.connect("clicked", lambda *_a: self._edit(None))
         self.group.set_header_suffix(add)
         self.add(self.group)
         self.rows = []
-        self.empty = Adw.ActionRow(title="Henüz kural yok",
-                                   subtitle="Örnek: uzantı “deb, rpm” → ~/Paketler; uzantı “zip” → arşivi aç ve sil")
+        self.empty = Adw.ActionRow(title=_("Henüz kural yok"),
+                                   subtitle=_("Örnek: uzantı “deb, rpm” → ~/Paketler; uzantı “zip” → arşivi aç ve sil"))
         self.refresh()
 
     def refresh(self):
@@ -168,15 +170,15 @@ class RulesPage(Adw.PreferencesPage):
             self.rows.append(self.empty)
             return
         for i, rule in enumerate(rules):
-            row = Adw.ActionRow(title=GLib.markup_escape_text(rule.get("name") or "Kural"),
+            row = Adw.ActionRow(title=GLib.markup_escape_text(rule.get("name") or _("Kural")),
                                 subtitle=GLib.markup_escape_text(rule_summary(rule)))
             row.set_subtitle_lines(2)
             sw = Gtk.Switch(active=rule.get("enabled", True), valign=Gtk.Align.CENTER)
             sw.connect("notify::active", lambda s, _p, idx=i: self._toggle(idx, s.get_active()))
             row.add_prefix(sw)
-            for icon, tip, cb in (("go-up-symbolic", "Yukarı", lambda *_, idx=i: self._move(idx, -1)),
-                                  ("document-edit-symbolic", "Düzenle", lambda *_, idx=i: self._edit(idx)),
-                                  ("user-trash-symbolic", "Sil", lambda *_, idx=i: self._delete(idx))):
+            for icon, tip, cb in (("go-up-symbolic", _("Yukarı"), lambda *_a, idx=i: self._move(idx, -1)),
+                                  ("document-edit-symbolic", _("Düzenle"), lambda *_a, idx=i: self._edit(idx)),
+                                  ("user-trash-symbolic", _("Sil"), lambda *_a, idx=i: self._delete(idx))):
                 b = Gtk.Button(icon_name=icon, valign=Gtk.Align.CENTER, tooltip_text=tip)
                 b.add_css_class("flat")
                 b.connect("clicked", cb)

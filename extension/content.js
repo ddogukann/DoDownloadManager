@@ -69,18 +69,21 @@
         button.err { background: #c01c28; }
         svg { width: 15px; height: 15px; flex: none; }
       </style>
-      <button type="button" title="DDM ile indir">
+      <button type="button">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 3h2v10.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6zM5 19h14v2H5z"/></svg>
-        <span>İndir</span>
+        <span></span>
       </button>`;
     button = root.querySelector("button");
     const label = root.querySelector("span");
+    const msg = key => browser.i18n.getMessage(key) || key;
+    button.title = msg("menuLink");
+    label.textContent = msg("download");
     button.addEventListener("click", async e => {
       e.preventDefault();
       e.stopPropagation();
       if (!current) return;
       const src = mediaSources(current)[0] || "";
-      label.textContent = "Gönderiliyor…";
+      label.textContent = msg("sending");
       let res;
       try {
         res = await browser.runtime.sendMessage({ type: "overlay-download", src, frameUrl: location.href });
@@ -88,10 +91,10 @@
         res = { ok: false };
       }
       button.classList.add(res && res.ok ? "ok" : "err");
-      label.textContent = res && res.ok ? "DDM'ye gönderildi" : "Uygulama çalışmıyor";
+      label.textContent = res && res.ok ? msg("sentToDdm") : msg("appNotRunning");
       setTimeout(() => {
         button.classList.remove("ok", "err");
-        label.textContent = "İndir";
+        label.textContent = msg("download");
       }, 2200);
     }, true);
     host.addEventListener("mouseenter", () => clearTimeout(hideTimer));

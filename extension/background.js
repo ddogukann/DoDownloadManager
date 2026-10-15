@@ -105,7 +105,7 @@ function classify(url, contentType) {
   }
   if (ext === "ts" || ext === "m4s" || ct === "video/mp2t" || ct === "video/iso.segment") return null;
   if (ct.startsWith("video/") || ct.startsWith("audio/")) {
-    return { kind: "file", label: (ext || ct.split("/")[1] || "medya").toUpperCase() };
+    return { kind: "file", label: (ext || ct.split("/")[1] || "media").toUpperCase() };
   }
   if ((ct === "application/octet-stream" || ct === "binary/octet-stream" || !ct) && MEDIA_EXTS.has(ext)) {
     return { kind: "file", label: ext.toUpperCase() };
@@ -304,9 +304,9 @@ browser.downloads.onCreated.addListener(async item => {
 
 function setupMenus() {
   browser.contextMenus.removeAll().then(() => {
-    browser.contextMenus.create({ id: "yd-link", title: "DDM ile indir", contexts: ["link"] });
-    browser.contextMenus.create({ id: "yd-media", title: "Bu medyayı DDM ile indir", contexts: ["video", "audio"] });
-    browser.contextMenus.create({ id: "yd-page", title: "Sayfadaki videoyu indir (yt-dlp)", contexts: ["page", "frame"] });
+    browser.contextMenus.create({ id: "yd-link", title: t("menuLink"), contexts: ["link"] });
+    browser.contextMenus.create({ id: "yd-media", title: t("menuMedia"), contexts: ["video", "audio"] });
+    browser.contextMenus.create({ id: "yd-page", title: t("menuPage"), contexts: ["page", "frame"] });
   });
 }
 

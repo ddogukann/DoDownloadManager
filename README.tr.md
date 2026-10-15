@@ -4,6 +4,8 @@
 
 Ubuntu için çok bağlantılı indirme yöneticisi. GTK4/libadwaita arayüzü, IDM tarzı dinamik parça bölme, birden fazla internet bağlantısını birleştirme, yt-dlp ile video indirme, VirusTotal kontrolü ve Firefox entegrasyonu.
 
+Arayüz **Türkçe** ve **İngilizce**. Varsayılan olarak sistem dilini izler; Ayarlar ▸ Genel ▸ Dil bölümünden değiştirilebilir.
+
 ![Ana pencere](docs/main.png)
 
 | Özet | Ayrıntı | Bitiş |
@@ -64,6 +66,7 @@ Ubuntu için çok bağlantılı indirme yöneticisi. GTK4/libadwaita arayüzü, 
 - DRM korumalı içerik (Netflix, Disney+ vb.) indirilemez.
 
 **Arayüz**
+- Türkçe ve İngilizce. Varsayılan olarak sistem dili kullanılır. Ayarlar ▸ Genel ▸ Dil bölümünden değiştirilince uygulama yeniden başlar, indirmeler kaldığı yerden sürer.
 - Kategoriler (Video, Müzik, Arşiv, Belge, Program, Resim), arama ve sıralanabilir tablo.
 - Ayrıntı penceresinin iki görünümü var ve son seçilen hatırlanır:
   - **Özet:** büyük yüzde, hız, kalan süre, parça çubuğu, durum ve VirusTotal etiketleri.
@@ -94,7 +97,11 @@ Ubuntu için çok bağlantılı indirme yöneticisi. GTK4/libadwaita arayüzü, 
 - **Ücretsiz kota:** Dakikada 4, günde 500 sorgu. Bir indirme en fazla 3 sorgu harcar. Aynı anda çok indirme başlarsa sonuçlar sırayla, birkaç dakika içinde gelir. Bu yüzden çok hızlı biten bir indirmede link uyarısı dosya indikten sonra gelebilir; bitişteki dosya kontrolü yine yapılır.
 
 **Firefox eklentisi**
+
+<img src="docs/extension.png" alt="Eklenti penceresi" width="300">
+
 - Firefox'ta başlayan indirmeleri (uzantı listesine göre) çerez, Referer ve User-Agent bilgisiyle birlikte DDM'ye devreder. Uygulama kapalıysa indirme Firefox'ta kalır.
+- Firefox'un dilini izler (Türkçe ya da İngilizce).
 - **Erken yakalama (1.0.2):** İndirme, sunucunun yanıt başlıkları geldiği anda yakalanır (`webRequest`). Firefox dosyayı indirmeye hiç başlamaz. Böylece birkaç MB'lık küçük `.tar.gz` gibi dosyalar da kaçmaz. Yakalanamayan durumlar için eski yöntem (indirme başladıktan sonra iptal) yedek olarak çalışır.
 - **Site bazlı medya taraması:** Yalnızca açtığınız sitelerde çalışır. Ağ trafiğindeki video/ses dosyalarını ve HLS/DASH akışlarını yakalar, araç çubuğu rozetinde sayısını gösterir.
 - Video üstünde "İndir" düğmesi (ayarlardan kapatılabilir).
@@ -141,6 +148,17 @@ Ubuntu'daki snap Firefox ile sorunsuz çalışır. Eklenti uygulamaya native mes
 Kurulumdan sonra eklentiyi kullanmak için:
 - Medya taraması istediğiniz sitede araç çubuğundaki DDM simgesine tıklayın ve **Bu sitede medya taraması** anahtarını açın.
 - Hangi dosya uzantılarının yakalanacağını ve en küçük boyutu DDM ▸ Ayarlar ▸ Tarayıcı bölümünden belirleyin.
+
+## Çeviri
+
+Uygulama metinleri `ddm/locale/<dil>.po` dosyalarında durur (standart gettext biçimi; Poedit ya da herhangi bir metin düzenleyiciyle düzenlenebilir). Kaynak dil Türkçe'dir. Eklenti metinleri `extension/_locales/<dil>/messages.json` dosyalarındadır.
+
+```bash
+python3 scripts/i18n.py check en    # çevrilmemiş ya da kullanılmayan metinleri listeler
+python3 scripts/i18n.py update en   # yeni metinleri boş çeviriyle ekler
+```
+
+Yeni bir dil eklemek için `ddm/locale/en.po` dosyasını `ddm/locale/<kod>.po` olarak kopyalayıp çevirin ve kodu `ddm/i18n.py` içindeki `LANGUAGES` listesine ekleyin.
 
 ## Komut satırı
 

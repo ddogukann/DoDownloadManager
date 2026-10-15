@@ -1,0 +1,158 @@
+{
+  "extDescription": {
+    "message": "Firefox indirmelerini DDM'ye devreder, izin verilen sitelerde videoları bulur ve indirme seçeneği sunar."
+  },
+  "checking": {
+    "message": "kontrol ediliyor…"
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "appOffline": {
+    "message": "DDM uygulaması çalışmıyor. Uygulamayı açın; tarayıcı indirmeleri o sırada Firefox'ta kalır."
+  },
+  "scanThisSite": {
+    "message": "Bu sitede medya taraması"
+  },
+  "downloadPageVideo": {
+    "message": "Sayfadaki videoyu indir"
+  },
+  "ytdlpHint": {
+    "message": "yt-dlp ile; kaliteyi uygulamada seçersiniz."
+  },
+  "foundMedia": {
+    "message": "Bulunan medya"
+  },
+  "scanOffHint": {
+    "message": "Bu sitede tarama kapalı. Açarsanız sayfadaki videolar burada listelenir."
+  },
+  "emptyHint": {
+    "message": "Henüz medya bulunmadı. Videoyu oynatmayı deneyin."
+  },
+  "recentDownloads": {
+    "message": "Son indirmeler"
+  },
+  "captureDownloads": {
+    "message": "Firefox indirmelerini yakala"
+  },
+  "connectedVersion": {
+    "message": "Bağlı · v$1"
+  },
+  "activeCount": {
+    "message": "$1 etkin"
+  },
+  "appNotRunning": {
+    "message": "Uygulama çalışmıyor"
+  },
+  "sending": {
+    "message": "Gönderiliyor…"
+  },
+  "sent": {
+    "message": "Gönderildi ✓"
+  },
+  "error": {
+    "message": "Hata"
+  },
+  "download": {
+    "message": "İndir"
+  },
+  "thisPage": {
+    "message": "bu sayfa"
+  },
+  "onAllSites": {
+    "message": "$1 · tüm sitelerde açık"
+  },
+  "statusQueued": {
+    "message": "Sırada"
+  },
+  "statusRunning": {
+    "message": "İndiriliyor"
+  },
+  "statusPaused": {
+    "message": "Duraklatıldı"
+  },
+  "statusDone": {
+    "message": "Tamamlandı"
+  },
+  "statusError": {
+    "message": "Hata"
+  },
+  "hashMismatch": {
+    "message": "≠ hash uyuşmuyor"
+  },
+  "pause": {
+    "message": "Duraklat"
+  },
+  "resume": {
+    "message": "Devam et"
+  },
+  "optionsTitle": {
+    "message": "DDM ayarları"
+  },
+  "connection": {
+    "message": "Bağlantı"
+  },
+  "appPort": {
+    "message": "Uygulama portu"
+  },
+  "appPortHint": {
+    "message": "DDM ▸ Ayarlar ▸ Tarayıcı ile aynı olmalı"
+  },
+  "testConnection": {
+    "message": "Bağlantıyı dene"
+  },
+  "downloads": {
+    "message": "İndirmeler"
+  },
+  "captureHint": {
+    "message": "Uzantı listesi uygulama ayarlarından gelir"
+  },
+  "mediaScanning": {
+    "message": "Medya taraması"
+  },
+  "overlayButton": {
+    "message": "Video üstünde “İndir” düğmesi"
+  },
+  "scanAllSites": {
+    "message": "Tüm sitelerde tara"
+  },
+  "scanAllSitesHint": {
+    "message": "Kapalıyken yalnızca aşağıdaki sitelerde çalışır"
+  },
+  "enabledSites": {
+    "message": "Tarama açık siteler"
+  },
+  "noSites": {
+    "message": "Henüz site yok. Bir sitede araç çubuğundaki DDM düğmesinden açabilirsiniz."
+  },
+  "remove": {
+    "message": "Kaldır"
+  },
+  "testing": {
+    "message": "Deneniyor…"
+  },
+  "connectedTo": {
+    "message": "Bağlı · $1 $2"
+  },
+  "ytdlpReady": {
+    "message": "yt-dlp hazır"
+  },
+  "ytdlpMissing": {
+    "message": "yt-dlp yok"
+  },
+  "cannotReachApp": {
+    "message": "Uygulamaya ulaşılamadı"
+  },
+  "menuLink": {
+    "message": "DDM ile indir"
+  },
+  "menuMedia": {
+    "message": "Bu medyayı DDM ile indir"
+  },
+  "menuPage": {
+    "message": "Sayfadaki videoyu indir (yt-dlp)"
+  },
+  "sentToDdm": {
+    "message": "DDM'ye gönderildi"
+  }
+}

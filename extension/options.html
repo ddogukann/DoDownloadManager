@@ -1,51 +1,51 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="ui.css">
 </head>
 <body class="options">
-  <h1>DDM ayarları</h1>
+  <h1 data-i18n="optionsTitle"></h1>
 
   <section>
-    <h2>Bağlantı</h2>
+    <h2 data-i18n="connection"></h2>
     <div class="card">
       <div class="field">
-        <span class="text"><span class="title">Uygulama portu</span><span class="sub">DDM ▸ Ayarlar ▸ Tarayıcı ile aynı olmalı</span></span>
+        <span class="text"><span class="title" data-i18n="appPort"></span><span class="sub" data-i18n="appPortHint"></span></span>
         <input type="number" id="port" min="1024" max="65535">
       </div>
       <div class="field">
         <span id="status" class="sub">—</span>
-        <button id="test" class="small">Bağlantıyı dene</button>
+        <button id="test" class="small" data-i18n="testConnection"></button>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>İndirmeler</h2>
+    <h2 data-i18n="downloads"></h2>
     <div class="card">
       <label class="row switch">
-        <span class="text"><span class="title">Firefox indirmelerini yakala</span><span class="sub">Uzantı listesi uygulama ayarlarından gelir</span></span>
+        <span class="text"><span class="title" data-i18n="captureDownloads"></span><span class="sub" data-i18n="captureHint"></span></span>
         <input type="checkbox" id="capture"><span class="slider"></span>
       </label>
     </div>
   </section>
 
   <section>
-    <h2>Medya taraması</h2>
+    <h2 data-i18n="mediaScanning"></h2>
     <div class="card">
       <label class="row switch">
-        <span class="text"><span class="title">Video üstünde “İndir” düğmesi</span></span>
+        <span class="text"><span class="title" data-i18n="overlayButton"></span></span>
         <input type="checkbox" id="overlay"><span class="slider"></span>
       </label>
       <label class="row switch">
-        <span class="text"><span class="title">Tüm sitelerde tara</span><span class="sub">Kapalıyken yalnızca aşağıdaki sitelerde çalışır</span></span>
+        <span class="text"><span class="title" data-i18n="scanAllSites"></span><span class="sub" data-i18n="scanAllSitesHint"></span></span>
         <input type="checkbox" id="allSites"><span class="slider"></span>
       </label>
     </div>
-    <h2 style="margin-top:14px">Tarama açık siteler</h2>
+    <h2 style="margin-top:14px" data-i18n="enabledSites"></h2>
     <ul id="sites" class="list sites"></ul>
-    <p id="no-sites" class="hint">Henüz site yok. Bir sitede araç çubuğundaki DDM düğmesinden açabilirsiniz.</p>
+    <p id="no-sites" class="hint" data-i18n="noSites"></p>
   </section>
 
   <script src="shared.js"></script>

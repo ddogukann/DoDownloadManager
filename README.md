@@ -4,13 +4,13 @@
 
 A multi-connection download manager for Ubuntu. Native GTK4/libadwaita UI, IDM-style dynamic segmenting, bonding of several internet connections, video downloads via yt-dlp, VirusTotal checks and a Firefox extension.
 
-> The user interface is currently in Turkish.
+The interface is available in **English** and **Turkish**. It follows your system language, and you can switch it in Settings ▸ General ▸ Language.
 
-![Main window](docs/main.png)
+![Main window](docs/en/main.png)
 
-| Summary | Details | Finished |
+| Details | Finished | Settings |
 |---|---|---|
-| ![Summary](docs/summary.png) | ![Details](docs/detail.png) | ![Finished](docs/complete.png) |
+| ![Details](docs/en/detail.png) | ![Finished](docs/en/complete.png) | ![Settings](docs/en/settings.png) |
 
 ## Features
 
@@ -27,18 +27,18 @@ A multi-connection download manager for Ubuntu. Native GTK4/libadwaita UI, IDM-s
 - Spreads the connections of large files across several internet links, for example home Wi-Fi plus USB tethering from a phone.
 - Each connection is bound to its network interface with `SO_BINDTODEVICE`. No root is needed on Linux 5.7+.
 - Faster links get more segments. If a link drops or stalls for 6 seconds, its segments move to the remaining links and the download continues.
-- Enable it in Settings ▸ Bağlantı ▸ *Çoklu bağdaştırıcı*. Choose which links to use and the minimum file size (50 MB by default). Metered links are marked.
+- Enable it in Settings ▸ Connection ▸ *Multiple adapters*. Choose which links to use and the minimum file size (50 MB by default). Metered links are marked.
 - The detail window shows the live speed of each link.
 - Limits: Wi-Fi and Ethernet on the same router give no gain, because both share one internet line. Not used for servers without `Range` support or for yt-dlp videos.
 
 **Expired link refresh**
 - If the server answers 401/403/404/410 after part of the file has arrived, the download is marked "link expired" and the partial file is kept.
-- Open the download page again and click download in the browser: DDM recognizes the same file by name and size and offers to resume. The same offer appears in the add dialog. You can also paste a new link via right-click ▸ *Linki yenile…*.
+- Open the download page again and click download in the browser: DDM recognizes the same file by name and size and offers to resume. The same offer appears in the add dialog. You can also paste a new link via right-click ▸ *Refresh link…*.
 - Before resuming, DDM checks that the new link serves the same file: the size must match and sample bytes from an already downloaded region must be identical. Otherwise the partial file is kept and you are warned.
 
 **Power and scheduling**
 - The computer does not go to sleep while downloads are running (the screen can still blank).
-- Main menu ▸ *Tümü bitince* ▸ suspend or power off when everything finishes, with a 60-second cancelable countdown.
+- Main menu ▸ *When all finish* ▸ suspend or power off when everything finishes, with a 60-second cancelable countdown.
 - **Scheduler:** downloads marked as scheduled only run inside a time window (02:00–07:00 by default; windows over midnight work).
 - **Metered connections:** downloads are held or throttled on metered connections such as phone tethering. A notification button lets you override it.
 
@@ -62,6 +62,7 @@ A multi-connection download manager for Ubuntu. Native GTK4/libadwaita UI, IDM-s
 - yt-dlp can be updated with one click. DRM-protected content cannot be downloaded.
 
 **Interface**
+- English and Turkish, following the system language by default. Switch in Settings ▸ General ▸ Language; the app restarts and downloads resume where they left off.
 - Categories, search and a sortable table.
 - Detail window with a compact **summary** view and a **details** view (speed graph, location, URL, SHA-256, VirusTotal results, per-connection progress).
 - A finish window with size, time, average and peak speed, the speed graph, VirusTotal and checksum results and *open file* / *open folder* buttons.
@@ -72,7 +73,7 @@ A multi-connection download manager for Ubuntu. Native GTK4/libadwaita UI, IDM-s
   ![Top bar icons](docs/tray.png)
 
 **VirusTotal**
-- Add a free VirusTotal API key in Settings ▸ Güvenlik and every download is checked. The file itself is never uploaded unless you ask.
+- Add a free VirusTotal API key in Settings ▸ Security and every download is checked. The file itself is never uploaded unless you ask.
 - **On start:** the URL (or the domain, if the URL is unknown) is looked up. If it is flagged, the download is paused and you are asked what to do.
 - **While downloading:** if the server sends a hash header (`Repr-Digest`, `Digest`, `x-goog-hash`, `x-amz-checksum-sha256`), it is looked up before the file finishes.
 - **On finish:** the SHA-256 is computed and looked up. Results appear in the list: ✓ 0/70, ⚠ 2/70, ✕ 15/70 or "? unknown".
@@ -80,7 +81,11 @@ A multi-connection download manager for Ubuntu. Native GTK4/libadwaita UI, IDM-s
 - **Free quota:** 4 requests/minute, 500/day. One download uses at most 3 requests.
 
 **Firefox extension**
+
+<img src="docs/en/extension.png" alt="Extension popup" width="300">
+
 - Hands downloads started in Firefox (filtered by extension and size) over to DDM, together with cookies, Referer and User-Agent. If DDM is not running, Firefox keeps the download.
+- Follows Firefox's language (English or Turkish).
 - **Early capture (1.0.2):** downloads are intercepted as soon as the response headers arrive (`webRequest`), so Firefox never starts downloading them. Small files are no longer missed. The older cancel-after-start method remains as a fallback.
 - **Per-site media scanning**, only on sites where you enable it: detects video/audio files and HLS/DASH streams and shows a count on the toolbar badge.
 - "Download" button over videos, context menu entries and a popup with status, found media and recent downloads.
@@ -117,6 +122,17 @@ Release Firefox only installs extensions signed by Mozilla. Three options:
 3. **Developer Edition / Nightly:** set `xpinstall.signatures.required = false` in `about:config` and install the `.xpi` directly.
 
 The snap Firefox on Ubuntu works fine: the extension talks to DDM over `127.0.0.1` instead of native messaging.
+
+## Translating
+
+App strings live in `ddm/locale/<lang>.po` (standard gettext format, editable with Poedit or any text editor); Turkish is the source language. Extension strings live in `extension/_locales/<lang>/messages.json`.
+
+```bash
+python3 scripts/i18n.py check en    # list untranslated or unused strings
+python3 scripts/i18n.py update en   # append new strings with empty translations
+```
+
+To add a language, copy `ddm/locale/en.po` to `ddm/locale/<code>.po`, translate it, and add the code to `LANGUAGES` in `ddm/i18n.py`.
 
 ## Command line
 

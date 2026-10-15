@@ -7,6 +7,7 @@ import cairo
 from gi.repository import Gio, GLib
 
 from . import APP_ID, APP_NAME
+from .i18n import N_, _, pct
 from .util import human_eta, human_size, human_speed
 
 SNI_XML = """
@@ -375,19 +376,19 @@ class TrayIcon:
         items = {0: {"children-display": "submenu"}}
         structure = []
         if running:
-            head = f"{len(running)} indiriliyor"
+            head = N_("{n} indiriliyor", len(running)).format(n=len(running))
             if total_speed:
                 head += f"  ·  {human_speed(total_speed)}"
             if sum_total and total_speed:
                 head += f"  ·  ~{human_eta((sum_total - sum_done) / total_speed)}"
             if queued:
-                head += f"  ·  {len(queued)} sırada"
+                head += "  ·  " + N_("{n} sırada", len(queued)).format(n=len(queued))
         elif queued:
-            head = f"{len(queued)} indirme sırada"
+            head = N_("{n} indirme sırada", len(queued)).format(n=len(queued))
         elif paused:
-            head = f"{len(paused)} indirme duraklatıldı"
+            head = N_("{n} indirme duraklatıldı", len(paused)).format(n=len(paused))
         else:
-            head = "Etkin indirme yok"
+            head = _("Etkin indirme yok")
         items[ID_HEADER] = {"label": _menu_text(head), "enabled": False}
         structure.append(ID_HEADER)
 
@@ -406,30 +407,31 @@ class TrayIcon:
             frac = done / total if total else 0.0
             if r["status"] == "running":
                 spd = snap.get("speed") or 0
-                tail = f"%{int(frac * 100)}" if total else human_size(done)
+                tail = pct(int(frac * 100)) if total else human_size(done)
                 text = f"{_text_bar(frac)}  {tail}   {name}" + (f"  ·  {human_speed(spd)}" if spd else "")
                 icon = "folder-download-symbolic"
             elif r["status"] == "queued":
-                text = f"{_text_bar(frac)}  sırada   {name}"
+                text = f"{_text_bar(frac)}  {_('sırada')}   {name}"
                 icon = "content-loading-symbolic"
             elif r["status"] == "paused":
-                text = f"{_text_bar(frac)}  %{int(frac * 100)}   {name}  ·  duraklatıldı" if total else f"{name}  ·  duraklatıldı"
+                text = (f"{_text_bar(frac)}  {pct(int(frac * 100))}   {name}  ·  {_('duraklatıldı')}" if total
+                        else f"{name}  ·  {_('duraklatıldı')}")
                 icon = "media-playback-pause-symbolic"
             else:
-                text = f"{name}  ·  hata"
+                text = f"{name}  ·  {_('hata')}"
                 icon = "dialog-warning-symbolic"
             items[iid] = {"label": _menu_text(text), "icon-name": icon}
             structure.append(iid)
         extra = len(running) + len(queued) + len(paused) - len(shown)
         if extra > 0:
-            items[ID_EMPTY] = {"label": f"+{extra} indirme daha", "enabled": False}
+            items[ID_EMPTY] = {"label": N_("+{n} indirme daha", extra).format(n=extra), "enabled": False}
             structure.append(ID_EMPTY)
 
         live = {r["id"] for r in shown}
         self.dl_ids = {d: i for d, i in self.dl_ids.items() if d in live}
         if recent:
             items[SEP_C] = {"type": "separator"}
-            items[ID_RECENT_HEAD] = {"label": "Son tamamlananlar", "enabled": False}
+            items[ID_RECENT_HEAD] = {"label": _("Son tamamlananlar"), "enabled": False}
             structure += [SEP_C, ID_RECENT_HEAD]
             for n, r in enumerate(recent):
                 iid = RECENT_BASE + n
@@ -443,20 +445,20 @@ class TrayIcon:
                 structure.append(iid)
 
         items[SEP_A] = {"type": "separator"}
-        items[ID_SHOW] = {"label": "Pencereyi aç", "icon-name": "window-new-symbolic"}
-        items[ID_ADD] = {"label": "Yeni indirme…", "icon-name": "list-add-symbolic"}
+        items[ID_SHOW] = {"label": _("Pencereyi aç"), "icon-name": "window-new-symbolic"}
+        items[ID_ADD] = {"label": _("Yeni indirme…"), "icon-name": "list-add-symbolic"}
         items[SEP_D] = {"type": "separator"}
-        items[ID_PAUSE] = {"label": "Tümünü duraklat", "enabled": bool(running or queued),
+        items[ID_PAUSE] = {"label": _("Tümünü duraklat"), "enabled": bool(running or queued),
                            "icon-name": "media-playback-pause-symbolic"}
-        items[ID_RESUME] = {"label": "Tümünü sürdür", "enabled": bool(paused),
+        items[ID_RESUME] = {"label": _("Tümünü sürdür"), "enabled": bool(paused),
                             "icon-name": "media-playback-start-symbolic"}
         items[SEP_B] = {"type": "separator"}
-        items[ID_PREFS] = {"label": "Ayarlar", "icon-name": "emblem-system-symbolic"}
-        items[ID_QUIT] = {"label": "Çık", "icon-name": "application-exit-symbolic"}
+        items[ID_PREFS] = {"label": _("Ayarlar"), "icon-name": "emblem-system-symbolic"}
+        items[ID_QUIT] = {"label": _("Çık"), "icon-name": "application-exit-symbolic"}
         structure += [SEP_A, ID_SHOW, ID_ADD, SEP_D, ID_PAUSE, ID_RESUME, SEP_B, ID_PREFS, ID_QUIT]
 
         if running:
-            label = (f"%{int(overall * 100)}" if overall is not None else "")
+            label = (pct(int(overall * 100)) if overall is not None else "")
             if total_speed:
                 label = f"{label} · {human_speed(total_speed)}" if label else human_speed(total_speed)
             tip = head
@@ -469,7 +471,7 @@ class TrayIcon:
                 fr = (sum(r.get("downloaded") or 0 for r in paused) / t) if t else 0.0
             icon_key = ("pause", int(fr * 50)) if paused and not queued else ("queue", 0)
         else:
-            label, tip = "", "Boşta"
+            label, tip = "", _("Boşta")
             icon_key = None
         return items, structure, label, tip, icon_key
 

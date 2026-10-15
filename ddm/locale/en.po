@@ -1,0 +1,1879 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DoDownloadManager\n"
+"Report-Msgid-Bugs-To: https://github.com/ddogukann/DoDownloadManager/issues\n"
+"Last-Translator: Doğukan\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ddm/engine.py:112
+msgid "Zaman aşımı"
+msgstr "Timed out"
+
+#: ddm/engine.py:114
+msgid "Bağlantı hatası"
+msgstr "Connection error"
+
+#: ddm/engine.py:116
+msgid "Diskte yer kalmadı"
+msgstr "No space left on disk"
+
+#: ddm/engine.py:118
+msgid "Klasöre yazma izni yok"
+msgstr "No permission to write to the folder"
+
+#: ddm/engine.py:104
+msgid "Yetki gerekli (401)"
+msgstr "Authorization required (401)"
+
+#: ddm/engine.py:105
+msgid "Erişim reddedildi (403) — link süresi dolmuş olabilir"
+msgstr "Access denied (403) — the link may have expired"
+
+#: ddm/engine.py:106
+msgid "Dosya bulunamadı (404)"
+msgstr "File not found (404)"
+
+#: ddm/engine.py:107
+msgid "Link artık geçerli değil (410)"
+msgstr "Link is no longer valid (410)"
+
+#: ddm/engine.py:108
+msgid "Sunucu istenen aralığı kabul etmedi (416)"
+msgstr "Server rejected the requested range (416)"
+
+#: ddm/engine.py:245
+msgid "indirme"
+msgstr "download"
+
+#: ddm/engine.py:570
+msgid "Link bir dosya yerine web sayfası döndürüyor"
+msgstr "The link returns a web page instead of a file"
+
+#: ddm/engine.py:712
+msgid "Bazı parçalar indirilemedi"
+msgstr "Some segments could not be downloaded"
+
+#: ddm/engine.py:110
+msgid "Sunucu hatası ({code})"
+msgstr "Server error ({code})"
+
+#: ddm/engine.py:534
+msgid "Sunucu yoğun (429/503)"
+msgstr "Server busy (429/503)"
+
+#: ddm/engine.py:576
+msgid "Yeni link parçalı indirmeyi desteklemiyor; kaldığı yerden sürdürülemez"
+msgstr "The new link does not support segmented downloads; cannot resume"
+
+#: ddm/engine.py:606
+msgid "Yeni link aynı dosyayı vermiyor (örnek baytlar uyuşmadı); kaldığı yerden sürdürülemez"
+msgstr "The new link serves a different file (sample bytes do not match); cannot resume"
+
+#: ddm/engine.py:451
+msgid "Bağlantı sürekli erken kapandı"
+msgstr "The connection kept closing early"
+
+#: ddm/engine.py:470
+msgid "Sunucu sürekli yoğun (429/503)"
+msgstr "Server keeps reporting busy (429/503)"
+
+#: ddm/engine.py:579
+msgid "Yeni linkteki dosyanın boyutu farklı ({new} ≠ {old} bayt); başka bir dosya olabilir"
+msgstr "The file at the new link has a different size ({new} ≠ {old} bytes); it may be another file"
+
+#: ddm/engine.py:412
+msgid "Sunucu yanlış aralık döndürdü"
+msgstr "Server returned the wrong range"
+
+#: ddm/engine.py:237
+msgid "Beklenmeyen yanıt ({code})"
+msgstr "Unexpected response ({code})"
+
+#: ddm/manager.py:424
+msgid "Link süresi dolmuş olabilir — yeni linkle kaldığı yerden sürdürülebilir ({detail})"
+msgstr "The link may have expired — you can resume with a new link ({detail})"
+
+#: ddm/netlanes.py:78
+msgid "Ağ"
+msgstr "Network"
+
+#: ddm/netlanes.py:73
+msgid "USB internet paylaşımı"
+msgstr "USB tethering"
+
+#: ddm/netlanes.py:75
+msgid "Mobil modem"
+msgstr "Mobile modem"
+
+#: ddm/netlanes.py:77
+msgid "Kablolu"
+msgstr "Wired"
+
+#: ddm/post.py:216
+msgid "Dosya güvenli görünmediği için otomatik işlem yapılmadı"
+msgstr "Skipped automatic actions because the file does not look safe"
+
+#: ddm/post.py:107
+msgid "Arşivde güvensiz yol: {name}"
+msgstr "Unsafe path in archive: {name}"
+
+#: ddm/post.py:141
+msgid "Desteklenmeyen arşiv türü"
+msgstr "Unsupported archive type"
+
+#: ddm/post.py:129
+msgid "7z kurulu değil (sudo apt install 7zip)"
+msgstr "7z is not installed (sudo apt install 7zip)"
+
+#: ddm/post.py:234
+msgid "Arşiv açılamadı: {error}"
+msgstr "Could not extract archive: {error}"
+
+#: ddm/post.py:133
+msgid "7z çıkış kodu {code}"
+msgstr "7z exit code {code}"
+
+#: ddm/tray.py:448
+msgid "Pencereyi aç"
+msgstr "Open window"
+
+#: ddm/tray.py:449
+msgid "Yeni indirme…"
+msgstr "New download…"
+
+#: ddm/tray.py:451
+msgid "Tümünü duraklat"
+msgstr "Pause all"
+
+#: ddm/tray.py:453
+msgid "Tümünü sürdür"
+msgstr "Resume all"
+
+#: ddm/tray.py:456
+msgid "Ayarlar"
+msgstr "Settings"
+
+#: ddm/tray.py:457
+msgid "Çık"
+msgstr "Quit"
+
+#: ddm/tray.py:434
+msgid "Son tamamlananlar"
+msgstr "Recently finished"
+
+#: ddm/tray.py:391
+msgid "Etkin indirme yok"
+msgstr "No active downloads"
+
+#: ddm/tray.py:474
+msgid "Boşta"
+msgstr "Idle"
+
+#: ddm/tray.py:414
+msgid "sırada"
+msgstr "queued"
+
+#: ddm/tray.py:421
+msgid "hata"
+msgstr "error"
+
+#: ddm/tray.py:417
+msgid "duraklatıldı"
+msgstr "paused"
+
+#: ddm/ui/add_dialog.py:26
+msgid "İndirme ekle"
+msgstr "Add download"
+
+#: ddm/ui/add_dialog.py:41
+msgid "Duraklatılmış olarak listeye ekle"
+msgstr "Add to the list paused"
+
+#: ddm/ui/add_dialog.py:67
+msgid "Klasör seç"
+msgstr "Choose folder"
+
+#: ddm/ui/add_dialog.py:106
+msgid "Bağlantı sayısı"
+msgstr "Connections"
+
+#: ddm/ui/add_dialog.py:252
+msgid "Bilgi alınıyor…"
+msgstr "Fetching info…"
+
+#: ddm/ui/add_dialog.py:33
+msgid "Vazgeç"
+msgstr "Cancel"
+
+#: ddm/ui/add_dialog.py:36
+msgid "İndir"
+msgstr "Download"
+
+#: ddm/ui/add_dialog.py:40
+msgid "Sonra"
+msgstr "Later"
+
+#: ddm/ui/add_dialog.py:52
+msgid "Adres"
+msgstr "Address"
+
+#: ddm/ui/add_dialog.py:58
+msgid "Dosya adı"
+msgstr "File name"
+
+#: ddm/ui/add_dialog.py:63
+msgid "Klasör"
+msgstr "Folder"
+
+#: ddm/ui/add_dialog.py:72
+msgid "Bilgi"
+msgstr "Info"
+
+#: ddm/ui/add_dialog.py:77
+msgid "Bu link listede zaten var"
+msgstr "This link is already in the list"
+
+#: ddm/ui/add_dialog.py:82
+msgid "Yarım kalan indirmeyle eşleşiyor"
+msgstr "Matches an unfinished download"
+
+#: ddm/ui/add_dialog.py:84
+msgid "Kaldığı yerden sürdür"
+msgstr "Resume where it left off"
+
+#: ddm/ui/add_dialog.py:92
+msgid "Seçenekler"
+msgstr "Options"
+
+#: ddm/ui/add_dialog.py:94
+msgid "Video olarak indir"
+msgstr "Download as video"
+
+#: ddm/ui/add_dialog.py:95
+msgid "Sayfadaki videoyu yt-dlp ile indirir (YouTube, HLS, DASH…)"
+msgstr "Downloads the video on the page with yt-dlp (YouTube, HLS, DASH…)"
+
+#: ddm/ui/add_dialog.py:100
+msgid "Zamanlanmış saatte indir"
+msgstr "Download during scheduled hours"
+
+#: ddm/ui/add_dialog.py:110
+msgid "Video"
+msgstr "Video"
+
+#: ddm/ui/add_dialog.py:113
+msgid "Kalite"
+msgstr "Quality"
+
+#: ddm/ui/add_dialog.py:115
+msgid "Kapsayıcı"
+msgstr "Container"
+
+#: ddm/ui/add_dialog.py:118
+msgid "Kendi klasörüne indir"
+msgstr "Save into its own folder"
+
+#: ddm/ui/add_dialog.py:118
+msgid "Video Adı/Video Adı.mp4"
+msgstr "Video Title/Video Title.mp4"
+
+#: ddm/ui/add_dialog.py:124
+msgid "yt-dlp kurulu değil"
+msgstr "yt-dlp is not installed"
+
+#: ddm/ui/add_dialog.py:125
+msgid "Ayarlar ▸ Video bölümünden tek tıkla indirebilirsiniz"
+msgstr "You can install it with one click in Settings ▸ Video"
+
+#: ddm/ui/add_dialog.py:156
+msgid "En iyi"
+msgstr "Best"
+
+#: ddm/ui/add_dialog.py:204
+msgid "İndirme klasörü"
+msgstr "Download folder"
+
+#: ddm/ui/add_dialog.py:249
+msgid "yt-dlp gerekli"
+msgstr "yt-dlp required"
+
+#: ddm/ui/add_dialog.py:277
+msgid "Sunucuya ulaşılamadı — yine de deneyebilirsiniz"
+msgstr "Could not reach the server — you can still try"
+
+#: ddm/ui/add_dialog.py:297
+msgid "boyut bilinmiyor"
+msgstr "size unknown"
+
+#: ddm/ui/add_dialog.py:298
+msgid "devam ettirilebilir"
+msgstr "resumable"
+
+#: ddm/ui/add_dialog.py:298
+msgid "parçalı indirme desteklenmiyor"
+msgstr "segmented download not supported"
+
+#: ddm/ui/add_dialog.py:300
+msgid "dikkat: link bir web sayfası"
+msgstr "warning: the link is a web page"
+
+#: ddm/ui/add_dialog.py:160
+msgid "Yalnız ses (MP3)"
+msgstr "Audio only (MP3)"
+
+#: ddm/ui/add_dialog.py:161
+msgid "Yalnız ses (M4A)"
+msgstr "Audio only (M4A)"
+
+#: ddm/ui/add_dialog.py:242
+msgid "Geçerli bir http(s) adresi girin"
+msgstr "Enter a valid http(s) address"
+
+#: ddm/ui/add_dialog.py:287
+msgid "canlı yayın"
+msgstr "live stream"
+
+#: ddm/ui/add_dialog.py:101
+msgid "{start}–{end} arası · Ayarlar ▸ Güç ve zamanlama"
+msgstr "{start}–{end} · Settings ▸ Power and schedule"
+
+#: ddm/ui/add_dialog.py:316
+msgid "Bu linkle yeniden indirmek yerine kaldığı yerden devam edebilirsin."
+msgstr "Instead of downloading again, you can resume it with this link."
+
+#: ddm/ui/add_dialog.py:330
+msgid "{name} yeni linkle kaldığı yerden sürüyor"
+msgstr "{name} is resuming with the new link"
+
+#: ddm/ui/add_dialog.py:315
+msgid "{pct} indirilmişti ({amount})."
+msgstr "{pct} had been downloaded ({amount})."
+
+#: ddm/ui/app.py:72
+msgid "Pencere açmadan arka planda başlat"
+msgstr "Start in the background without a window"
+
+#: ddm/ui/app.py:74
+msgid "Verilen linkleri video olarak (yt-dlp) indir"
+msgstr "Download the given links as videos (yt-dlp)"
+
+#: ddm/ui/app.py:76
+msgid "Onay penceresi göstermeden kuyruğa ekle"
+msgstr "Add to the queue without a confirmation dialog"
+
+#: ddm/ui/app.py:78
+msgid "Yeni indirme penceresini aç"
+msgstr "Open the new download dialog"
+
+#: ddm/ui/app.py:80
+msgid "Çalışan örneği kapat"
+msgstr "Quit the running instance"
+
+#: ddm/ui/app.py:192
+msgid "Bilgisayar {n} saniye içinde uyku moduna geçecek."
+msgstr "The computer will suspend in {n} seconds."
+
+#: ddm/ui/app.py:193
+msgid "Bilgisayar {n} saniye içinde kapanacak."
+msgstr "The computer will power off in {n} seconds."
+
+#: ddm/ui/app.py:195
+msgid "İptal"
+msgstr "Cancel"
+
+#: ddm/ui/app.py:196
+msgid "Şimdi"
+msgstr "Now"
+
+#: ddm/ui/app.py:500
+msgid "Zararlı olabilecek dosya"
+msgstr "Possibly malicious file"
+
+#: ddm/ui/app.py:533
+msgid "Yükle ve tara"
+msgstr "Upload and scan"
+
+#: ddm/ui/app.py:588
+msgid "Bu yeni linkle kaldığı yerden devam edilsin mi?"
+msgstr "Resume it with this new link?"
+
+#: ddm/ui/app.py:590
+msgid "Yeni indirme olarak ekle"
+msgstr "Add as a new download"
+
+#: ddm/ui/app.py:618
+msgid "Yeni linki yapıştır. Ya da indirme sayfasını yeniden açıp tarayıcıda indir'e bas; DDM aynı dosyayı tanıyıp kaldığı yerden sürdürmeyi önerir."
+msgstr "Paste the new link. Or open the download page again and click download in the browser; DDM will recognize the same file and offer to resume it."
+
+#: ddm/ui/app.py:624
+msgid "Sürdür"
+msgstr "Resume"
+
+#: ddm/ui/app.py:175
+msgid "Tüm indirmeler bitince uyku moduna geçilecek"
+msgstr "The computer will suspend when all downloads finish"
+
+#: ddm/ui/app.py:176
+msgid "Tüm indirmeler bitince bilgisayar kapatılacak"
+msgstr "The computer will power off when all downloads finish"
+
+#: ddm/ui/app.py:182
+msgid "DDM dosya indiriyor"
+msgstr "DDM is downloading files"
+
+#: ddm/ui/app.py:194
+msgid "Tüm indirmeler bitti"
+msgstr "All downloads finished"
+
+#: ddm/ui/app.py:462
+msgid "Dosya doğrulanamadı"
+msgstr "File verification failed"
+
+#: ddm/ui/app.py:478
+msgid "İndirmeyi iptal et"
+msgstr "Cancel download"
+
+#: ddm/ui/app.py:479
+msgid "VirusTotal'da gör"
+msgstr "View on VirusTotal"
+
+#: ddm/ui/app.py:480
+msgid "Yine de indir"
+msgstr "Download anyway"
+
+#: ddm/ui/app.py:528
+msgid "Dosya VirusTotal'a yüklensin mi?"
+msgstr "Upload the file to VirusTotal?"
+
+#: ddm/ui/app.py:587
+msgid "Eski linkin süresi dolmuştu."
+msgstr "The old link had expired."
+
+#: ddm/ui/app.py:589
+msgid "Yarım kalan indirme bulundu"
+msgstr "Unfinished download found"
+
+#: ddm/ui/app.py:617
+msgid "https://… yeni indirme linki"
+msgstr "https://… new download link"
+
+#: ddm/ui/app.py:620
+msgid "Linki yenile"
+msgstr "Refresh link"
+
+#: ddm/ui/app.py:623
+msgid "Sayfayı aç"
+msgstr "Open page"
+
+#: ddm/ui/app.py:682
+msgid "Çok bağlantılı indirme yöneticisi · Firefox eklentisi · yt-dlp ile video"
+msgstr "Multi-connection download manager · Firefox extension · video via yt-dlp"
+
+#: ddm/ui/app.py:161
+msgid "Ölçülü bağlantı: indirmeler bekletiliyor"
+msgstr "Metered connection: downloads are on hold"
+
+#: ddm/ui/app.py:322
+msgid "İndirmeler sürüyor. Pencereyi üst çubuktaki DDM simgesinden yeniden açabilirsiniz."
+msgstr "Downloads continue. You can reopen the window from the DDM icon in the top bar."
+
+#: ddm/ui/app.py:324
+msgid "İndirmeler sürüyor. Pencereyi uygulama menüsünden yeniden açabilirsiniz."
+msgstr "Downloads continue. You can reopen the window from the app menu."
+
+#: ddm/ui/app.py:325
+msgid "DDM arka planda çalışıyor"
+msgstr "DDM is running in the background"
+
+#: ddm/ui/app.py:328
+msgid "Etkin indirmeler var"
+msgstr "Downloads in progress"
+
+#: ddm/ui/app.py:329
+msgid "Çıkarsanız indirmeler duraklatılır ve sonraki açılışta sürer."
+msgstr "If you quit, downloads are paused and continue the next time DDM starts."
+
+#: ddm/ui/app.py:473
+msgid "Bu link zararlı olarak işaretlenmiş"
+msgstr "This link is flagged as malicious"
+
+#: ddm/ui/app.py:503
+msgid "Ayrıntı"
+msgstr "Details"
+
+#: ddm/ui/app.py:525
+msgid "Önce Ayarlar ▸ Güvenlik bölümünden VirusTotal API anahtarı girin"
+msgstr "First enter a VirusTotal API key in Settings ▸ Security"
+
+#: ddm/ui/app.py:529
+msgid "Yüklenen dosyalar VirusTotal'ın güvenlik ortaklarıyla paylaşılır ve aranabilir hale gelir. Kişisel ya da gizli belgeleri yüklemeyin. 650 MB sınırı vardır."
+msgstr "Uploaded files are shared with VirusTotal's security partners and become searchable. Do not upload personal or confidential documents. The limit is 650 MB."
+
+#: ddm/ui/app.py:719
+msgid "Dosyanın hash değeri sunucunun bildirdiğiyle uyuşmuyor; bozuk ya da değiştirilmiş olabilir."
+msgstr "The file's hash does not match the one reported by the server; it may be corrupted or tampered with."
+
+#: ddm/ui/app.py:722
+msgid "Yine de aç"
+msgstr "Open anyway"
+
+#: ddm/ui/app.py:729
+msgid "Dosya henüz hazır değil"
+msgstr "The file is not ready yet"
+
+#: ddm/ui/app.py:219
+msgid "İptal edildi"
+msgstr "Cancelled"
+
+#: ddm/ui/app.py:442
+msgid "İndirme tamamlandı"
+msgstr "Download complete"
+
+#: ddm/ui/app.py:451
+msgid "İndirme başarısız"
+msgstr "Download failed"
+
+#: ddm/ui/app.py:460
+msgid "{file} dosyasındaki değerle uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir."
+msgstr "Does not match the value in {file}; the file may be corrupted or tampered with."
+
+#: ddm/ui/app.py:498
+msgid "VirusTotal: {n}/{total} motor zararlı buldu"
+msgstr "VirusTotal: {n}/{total} engines flagged it as malicious"
+
+#: ddm/ui/app.py:720
+msgid "Dosya yine de açılsın mı?"
+msgstr "Open the file anyway?"
+
+#: ddm/ui/app.py:503
+msgid "Zararlı olabilir: {name}"
+msgstr "Possibly malicious: {name}"
+
+#: ddm/ui/app.py:644
+msgid "Geçerli bir link girin"
+msgstr "Enter a valid link"
+
+#: ddm/ui/app.py:716
+msgid "VirusTotal'da {n}/{total} motor bu dosyayı zararlı buldu."
+msgstr "{n}/{total} engines on VirusTotal flagged this file as malicious."
+
+#: ddm/ui/app.py:238
+msgid "İşlem yapılamadı: {error}"
+msgstr "Could not do that: {error}"
+
+#: ddm/ui/app.py:446
+msgid "Aç"
+msgstr "Open"
+
+#: ddm/ui/app.py:465
+msgid "Checksum uyuşmuyor: {name}"
+msgstr "Checksum mismatch: {name}"
+
+#: ddm/ui/app.py:474
+msgid "VirusTotal'da {n}/{total} güvenlik motoru bu {what} zararlı buldu. İndirme duraklatıldı."
+msgstr "{n}/{total} security engines on VirusTotal flagged this {what} as malicious. The download was paused."
+
+#: ddm/ui/app.py:444
+msgid "Klasörü aç"
+msgstr "Open folder"
+
+#: ddm/ui/app.py:477
+msgid "alan adını"
+msgstr "domain"
+
+#: ddm/ui/app.py:477
+msgid "linki"
+msgstr "link"
+
+#: ddm/ui/app.py:696
+msgid "Açılamadı: {error}"
+msgstr "Could not open: {error}"
+
+#: ddm/ui/app.py:446
+msgid "Tamamlandı: {name}"
+msgstr "Finished: {name}"
+
+#: ddm/ui/complete.py:48
+msgid "Boyut"
+msgstr "Size"
+
+#: ddm/ui/complete.py:49
+msgid "Süre"
+msgstr "Time"
+
+#: ddm/ui/complete.py:51
+msgid "Ortalama hız"
+msgstr "Average speed"
+
+#: ddm/ui/complete.py:52
+msgid "En yüksek hız"
+msgstr "Peak speed"
+
+#: ddm/ui/complete.py:76
+msgid "Dosyayı aç"
+msgstr "Open file"
+
+#: ddm/ui/complete.py:87
+msgid "Bir daha gösterme"
+msgstr "Don't show again"
+
+#: ddm/ui/complete.py:91
+msgid "Ayrıntılar"
+msgstr "Details"
+
+#: ddm/ui/complete.py:179
+msgid "Açılan klasörü aç"
+msgstr "Open extracted folder"
+
+#: ddm/ui/complete.py:180
+msgid "Konumu göster"
+msgstr "Show location"
+
+#: ddm/ui/complete.py:154
+msgid "Süre · yt-dlp"
+msgstr "Time · yt-dlp"
+
+#: ddm/ui/complete.py:181
+msgid "arşiv açıldı"
+msgstr "archive extracted"
+
+#: ddm/ui/complete.py:184
+msgid "arşiv açılıyor…"
+msgstr "extracting archive…"
+
+#: ddm/ui/complete.py:152
+msgid "Süre · {n} bağlantı"
+msgstr "Time · {n} connections"
+
+#: ddm/ui/complete.py:173
+msgid "checksum aranıyor…"
+msgstr "looking for checksum…"
+
+#: ddm/ui/complete.py:186
+msgid "otomatik işlem yapılmadı"
+msgstr "automatic actions skipped"
+
+#: ddm/ui/complete.py:171
+msgid "{name} ✕ uyuşmuyor"
+msgstr "{name} ✕ mismatch"
+
+#: ddm/ui/complete.py:181
+msgid "arşiv silindi"
+msgstr "archive deleted"
+
+#: ddm/ui/detail.py:51
+msgid "İndirme"
+msgstr "Download"
+
+#: ddm/ui/detail.py:62
+msgid "Linki kopyala"
+msgstr "Copy link"
+
+#: ddm/ui/detail.py:63
+msgid "SHA-256 kopyala"
+msgstr "Copy SHA-256"
+
+#: ddm/ui/detail.py:64
+msgid "VirusTotal'da aç"
+msgstr "Open on VirusTotal"
+
+#: ddm/ui/detail.py:56
+msgid "Özet"
+msgstr "Summary"
+
+#: ddm/ui/detail.py:135
+msgid "Hız"
+msgstr "Speed"
+
+#: ddm/ui/detail.py:147
+msgid "Dosya"
+msgstr "File"
+
+#: ddm/ui/detail.py:149
+msgid "Konum"
+msgstr "Location"
+
+#: ddm/ui/detail.py:155
+msgid "Kopyala"
+msgstr "Copy"
+
+#: ddm/ui/detail.py:159
+msgid "Bağlantı"
+msgstr "Connection"
+
+#: ddm/ui/detail.py:165
+msgid "Doğrulama"
+msgstr "Verification"
+
+#: ddm/ui/detail.py:166
+msgid "Otomatik işlem"
+msgstr "Automatic action"
+
+#: ddm/ui/detail.py:167
+msgid "Açılan klasörü göster"
+msgstr "Show extracted folder"
+
+#: ddm/ui/detail.py:178
+msgid "Sonuç"
+msgstr "Result"
+
+#: ddm/ui/detail.py:185
+msgid "Yeniden kontrol et"
+msgstr "Check again"
+
+#: ddm/ui/detail.py:191
+msgid "Link"
+msgstr "Link"
+
+#: ddm/ui/detail.py:196
+msgid "Bağlantılar"
+msgstr "Connections"
+
+#: ddm/ui/detail.py:343
+msgid "Birleştiriliyor"
+msgstr "Merging"
+
+#: ddm/ui/detail.py:374
+msgid "Duraklat"
+msgstr "Pause"
+
+#: ddm/ui/detail.py:393
+msgid "veri yok"
+msgstr "no data"
+
+#: ddm/ui/detail.py:407
+msgid "yt-dlp · kaldığı yerden sürer"
+msgstr "yt-dlp · resumable"
+
+#: ddm/ui/detail.py:419
+msgid "hesaplanıyor…"
+msgstr "calculating…"
+
+#: ddm/ui/detail.py:454
+msgid "Ayarlar ▸ Güvenlik bölümünden API anahtarı girin"
+msgstr "Enter an API key in Settings ▸ Security"
+
+#: ddm/ui/detail.py:475
+msgid "Akışlar"
+msgstr "Streams"
+
+#: ddm/ui/detail.py:65
+msgid "Diğer seçenekler"
+msgstr "More options"
+
+#: ddm/ui/detail.py:378
+msgid "Kapat"
+msgstr "Close"
+
+#: ddm/ui/detail.py:421
+msgid "✓ sunucunun bildirdiği değerle aynı"
+msgstr "✓ matches the value reported by the server"
+
+#: ddm/ui/detail.py:422
+msgid "✕ sunucunun bildirdiği değerle uyuşmuyor"
+msgstr "✕ does not match the value reported by the server"
+
+#: ddm/ui/detail.py:427
+msgid "checksum dosyası aranıyor…"
+msgstr "looking for a checksum file…"
+
+#: ddm/ui/detail.py:430
+msgid "yayımlanmış checksum dosyası bulunamadı"
+msgstr "no published checksum file found"
+
+#: ddm/ui/detail.py:431
+msgid "doğrulanamadı"
+msgstr "could not verify"
+
+#: ddm/ui/detail.py:346
+msgid "Bağlanıyor…"
+msgstr "Connecting…"
+
+#: ddm/ui/detail.py:380
+msgid "Devam et"
+msgstr "Resume"
+
+#: ddm/ui/detail.py:380
+msgid "Yeniden dene"
+msgstr "Retry"
+
+#: ddm/ui/detail.py:391
+msgid "son {n} sn · ort. {avg}"
+msgstr "last {n} s · avg. {avg}"
+
+#: ddm/ui/detail.py:410
+msgid "{n} etkin / sınır {limit}"
+msgstr "{n} active / limit {limit}"
+
+#: ddm/ui/detail.py:465
+msgid "{scope}: {n}/{total} zararlı"
+msgstr "{scope}: {n}/{total} malicious"
+
+#: ddm/ui/detail.py:428
+msgid "✓ {file} ile doğrulandı"
+msgstr "✓ verified with {file}"
+
+#: ddm/ui/detail.py:429
+msgid "✕ {file} ile UYUŞMUYOR"
+msgstr "✕ does NOT match {file}"
+
+#: ddm/ui/detail.py:442
+msgid "arşiv açılıyor… ({rule})"
+msgstr "extracting archive… ({rule})"
+
+#: ddm/ui/detail.py:445
+msgid "dosya açıldı ({rule})"
+msgstr "file opened ({rule})"
+
+#: ddm/ui/detail.py:468
+msgid "kontrol ediliyor…"
+msgstr "checking…"
+
+#: ddm/ui/detail.py:468
+msgid "VirusTotal'da kayıtlı değil"
+msgstr "not known to VirusTotal"
+
+#: ddm/ui/detail.py:347
+msgid "{t} kaldı"
+msgstr "{t} left"
+
+#: ddm/ui/detail.py:443
+msgid "arşiv açıldı → {dest}"
+msgstr "archive extracted → {dest}"
+
+#: ddm/ui/detail.py:351
+msgid "{t} sürdü"
+msgstr "took {t}"
+
+#: ddm/ui/detail.py:412
+msgid "kopuk"
+msgstr "down"
+
+#: ddm/ui/detail.py:415
+msgid "Parçalı, kaldığı yerden sürer"
+msgstr "Segmented, resumable"
+
+#: ddm/ui/detail.py:415
+msgid "Tek bağlantı, devam ettirilemez"
+msgstr "Single connection, not resumable"
+
+#: ddm/ui/items.py:9
+msgid "Sırada"
+msgstr "Queued"
+
+#: ddm/ui/items.py:10
+msgid "İndiriliyor"
+msgstr "Downloading"
+
+#: ddm/ui/items.py:11
+msgid "Duraklatıldı"
+msgstr "Paused"
+
+#: ddm/ui/items.py:12
+msgid "Tamamlandı"
+msgstr "Finished"
+
+#: ddm/ui/items.py:13
+msgid "Hata"
+msgstr "Error"
+
+#: ddm/ui/items.py:36
+msgid "Hash…"
+msgstr "Hashing…"
+
+#: ddm/ui/items.py:36
+msgid "Sırada…"
+msgstr "Queued…"
+
+#: ddm/ui/items.py:36
+msgid "Sorgu…"
+msgstr "Lookup…"
+
+#: ddm/ui/items.py:36
+msgid "Yükleniyor…"
+msgstr "Uploading…"
+
+#: ddm/ui/items.py:37
+msgid "Taranıyor…"
+msgstr "Scanning…"
+
+#: ddm/ui/items.py:64
+msgid "%d.%m.%Y %H:%M"
+msgstr "%Y-%m-%d %H:%M"
+
+#: ddm/ui/items.py:25
+msgid "sunucunun bildirdiği değer"
+msgstr "the value reported by the server"
+
+#: ddm/ui/items.py:39
+msgid "VirusTotal kontrolü sürüyor"
+msgstr "VirusTotal check in progress"
+
+#: ddm/ui/items.py:41
+msgid "? kayıtsız"
+msgstr "? unknown"
+
+#: ddm/ui/items.py:41
+msgid "Bu dosya VirusTotal'da kayıtlı değil. Sağ tık ▸ VirusTotal'a yükle ve tara"
+msgstr "VirusTotal does not know this file. Right-click ▸ Upload to VirusTotal and scan"
+
+#: ddm/ui/items.py:43
+msgid "! hata"
+msgstr "! error"
+
+#: ddm/ui/items.py:49
+msgid "Link/alan adı VirusTotal'da şüpheli olarak işaretli"
+msgstr "The link/domain is flagged as suspicious on VirusTotal"
+
+#: ddm/ui/items.py:51
+msgid "Link…"
+msgstr "Link…"
+
+#: ddm/ui/items.py:51
+msgid "Link VirusTotal'da kontrol ediliyor"
+msgstr "Checking the link on VirusTotal"
+
+#: ddm/ui/items.py:53
+msgid "Link/alan adı temiz; dosya inince kontrol edilecek"
+msgstr "The link/domain is clean; the file will be checked when it finishes"
+
+#: ddm/ui/items.py:43
+msgid "VirusTotal kontrolü başarısız"
+msgstr "VirusTotal check failed"
+
+#: ddm/ui/items.py:153
+msgid "Bağlanıyor"
+msgstr "Connecting"
+
+#: ddm/ui/items.py:26
+msgid "Dosyanın SHA-256 değeri {src} ile uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir"
+msgstr "The file's SHA-256 does not match {src}; the file may be corrupted or tampered with"
+
+#: ddm/ui/items.py:46
+msgid "Link/alan adı VirusTotal'da zararlı olarak işaretli ({n} motor)"
+msgstr "The link/domain is flagged as malicious on VirusTotal ({n} engines)"
+
+#: ddm/ui/items.py:155
+msgid "Zamanlandı"
+msgstr "Scheduled"
+
+#: ddm/ui/items.py:30
+msgid "VirusTotal: {total} motorun hiçbiri zararlı bulmadı"
+msgstr "VirusTotal: none of {total} engines flagged it"
+
+#: ddm/ui/items.py:33
+msgid "VirusTotal: {n} motor zararlı, {s} motor şüpheli buldu"
+msgstr "VirusTotal: {n} engines flagged it as malicious, {s} as suspicious"
+
+#: ddm/ui/items.py:157
+msgid "Link süresi doldu"
+msgstr "Link expired"
+
+#: ddm/ui/items.py:159
+msgid "Hata: "
+msgstr "Error: "
+
+#: ddm/ui/prefs.py:71
+msgid "Kategori alt klasörleri"
+msgstr "Category subfolders"
+
+#: ddm/ui/prefs.py:72
+msgid "Dosyaları Video, Müzik, Arşiv… klasörlerine ayırır"
+msgstr "Sorts files into Video, Music, Archives… folders"
+
+#: ddm/ui/prefs.py:76
+msgid "Aynı anda indirme"
+msgstr "Simultaneous downloads"
+
+#: ddm/ui/prefs.py:77
+msgid "Açılışta yarım kalanları sürdür"
+msgstr "Resume unfinished downloads on startup"
+
+#: ddm/ui/prefs.py:81
+msgid "Pencere kapanınca arka planda çalış"
+msgstr "Keep running in the background when the window is closed"
+
+#: ddm/ui/prefs.py:82
+msgid "Tarayıcı eklentisi uygulama penceresi kapalıyken de çalışır"
+msgstr "The browser extension keeps working while the window is closed"
+
+#: ddm/ui/prefs.py:83
+msgid "Oturum açılınca başlat"
+msgstr "Start on login"
+
+#: ddm/ui/prefs.py:84
+msgid "Üst çubukta simge göster"
+msgstr "Show icon in the top bar"
+
+#: ddm/ui/prefs.py:85
+msgid "Ubuntu'da hazır gelen AppIndicator desteğini kullanır"
+msgstr "Uses Ubuntu's built-in AppIndicator support"
+
+#: ddm/ui/prefs.py:86
+msgid "Simgenin yanında hızı göster"
+msgstr "Show speed next to the icon"
+
+#: ddm/ui/prefs.py:87
+msgid "Bildirimler"
+msgstr "Notifications"
+
+#: ddm/ui/prefs.py:88
+msgid "Panodaki linkleri öner"
+msgstr "Suggest links from the clipboard"
+
+#: ddm/ui/prefs.py:89
+msgid "Pencere öne geldiğinde panodaki indirilebilir linki sorar"
+msgstr "Offers a downloadable link from the clipboard when the window gains focus"
+
+#: ddm/ui/prefs.py:90
+msgid "İndirme başlayınca ayrıntı penceresini aç"
+msgstr "Open the detail window when a download starts"
+
+#: ddm/ui/prefs.py:91
+msgid "İndirme bitince özet penceresi göster"
+msgstr "Show a summary window when a download finishes"
+
+#: ddm/ui/prefs.py:92
+msgid "Boyut, süre, hız grafiği ve VirusTotal sonucu; Dosyayı aç / Klasörü aç"
+msgstr "Size, time, speed graph and VirusTotal result; Open file / Open folder"
+
+#: ddm/ui/prefs.py:127
+msgid "Varsayılan bağlantı sayısı"
+msgstr "Default connections"
+
+#: ddm/ui/prefs.py:129
+msgid "Hız sınırı (KB/s)"
+msgstr "Speed limit (KB/s)"
+
+#: ddm/ui/prefs.py:144
+msgid "Yeniden deneme"
+msgstr "Retries"
+
+#: ddm/ui/prefs.py:145
+msgid "Zaman aşımı (sn)"
+msgstr "Timeout (s)"
+
+#: ddm/ui/prefs.py:190
+msgid "En küçük dosya boyutu (MB)"
+msgstr "Minimum file size (MB)"
+
+#: ddm/ui/prefs.py:191
+msgid "Bunun altındaki dosyalar tek hattan iner"
+msgstr "Smaller files use a single link"
+
+#: ddm/ui/prefs.py:228
+msgid "Paralel parça (HLS/DASH)"
+msgstr "Parallel fragments (HLS/DASH)"
+
+#: ddm/ui/prefs.py:229
+msgid "Her videoyu kendi klasörüne indir"
+msgstr "Save each video into its own folder"
+
+#: ddm/ui/prefs.py:230
+msgid "Video Adı/Video Adı.mp4 şeklinde kaydedilir; doğrudan inen .mp4/.mkv dosyaları için de geçerli. Yalnız ses indirmeleri klasöre konmaz"
+msgstr "Saved as Video Title/Video Title.mp4; also applies to directly downloaded .mp4/.mkv files. Audio-only downloads are not put in a folder"
+
+#: ddm/ui/prefs.py:283
+msgid "İndirme sürerken uyku moduna geçme"
+msgstr "Don't suspend while downloading"
+
+#: ddm/ui/prefs.py:284
+msgid "Bilgisayar boşta kalsa da indirme bitene kadar uyumaz; ekran yine kararabilir"
+msgstr "The computer stays awake until downloads finish, even when idle; the screen can still blank"
+
+#: ddm/ui/prefs.py:320
+msgid "Sınır (KB/s)"
+msgstr "Limit (KB/s)"
+
+#: ddm/ui/prefs.py:344
+msgid "İndirilen dosyaları kontrol et"
+msgstr "Check downloaded files"
+
+#: ddm/ui/prefs.py:345
+msgid "Her indirme bitince VirusTotal sonucu listede gösterilir; zararlıysa uyarılırsın"
+msgstr "Each finished download shows its VirusTotal result in the list; you're warned if it's malicious"
+
+#: ddm/ui/prefs.py:347
+msgid "Checksum dosyalarını bul ve doğrula"
+msgstr "Find and verify checksum files"
+
+#: ddm/ui/prefs.py:348
+msgid "İndirme bitince aynı dizinde SHA256SUMS ya da dosya.sha256 aranır; varsa dosya otomatik doğrulanır"
+msgstr "When a download finishes, SHA256SUMS or file.sha256 is looked up next to it; if found, the file is verified automatically"
+
+#: ddm/ui/prefs.py:350
+msgid "Linki indirme başlamadan kontrol et"
+msgstr "Check the link before downloading"
+
+#: ddm/ui/prefs.py:351
+msgid "Link ya da alan adı zararlı işaretliyse indirme duraklatılıp sorulur. Link adresi VirusTotal'a gider"
+msgstr "If the link or domain is flagged, the download is paused and you are asked. The link address is sent to VirusTotal"
+
+#: ddm/ui/prefs.py:384
+msgid "Port"
+msgstr "Port"
+
+#: ddm/ui/prefs.py:386
+msgid "Tarayıcıdan gelenleri onayla"
+msgstr "Confirm downloads from the browser"
+
+#: ddm/ui/prefs.py:387
+msgid "Kapalıysa indirme pencere açılmadan hemen başlar"
+msgstr "When off, downloads start right away without a dialog"
+
+#: ddm/ui/prefs.py:398
+msgid "En küçük boyut (KB)"
+msgstr "Minimum size (KB)"
+
+#: ddm/ui/prefs.py:60
+msgid "Genel"
+msgstr "General"
+
+#: ddm/ui/prefs.py:63
+msgid "Kayıt yeri"
+msgstr "Save location"
+
+#: ddm/ui/prefs.py:74
+msgid "Kuyruk"
+msgstr "Queue"
+
+#: ddm/ui/prefs.py:79
+msgid "Davranış"
+msgstr "Behavior"
+
+#: ddm/ui/prefs.py:95
+msgid "Dil · Language"
+msgstr "Language · Dil"
+
+#: ddm/ui/prefs.py:100
+msgid "Arayüz dili"
+msgstr "Interface language"
+
+#: ddm/ui/prefs.py:104
+msgid "Yeni dil yeniden başlatınca uygulanır"
+msgstr "The new language applies after a restart"
+
+#: ddm/ui/prefs.py:105
+msgid "İndirmeler duraklatılır ve kaldığı yerden sürer"
+msgstr "Downloads are paused and resume where they left off"
+
+#: ddm/ui/prefs.py:107
+msgid "Yeniden başlat"
+msgstr "Restart"
+
+#: ddm/ui/prefs.py:128
+msgid "Dosya başına paralel bağlantı. Sunucu 429/503 dönerse otomatik azaltılır"
+msgstr "Parallel connections per file. Reduced automatically if the server returns 429/503"
+
+#: ddm/ui/prefs.py:129
+msgid "0 = sınırsız"
+msgstr "0 = unlimited"
+
+#: ddm/ui/prefs.py:131
+msgid "Çoklu bağdaştırıcı"
+msgstr "Multiple adapters"
+
+#: ddm/ui/prefs.py:132
+msgid "Büyük dosyaların bağlantılarını birden fazla internet hattına dağıtır (örn. ev Wi-Fi'si + telefondan USB paylaşım). Aynı modeme bağlı Wi-Fi ve kablo hız kazandırmaz. yt-dlp videolarında çalışmaz."
+msgstr "Spreads the connections of large files across several internet links (e.g. home Wi-Fi + USB tethering from a phone). Wi-Fi and Ethernet on the same router give no gain. Not used for yt-dlp videos."
+
+#: ddm/ui/prefs.py:134
+msgid "Yeniden tara"
+msgstr "Rescan"
+
+#: ddm/ui/prefs.py:142
+msgid "Dayanıklılık"
+msgstr "Reliability"
+
+#: ddm/ui/prefs.py:146
+msgid "Kimlik"
+msgstr "Identity"
+
+#: ddm/ui/prefs.py:158
+msgid "Birden fazla bağdaştırıcıyla indir"
+msgstr "Download over multiple adapters"
+
+#: ddm/ui/prefs.py:200
+msgid "YouTube ve diğer sitelerden video indirme motoru"
+msgstr "Video download engine for YouTube and other sites"
+
+#: ddm/ui/prefs.py:202
+msgid "Sürüm"
+msgstr "Version"
+
+#: ddm/ui/prefs.py:203
+msgid "Güncelle"
+msgstr "Update"
+
+#: ddm/ui/prefs.py:216
+msgid "Varsayılanlar"
+msgstr "Defaults"
+
+#: ddm/ui/prefs.py:219
+msgid "Azami çözünürlük"
+msgstr "Maximum resolution"
+
+#: ddm/ui/prefs.py:246
+msgid "Kurulu değil"
+msgstr "Not installed"
+
+#: ddm/ui/prefs.py:279
+msgid "Güç ve zamanlama"
+msgstr "Power and schedule"
+
+#: ddm/ui/prefs.py:281
+msgid "Güç"
+msgstr "Power"
+
+#: ddm/ui/prefs.py:288
+msgid "Zamanlayıcı"
+msgstr "Scheduler"
+
+#: ddm/ui/prefs.py:289
+msgid "“Zamanla” denilen indirmeler yalnızca bu saatler arasında çalışır. Gece yarısını aşan aralıklar (23:00–06:00) da olur."
+msgstr "Downloads marked “Schedule” only run between these times. Windows past midnight (23:00–06:00) work too."
+
+#: ddm/ui/prefs.py:292
+msgid "Başlangıç"
+msgstr "Start"
+
+#: ddm/ui/prefs.py:292
+msgid "Bitiş"
+msgstr "End"
+
+#: ddm/ui/prefs.py:311
+msgid "Ölçülü bağlantı"
+msgstr "Metered connection"
+
+#: ddm/ui/prefs.py:312
+msgid "Telefondan internet paylaşımı gibi kotalı bağlantılarda ne yapılsın"
+msgstr "What to do on metered connections such as phone tethering"
+
+#: ddm/ui/prefs.py:314
+msgid "Bir şey yapma"
+msgstr "Nothing"
+
+#: ddm/ui/prefs.py:314
+msgid "İndirmeleri beklet"
+msgstr "Hold downloads"
+
+#: ddm/ui/prefs.py:314
+msgid "Hızı sınırla"
+msgstr "Limit speed"
+
+#: ddm/ui/prefs.py:323
+msgid "Güvenlik"
+msgstr "Security"
+
+#: ddm/ui/prefs.py:327
+msgid "Dosyanın kendisi gönderilmez: indirme bitince SHA-256 değeri, başlarken de link adresi sorgulanır. Ücretsiz anahtar: dakikada 4, günde 500 sorgu."
+msgstr "The file itself is never sent: its SHA-256 is looked up when it finishes, and the link when it starts. Free key: 4 lookups per minute, 500 per day."
+
+#: ddm/ui/prefs.py:330
+msgid "API anahtarı"
+msgstr "API key"
+
+#: ddm/ui/prefs.py:334
+msgid "Dene"
+msgstr "Test"
+
+#: ddm/ui/prefs.py:339
+msgid "Anahtarın yok mu?"
+msgstr "Don't have a key?"
+
+#: ddm/ui/prefs.py:340
+msgid "VirusTotal'da ücretsiz hesap aç, profil ▸ API Key bölümünden kopyala"
+msgstr "Create a free VirusTotal account and copy it from profile ▸ API Key"
+
+#: ddm/ui/prefs.py:346
+msgid "Bütünlük"
+msgstr "Integrity"
+
+#: ddm/ui/prefs.py:376
+msgid "Tarayıcı"
+msgstr "Browser"
+
+#: ddm/ui/prefs.py:378
+msgid "Köprü"
+msgstr "Bridge"
+
+#: ddm/ui/prefs.py:384
+msgid "Değişiklik yeniden başlatınca geçerli olur; eklenti ayarlarındaki portla aynı olmalı"
+msgstr "Takes effect after a restart; must match the port in the extension settings"
+
+#: ddm/ui/prefs.py:389
+msgid "Yakalama"
+msgstr "Capture"
+
+#: ddm/ui/prefs.py:390
+msgid "Firefox'ta başlayan indirmelerden hangilerinin DDM'ye devredileceği"
+msgstr "Which downloads started in Firefox are handed over to DDM"
+
+#: ddm/ui/prefs.py:392
+msgid "Dosya uzantıları (virgülle)"
+msgstr "File extensions (comma separated)"
+
+#: ddm/ui/prefs.py:398
+msgid "0 = boyut sınırı yok"
+msgstr "0 = no size limit"
+
+#: ddm/ui/prefs.py:400
+msgid "Eklenti"
+msgstr "Extension"
+
+#: ddm/ui/prefs.py:403
+msgid "Firefox eklentisi"
+msgstr "Firefox extension"
+
+#: ddm/ui/prefs.py:170
+msgid "ölçülü bağlantı — kota harcar"
+msgstr "metered connection — uses data quota"
+
+#: ddm/ui/prefs.py:185
+msgid "İkinci bir bağlantı (telefon USB paylaşımı, ikinci Wi-Fi adaptörü…) takınca burada görünür; yenile düğmesiyle tekrar tara."
+msgstr "A second connection (USB tethering, a second Wi-Fi adapter…) appears here once plugged in; rescan with the refresh button."
+
+#: ddm/ui/prefs.py:211
+msgid "bulunamadı — ayrı görüntü/ses akışları birleştirilemez (sudo apt install ffmpeg)"
+msgstr "not found — separate video/audio streams cannot be merged (sudo apt install ffmpeg)"
+
+#: ddm/ui/prefs.py:285
+msgid "Tümü bitince uyku / kapatma"
+msgstr "Suspend / power off when all finish"
+
+#: ddm/ui/prefs.py:286
+msgid "Ana menü ▸ Tümü bitince. Tek seferliktir; 60 sn geri sayımla iptal edilebilir"
+msgstr "Main menu ▸ When all finish. One-time; can be cancelled during a 60 s countdown"
+
+#: ddm/ui/prefs.py:341
+msgid "Hesap aç"
+msgstr "Sign up"
+
+#: ddm/ui/prefs.py:363
+msgid "Anahtar çalışıyor ✓"
+msgstr "Key works ✓"
+
+#: ddm/ui/prefs.py:363
+msgid "Beklenmeyen yanıt"
+msgstr "Unexpected response"
+
+#: ddm/ui/prefs.py:381
+msgid "127.0.0.1:{port} dinleniyor"
+msgstr "Listening on 127.0.0.1:{port}"
+
+#: ddm/ui/prefs.py:382
+msgid "Başlatılamadı: {error}"
+msgstr "Could not start: {error}"
+
+#: ddm/ui/prefs.py:383
+msgid "Durum"
+msgstr "Status"
+
+#: ddm/ui/prefs.py:99
+msgid "Sistem dili ({name})"
+msgstr "System language ({name})"
+
+#: ddm/ui/prefs.py:356
+msgid "Önce anahtarı girin"
+msgstr "Enter the key first"
+
+#: ddm/ui/prefs.py:184
+msgid "Şu an internete çıkan {n} bağdaştırıcı var"
+msgstr "{n} adapter(s) currently connected to the internet"
+
+#: ddm/ui/prefs.py:272
+msgid "yt-dlp güncellendi"
+msgstr "yt-dlp updated"
+
+#: ddm/ui/prefs.py:293
+msgid "{title} (SS:DD)"
+msgstr "{title} (HH:MM)"
+
+#: ddm/ui/prefs.py:270
+msgid "yt-dlp indirilemedi: {error}"
+msgstr "Could not download yt-dlp: {error}"
+
+#: ddm/ui/rules.py:24
+msgid "koşul yok"
+msgstr "no conditions"
+
+#: ddm/ui/rules.py:23
+msgid "bitince aç"
+msgstr "open when finished"
+
+#: ddm/ui/rules.py:21
+msgid "arşivi aç ve sil"
+msgstr "extract and delete archive"
+
+#: ddm/ui/rules.py:21
+msgid "arşivi aç"
+msgstr "extract archive"
+
+#: ddm/ui/rules.py:39
+msgid "Kuralı düzenle"
+msgstr "Edit rule"
+
+#: ddm/ui/rules.py:39
+msgid "Yeni kural"
+msgstr "New rule"
+
+#: ddm/ui/rules.py:47
+msgid "Kaydet"
+msgstr "Save"
+
+#: ddm/ui/rules.py:56
+msgid "Ne zaman"
+msgstr "When"
+
+#: ddm/ui/rules.py:56
+msgid "Doldurulan koşulların hepsi tutmalı"
+msgstr "All filled-in conditions must match"
+
+#: ddm/ui/rules.py:58
+msgid "Kural adı"
+msgstr "Rule name"
+
+#: ddm/ui/rules.py:60
+msgid "Uzantılar (örn. deb, rpm, tar.gz)"
+msgstr "Extensions (e.g. deb, rpm, tar.gz)"
+
+#: ddm/ui/rules.py:62
+msgid "Site (örn. github.com)"
+msgstr "Site (e.g. github.com)"
+
+#: ddm/ui/rules.py:64
+msgid "Dosya adında geçen"
+msgstr "File name contains"
+
+#: ddm/ui/rules.py:69
+msgid "Ne yapılsın"
+msgstr "What to do"
+
+#: ddm/ui/rules.py:76
+msgid "Varsayılana dön"
+msgstr "Reset to default"
+
+#: ddm/ui/rules.py:82
+msgid "Arşivse otomatik aç"
+msgstr "Extract archives automatically"
+
+#: ddm/ui/rules.py:83
+msgid "zip, tar.gz, tar.xz… · 7z/rar için 7zip paketi gerekir"
+msgstr "zip, tar.gz, tar.xz… · 7z/rar need the 7zip package"
+
+#: ddm/ui/rules.py:85
+msgid "Açtıktan sonra arşivi sil"
+msgstr "Delete archive after extracting"
+
+#: ddm/ui/rules.py:87
+msgid "Bitince aç"
+msgstr "Open when finished"
+
+#: ddm/ui/rules.py:87
+msgid "Arşivse açılan klasörü, değilse dosyayı açar"
+msgstr "Opens the extracted folder for archives, otherwise the file"
+
+#: ddm/ui/rules.py:102
+msgid "Kural klasörü"
+msgstr "Rule folder"
+
+#: ddm/ui/rules.py:121
+msgid "Kural"
+msgstr "Rule"
+
+#: ddm/ui/rules.py:147
+msgid "Kurallar"
+msgstr "Rules"
+
+#: ddm/ui/rules.py:152
+msgid "Yukarıdan aşağı ilk eşleşen kural uygulanır. Ekleme penceresinde elle klasör seçersen kural klasörü kullanılmaz."
+msgstr "The first matching rule from the top applies. If you pick a folder manually in the add dialog, the rule folder is not used."
+
+#: ddm/ui/rules.py:153
+msgid "Kural ekle"
+msgstr "Add rule"
+
+#: ddm/ui/rules.py:159
+msgid "Henüz kural yok"
+msgstr "No rules yet"
+
+#: ddm/ui/rules.py:160
+msgid "Örnek: uzantı “deb, rpm” → ~/Paketler; uzantı “zip” → arşivi aç ve sil"
+msgstr "Example: extensions “deb, rpm” → ~/Packages; extension “zip” → extract and delete archive"
+
+#: ddm/ui/rules.py:11
+msgid "uzantı: {v}"
+msgstr "extension: {v}"
+
+#: ddm/ui/rules.py:13
+msgid "site: {v}"
+msgstr "site: {v}"
+
+#: ddm/ui/rules.py:15
+msgid "adında: “{v}”"
+msgstr "name contains: “{v}”"
+
+#: ddm/ui/rules.py:91
+msgid "VirusTotal zararlı derse ya da checksum tutmazsa arşiv açılmaz ve dosya otomatik açılmaz"
+msgstr "If VirusTotal flags the file or the checksum does not match, nothing is extracted or opened automatically"
+
+#: ddm/ui/rules.py:99
+msgid "varsayılan"
+msgstr "default"
+
+#: ddm/ui/rules.py:179
+msgid "Yukarı"
+msgstr "Up"
+
+#: ddm/ui/rules.py:180
+msgid "Düzenle"
+msgstr "Edit"
+
+#: ddm/ui/rules.py:181
+msgid "Sil"
+msgstr "Delete"
+
+#: ddm/ui/window.py:88
+msgid "Tamamlananları temizle"
+msgstr "Clear finished"
+
+#: ddm/ui/window.py:95
+msgid "Tümü bitince"
+msgstr "When all finish"
+
+#: ddm/ui/window.py:99
+msgid "DoDownloadManager hakkında"
+msgstr "About DoDownloadManager"
+
+#: ddm/ui/window.py:198
+msgid "Ad"
+msgstr "Name"
+
+#: ddm/ui/window.py:200
+msgid "İlerleme"
+msgstr "Progress"
+
+#: ddm/ui/window.py:202
+msgid "Kalan"
+msgstr "Left"
+
+#: ddm/ui/window.py:227
+msgid "Eklenme"
+msgstr "Added"
+
+#: ddm/ui/window.py:245
+msgid "Baştan başlat"
+msgstr "Restart from scratch"
+
+#: ddm/ui/window.py:246
+msgid "Linki yenile…"
+msgstr "Refresh link…"
+
+#: ddm/ui/window.py:247
+msgid "Zamanla"
+msgstr "Schedule"
+
+#: ddm/ui/window.py:248
+msgid "Zamanlamayı kaldır"
+msgstr "Unschedule"
+
+#: ddm/ui/window.py:253
+msgid "Sırada yukarı"
+msgstr "Move up in queue"
+
+#: ddm/ui/window.py:254
+msgid "Sırada aşağı"
+msgstr "Move down in queue"
+
+#: ddm/ui/window.py:258
+msgid "VirusTotal'a yükle ve tara"
+msgstr "Upload to VirusTotal and scan"
+
+#: ddm/ui/window.py:262
+msgid "Listeden kaldır"
+msgstr "Remove from list"
+
+#: ddm/ui/window.py:263
+msgid "Dosyayla birlikte sil"
+msgstr "Delete with file"
+
+#: ddm/ui/window.py:72
+msgid "Yeni indirme (Ctrl+N)"
+msgstr "New download (Ctrl+N)"
+
+#: ddm/ui/window.py:77
+msgid "Listeden kaldır (Del)"
+msgstr "Remove from list (Del)"
+
+#: ddm/ui/window.py:81
+msgid "Ara…"
+msgstr "Search…"
+
+#: ddm/ui/window.py:90
+msgid "Hiçbir şey yapma"
+msgstr "Do nothing"
+
+#: ddm/ui/window.py:90
+msgid "Uyku moduna geç"
+msgstr "Suspend"
+
+#: ddm/ui/window.py:91
+msgid "Bilgisayarı kapat"
+msgstr "Power off"
+
+#: ddm/ui/window.py:113
+msgid "İndirme yok"
+msgstr "No downloads"
+
+#: ddm/ui/window.py:114
+msgid "Bir linki <b>Ctrl+V</b> ile yapıştırın, pencereye sürükleyin\nya da Firefox eklentisini kullanın."
+msgstr "Paste a link with <b>Ctrl+V</b>, drag it onto the window\nor use the Firefox extension."
+
+#: ddm/ui/window.py:373
+msgid "Ölçülü bağlantı · bekliyor"
+msgstr "Metered connection · on hold"
+
+#: ddm/ui/window.py:551
+msgid "SHA-256 kopyalandı"
+msgstr "SHA-256 copied"
+
+#: ddm/ui/window.py:573
+msgid "Dosyalar silinsin mi?"
+msgstr "Delete the files?"
+
+#: ddm/ui/window.py:68
+msgid "Kategoriler"
+msgstr "Categories"
+
+#: ddm/ui/window.py:120
+msgid "İndirmeler"
+msgstr "Downloads"
+
+#: ddm/ui/window.py:314
+msgid "Burada bir şey yok"
+msgstr "Nothing here"
+
+#: ddm/ui/window.py:315
+msgid "Bu kategoride ya da aramada eşleşen indirme bulunmuyor."
+msgstr "No downloads match this category or search."
+
+#: ddm/ui/window.py:545
+msgid "Link kopyalandı"
+msgstr "Link copied"
+
+#: ddm/ui/window.py:383
+msgid "ölçülü: ≤{n} KB/s"
+msgstr "metered: ≤{n} KB/s"
+
+#: ddm/ui/window.py:607
+msgid "Panoda link var: {name}"
+msgstr "Link in clipboard: {name}"
+
+#: ddm/util.py:23
+msgid "Müzik"
+msgstr "Music"
+
+#: ddm/util.py:24
+msgid "Arşiv"
+msgstr "Archives"
+
+#: ddm/util.py:25
+msgid "Belge"
+msgstr "Documents"
+
+#: ddm/util.py:26
+msgid "Program"
+msgstr "Programs"
+
+#: ddm/util.py:27
+msgid "Resim"
+msgstr "Images"
+
+#: ddm/util.py:28
+msgid "Diğer"
+msgstr "Other"
+
+#: ddm/util.py:9
+msgid "Tümü"
+msgstr "All"
+
+#: ddm/util.py:10
+msgid "Devam eden"
+msgstr "Active"
+
+#: ddm/util.py:11
+msgid "Tamamlanan"
+msgstr "Finished"
+
+#: ddm/util.py:138
+msgid "{s} sn"
+msgstr "{s} s"
+
+#: ddm/util.py:135
+msgid "{h} sa {m:02d} dk"
+msgstr "{h} h {m:02d} min"
+
+#: ddm/util.py:137
+msgid "{m} dk {s:02d} sn"
+msgstr "{m} min {s:02d} s"
+
+#: ddm/video.py:98
+msgid "yt-dlp bulunamadı. Ayarlar ▸ Video bölümünden indirin."
+msgstr "yt-dlp not found. Install it in Settings ▸ Video."
+
+#: ddm/video.py:289
+msgid "Bu içerik DRM korumalı, indirilemez"
+msgstr "This content is DRM-protected and cannot be downloaded"
+
+#: ddm/video.py:287
+msgid "yt-dlp çıkış kodu {code}"
+msgstr "yt-dlp exit code {code}"
+
+#: ddm/video.py:267
+msgid "yt-dlp başlatılamadı: {error}"
+msgstr "Could not start yt-dlp: {error}"
+
+#: ddm/virustotal.py:125
+msgid "VirusTotal yanıt vermedi"
+msgstr "VirusTotal did not respond"
+
+#: ddm/virustotal.py:162
+msgid "VirusTotal 650 MB üzerindeki dosyaları kabul etmiyor"
+msgstr "VirusTotal does not accept files over 650 MB"
+
+#: ddm/virustotal.py:184
+msgid "Yükleme kabul edilmedi"
+msgstr "Upload was not accepted"
+
+#: ddm/virustotal.py:344
+msgid "Analiz uzun sürüyor; sonucu VirusTotal sayfasından izleyin"
+msgstr "The analysis is taking long; follow the result on the VirusTotal page"
+
+#: ddm/virustotal.py:110
+msgid "VirusTotal API anahtarı geçersiz"
+msgstr "Invalid VirusTotal API key"
+
+#: ddm/virustotal.py:168
+msgid "Yükleme adresi alınamadı"
+msgstr "Could not get an upload URL"
+
+#: ddm/virustotal.py:113
+msgid "VirusTotal kotası doldu, daha sonra tekrar denenecek"
+msgstr "VirusTotal quota exceeded; will retry later"
+
+#: ddm/virustotal.py:104
+msgid "VirusTotal'a ulaşılamadı"
+msgstr "Could not reach VirusTotal"
+
+#: ddm/virustotal.py:123
+msgid "VirusTotal hatası ({code})"
+msgstr "VirusTotal error ({code})"
+
+#: ddm/virustotal.py:263
+msgid "Dosya okunamadı: {error}"
+msgstr "Could not read the file: {error}"
+
+#: dynamic
+msgid "bekliyor"
+msgstr "waiting"
+
+#: dynamic
+msgid "bağlanıyor"
+msgstr "connecting"
+
+#: dynamic
+msgid "devralındı"
+msgstr "taken over"
+
+#: dynamic
+msgid "indiriyor"
+msgstr "downloading"
+
+#: dynamic
+msgid "bekletiliyor"
+msgstr "throttled"
+
+#: dynamic
+msgid "yeniden deneniyor"
+msgstr "retrying"
+
+#: dynamic
+msgid "alan adı"
+msgstr "domain"
+
+#: ddm/tray.py:379
+msgid "{n} indiriliyor"
+msgid_plural "{n} indiriliyor"
+msgstr[0] "{n} downloading"
+msgstr[1] "{n} downloading"
+
+#: ddm/tray.py:387
+msgid "{n} indirme sırada"
+msgid_plural "{n} indirme sırada"
+msgstr[0] "{n} download queued"
+msgstr[1] "{n} downloads queued"
+
+#: ddm/tray.py:427
+msgid "+{n} indirme daha"
+msgid_plural "+{n} indirme daha"
+msgstr[0] "+{n} more download"
+msgstr[1] "+{n} more downloads"
+
+#: ddm/tray.py:385
+msgid "{n} sırada"
+msgid_plural "{n} sırada"
+msgstr[0] "{n} queued"
+msgstr[1] "{n} queued"
+
+#: ddm/tray.py:389
+msgid "{n} indirme duraklatıldı"
+msgid_plural "{n} indirme duraklatıldı"
+msgstr[0] "{n} download paused"
+msgstr[1] "{n} downloads paused"
+
+#: ddm/ui/app.py:141
+msgid "{n} link kuyruğa eklendi"
+msgid_plural "{n} link kuyruğa eklendi"
+msgstr[0] "{n} link added to the queue"
+msgstr[1] "{n} links added to the queue"
+
+#: ddm/ui/detail.py:359
+msgid "{n} bağlantı"
+msgid_plural "{n} bağlantı"
+msgstr[0] "{n} connection"
+msgstr[1] "{n} connections"
+
+#: ddm/ui/detail.py:362
+msgid "{n} bağdaştırıcı"
+msgid_plural "{n} bağdaştırıcı"
+msgstr[0] "{n} adapter"
+msgstr[1] "{n} adapters"
+
+#: ddm/ui/window.py:375
+msgid "{n} etkin"
+msgid_plural "{n} etkin"
+msgstr[0] "{n} active"
+msgstr[1] "{n} active"
+
+#: ddm/ui/window.py:379
+msgid "{n} zamanlandı ({start})"
+msgid_plural "{n} zamanlandı ({start})"
+msgstr[0] "{n} scheduled ({start})"
+msgstr[1] "{n} scheduled ({start})"
+
+#: ddm/ui/window.py:574
+msgid "{n} indirme listeden kaldırılacak ve diskteki dosyaları silinecek."
+msgid_plural "{n} indirme listeden kaldırılacak ve diskteki dosyaları silinecek."
+msgstr[0] "{n} download will be removed from the list and its file deleted from disk."
+msgstr[1] "{n} downloads will be removed from the list and their files deleted from disk."
+
+#: ddm/ui/window.py:545
+msgid "{n} link kopyalandı"
+msgid_plural "{n} link kopyalandı"
+msgstr[0] "{n} link copied"
+msgstr[1] "{n} links copied"

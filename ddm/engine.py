@@ -12,6 +12,7 @@ import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 
+from .i18n import _
 from .netlanes import bound_session
 from .util import filename_from_disposition, filename_from_url, unique_path
 
@@ -100,21 +101,21 @@ def describe_error(exc):
     if isinstance(exc, requests.HTTPError) and exc.response is not None:
         code = exc.response.status_code
         messages = {
-            401: "Yetki gerekli (401)",
-            403: "Erişim reddedildi (403) — link süresi dolmuş olabilir",
-            404: "Dosya bulunamadı (404)",
-            410: "Link artık geçerli değil (410)",
-            416: "Sunucu istenen aralığı kabul etmedi (416)",
+            401: _("Yetki gerekli (401)"),
+            403: _("Erişim reddedildi (403) — link süresi dolmuş olabilir"),
+            404: _("Dosya bulunamadı (404)"),
+            410: _("Link artık geçerli değil (410)"),
+            416: _("Sunucu istenen aralığı kabul etmedi (416)"),
         }
-        return messages.get(code, f"Sunucu hatası ({code})")
+        return messages.get(code, _("Sunucu hatası ({code})").format(code=code))
     if isinstance(exc, (requests.Timeout, urllib3.exceptions.TimeoutError)):
-        return "Zaman aşımı"
+        return _("Zaman aşımı")
     if isinstance(exc, (requests.ConnectionError, urllib3.exceptions.ProtocolError)):
-        return "Bağlantı hatası"
+        return _("Bağlantı hatası")
     if isinstance(exc, OSError) and exc.errno == 28:
-        return "Diskte yer kalmadı"
+        return _("Diskte yer kalmadı")
     if isinstance(exc, PermissionError):
-        return "Klasöre yazma izni yok"
+        return _("Klasöre yazma izni yok")
     return str(exc) or exc.__class__.__name__
 
 
@@ -233,7 +234,7 @@ class SegmentedDownloader:
                     r.raise_for_status()
             else:
                 r.raise_for_status()
-                raise DownloadError(f"Beklenmeyen yanıt ({r.status_code})")
+                raise DownloadError(_("Beklenmeyen yanıt ({code})").format(code=r.status_code))
             name = filename_from_disposition(r.headers.get("Content-Disposition"))
             if not name:
                 name = filename_from_url(r.url) or filename_from_url(self.url)
@@ -241,7 +242,7 @@ class SegmentedDownloader:
                 ext = mimetypes.guess_extension(info["content_type"])
                 if ext and ext not in (".bin", ".html", ".htm"):
                     name += ext
-            info["filename"] = name or "indirme"
+            info["filename"] = name or _("indirme")
             info["hashes"] = hashes_from_headers(r.headers, r.status_code)
             if "text/html" in info["content_type"] and not info.get("ranges") and (info.get("total") or 0) < 2 * 1024 * 1024:
                 info["is_html"] = True
@@ -408,7 +409,7 @@ class SegmentedDownloader:
                         r.raise_for_status()
                         m = re.match(r"bytes\s+(\d+)-", r.headers.get("Content-Range", ""))
                         if r.status_code != 206 or not m or int(m.group(1)) != pos:
-                            raise DownloadError("Sunucu yanlış aralık döndürdü")
+                            raise DownloadError(_("Sunucu yanlış aralık döndürdü"))
                     else:
                         r.raise_for_status()
                     with self.lock:
@@ -447,7 +448,7 @@ class SegmentedDownloader:
                             return
                     attempt += 1
                     if attempt > self.retries:
-                        raise DownloadError("Bağlantı sürekli erken kapandı")
+                        raise DownloadError(_("Bağlantı sürekli erken kapandı"))
                     continue
             except RangeIgnored:
                 with self.lock:
@@ -466,7 +467,7 @@ class SegmentedDownloader:
                 if attempt > self.retries * 2:
                     with self.lock:
                         seg.state = "hata"
-                        self.fatal = "Sunucu sürekli yoğun (429/503)"
+                        self.fatal = _("Sunucu sürekli yoğun (429/503)")
                     return
                 if leave:
                     return
@@ -530,7 +531,7 @@ class SegmentedDownloader:
         try:
             return self._run()
         except Throttled:
-            return "error", "Sunucu yoğun (429/503)"
+            return "error", _("Sunucu yoğun (429/503)")
         except (requests.RequestException, urllib3.exceptions.HTTPError, OSError, DownloadError) as e:
             if isinstance(e, requests.HTTPError) and e.response is not None and e.response.status_code in EXPIRED_CODES:
                 self.fatal_code = "expired"
@@ -566,17 +567,17 @@ class SegmentedDownloader:
         if self.stop_event.is_set():
             return "paused", None
         if info.get("is_html") and not self.record.get("allow_html"):
-            return "error", "Link bir dosya yerine web sayfası döndürüyor"
+            return "error", _("Link bir dosya yerine web sayfası döndürüyor")
         self.fetch_url = info["final_url"] or self.url
         part_exists = self.path is not None and Path(str(self.path) + ".part").exists()
         if self.refreshed and part_exists and saved and self.ranges:
             if not info.get("ranges"):
                 self.fatal_code = "different"
-                return "error", "Yeni link parçalı indirmeyi desteklemiyor; kaldığı yerden sürdürülemez"
+                return "error", _("Yeni link parçalı indirmeyi desteklemiyor; kaldığı yerden sürdürülemez")
             if info.get("total") != self.total:
                 self.fatal_code = "different"
-                return "error", (f"Yeni linkteki dosyanın boyutu farklı ({info.get('total')} ≠ {self.total} bayt); "
-                                 "başka bir dosya olabilir")
+                return "error", _("Yeni linkteki dosyanın boyutu farklı ({new} ≠ {old} bayt); başka bir dosya olabilir").format(
+                    new=info.get("total"), old=self.total)
         same = (part_exists and saved and self.ranges and info.get("ranges")
                 and info.get("total") == self.total
                 and (self.refreshed or not self.etag or not info.get("etag") or self.etag == info.get("etag"))
@@ -602,7 +603,7 @@ class SegmentedDownloader:
             self.last_modified = info.get("last_modified")
             if not self._verify_sample():
                 self.fatal_code = "different"
-                return "error", "Yeni link aynı dosyayı vermiyor (örnek baytlar uyuşmadı); kaldığı yerden sürdürülemez"
+                return "error", _("Yeni link aynı dosyayı vermiyor (örnek baytlar uyuşmadı); kaldığı yerden sürdürülemez")
         if (len(self.lane_names) >= 2 and self.ranges and self.total
                 and self.total >= self.multi_min and not self.lanes):
             for name in self.lane_names:
@@ -664,7 +665,7 @@ class SegmentedDownloader:
             threads.append(t)
 
         initial = min(self.allowed, max(1, len(self.segments)))
-        for _ in range(initial):
+        for _i in range(initial):
             spawn()
         last_persist = time.monotonic()
         while True:
@@ -708,7 +709,7 @@ class SegmentedDownloader:
         with self.lock:
             incomplete = [s for s in self.segments if not s.complete()]
         if incomplete:
-            return "error", "Bazı parçalar indirilemedi"
+            return "error", _("Bazı parçalar indirilemedi")
         return "done", None
 
     def _finish(self, part):

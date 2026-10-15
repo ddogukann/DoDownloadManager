@@ -117,7 +117,7 @@ class Bridge:
                 path = urlsplit(self.path).path
                 data = self._body()
                 if not isinstance(data, dict):
-                    return self._send(400, {"ok": False, "error": "geçersiz istek"})
+                    return self._send(400, {"ok": False, "error": "invalid request"})
                 if path == "/download":
                     code, payload = bridge.handle_download(data)
                     return self._send(code, payload)
@@ -172,7 +172,7 @@ class Bridge:
     def handle_download(self, data):
         url = (data.get("url") or "").strip()
         if not valid_url(url):
-            return 400, {"ok": False, "error": "geçersiz URL"}
+            return 400, {"ok": False, "error": "invalid URL"}
         kind = data.get("kind") if data.get("kind") in ("file", "video") else "file"
         headers = {}
         if data.get("referer") and valid_url(data["referer"]):
@@ -198,7 +198,7 @@ class Bridge:
         did = data.get("id")
         action = data.get("action")
         if not self.manager.get(did):
-            return 404, {"ok": False, "error": "bulunamadı"}
+            return 404, {"ok": False, "error": "not found"}
         if action == "pause":
             self.manager.pause(did)
         elif action == "resume":
@@ -206,5 +206,5 @@ class Bridge:
         elif action in ("cancel", "remove"):
             self.manager.remove(did)
         else:
-            return 400, {"ok": False, "error": "bilinmeyen işlem"}
+            return 400, {"ok": False, "error": "unknown action"}
         return 200, {"ok": True}

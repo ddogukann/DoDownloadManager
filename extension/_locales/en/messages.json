@@ -1,0 +1,158 @@
+{
+  "extDescription": {
+    "message": "Hands Firefox downloads over to DDM, finds videos on sites you allow and offers to download them."
+  },
+  "checking": {
+    "message": "checking…"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "appOffline": {
+    "message": "The DDM app is not running. Start it; until then, browser downloads stay in Firefox."
+  },
+  "scanThisSite": {
+    "message": "Media scanning on this site"
+  },
+  "downloadPageVideo": {
+    "message": "Download the video on this page"
+  },
+  "ytdlpHint": {
+    "message": "Uses yt-dlp; you pick the quality in the app."
+  },
+  "foundMedia": {
+    "message": "Found media"
+  },
+  "scanOffHint": {
+    "message": "Scanning is off on this site. Turn it on to list the videos on the page here."
+  },
+  "emptyHint": {
+    "message": "No media found yet. Try playing the video."
+  },
+  "recentDownloads": {
+    "message": "Recent downloads"
+  },
+  "captureDownloads": {
+    "message": "Capture Firefox downloads"
+  },
+  "connectedVersion": {
+    "message": "Connected · v$1"
+  },
+  "activeCount": {
+    "message": "$1 active"
+  },
+  "appNotRunning": {
+    "message": "App not running"
+  },
+  "sending": {
+    "message": "Sending…"
+  },
+  "sent": {
+    "message": "Sent ✓"
+  },
+  "error": {
+    "message": "Error"
+  },
+  "download": {
+    "message": "Download"
+  },
+  "thisPage": {
+    "message": "this page"
+  },
+  "onAllSites": {
+    "message": "$1 · on for all sites"
+  },
+  "statusQueued": {
+    "message": "Queued"
+  },
+  "statusRunning": {
+    "message": "Downloading"
+  },
+  "statusPaused": {
+    "message": "Paused"
+  },
+  "statusDone": {
+    "message": "Finished"
+  },
+  "statusError": {
+    "message": "Error"
+  },
+  "hashMismatch": {
+    "message": "≠ hash mismatch"
+  },
+  "pause": {
+    "message": "Pause"
+  },
+  "resume": {
+    "message": "Resume"
+  },
+  "optionsTitle": {
+    "message": "DDM settings"
+  },
+  "connection": {
+    "message": "Connection"
+  },
+  "appPort": {
+    "message": "App port"
+  },
+  "appPortHint": {
+    "message": "Must match DDM ▸ Settings ▸ Browser"
+  },
+  "testConnection": {
+    "message": "Test connection"
+  },
+  "downloads": {
+    "message": "Downloads"
+  },
+  "captureHint": {
+    "message": "The file type list comes from the app settings"
+  },
+  "mediaScanning": {
+    "message": "Media scanning"
+  },
+  "overlayButton": {
+    "message": "“Download” button over videos"
+  },
+  "scanAllSites": {
+    "message": "Scan on all sites"
+  },
+  "scanAllSitesHint": {
+    "message": "When off, only works on the sites below"
+  },
+  "enabledSites": {
+    "message": "Sites with scanning on"
+  },
+  "noSites": {
+    "message": "No sites yet. Turn it on from the DDM toolbar button on a site."
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "testing": {
+    "message": "Testing…"
+  },
+  "connectedTo": {
+    "message": "Connected · $1 $2"
+  },
+  "ytdlpReady": {
+    "message": "yt-dlp ready"
+  },
+  "ytdlpMissing": {
+    "message": "no yt-dlp"
+  },
+  "cannotReachApp": {
+    "message": "Could not reach the app"
+  },
+  "menuLink": {
+    "message": "Download with DDM"
+  },
+  "menuMedia": {
+    "message": "Download this media with DDM"
+  },
+  "menuPage": {
+    "message": "Download the video on this page (yt-dlp)"
+  },
+  "sentToDdm": {
+    "message": "Sent to DDM"
+  }
+}

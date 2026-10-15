@@ -1,3 +1,19 @@
+const UI_TR = (browser.i18n.getUILanguage() || "").toLowerCase().startsWith("tr");
+
+function t(key, subs) {
+  return browser.i18n.getMessage(key, subs) || key;
+}
+
+function pctText(n) {
+  return UI_TR ? `%${n}` : `${n}%`;
+}
+
+function applyI18n(root = document) {
+  document.documentElement.lang = UI_TR ? "tr" : "en";
+  for (const el of root.querySelectorAll("[data-i18n]")) el.textContent = t(el.dataset.i18n);
+  for (const el of root.querySelectorAll("[data-i18n-title]")) el.title = t(el.dataset.i18nTitle);
+}
+
 const DEFAULTS = {
   port: 47821,
   capture: true,
@@ -52,7 +68,7 @@ function humanSize(n) {
   const units = ["B", "KB", "MB", "GB", "TB"];
   let f = n;
   for (const u of units) {
-    if (f < 1024 || u === "TB") return u === "B" ? `${f} ${u}` : `${f.toFixed(1).replace(".", ",")} ${u}`;
+    if (f < 1024 || u === "TB") return u === "B" ? `${f} ${u}` : `${UI_TR ? f.toFixed(1).replace(".", ",") : f.toFixed(1)} ${u}`;
     f /= 1024;
   }
   return String(n);

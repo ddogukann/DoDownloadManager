@@ -8,6 +8,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .. import APP_ID, APP_NAME, VERSION
 from ..bridge import Bridge, valid_url
+from ..i18n import N_, _, pct
 from ..config import CONFIG_DIR, DATA_DIR, Settings, bridge_token, ensure_dirs
 from ..manager import DownloadManager
 from ..tray import TrayIcon
@@ -66,16 +67,17 @@ class DDMApp(Adw.Application):
         self._hist = {}
         self._held = False
         self._bg_notice_shown = False
+        self.restart_requested = False
         self.add_main_option("background", ord("b"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
-                             "Pencere açmadan arka planda başlat", None)
+                             _("Pencere açmadan arka planda başlat"), None)
         self.add_main_option("video", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
-                             "Verilen linkleri video olarak (yt-dlp) indir", None)
+                             _("Verilen linkleri video olarak (yt-dlp) indir"), None)
         self.add_main_option("now", 0, GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
-                             "Onay penceresi göstermeden kuyruğa ekle", None)
+                             _("Onay penceresi göstermeden kuyruğa ekle"), None)
         self.add_main_option("new", ord("n"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
-                             "Yeni indirme penceresini aç", None)
+                             _("Yeni indirme penceresini aç"), None)
         self.add_main_option("quit", ord("q"), GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
-                             "Çalışan örneği kapat", None)
+                             _("Çalışan örneği kapat"), None)
 
     def do_startup(self):
         Adw.Application.do_startup(self)
@@ -102,7 +104,7 @@ class DDMApp(Adw.Application):
         GLib.timeout_add(500, self._tick)
         GLib.timeout_add_seconds(30, self._sched_tick)
         self.netmon = Gio.NetworkMonitor.get_default()
-        self.netmon.connect("notify::network-metered", lambda *_: GLib.idle_add(self._apply_metered, True))
+        self.netmon.connect("notify::network-metered", lambda *_a: GLib.idle_add(self._apply_metered, True))
         GLib.idle_add(self._apply_metered, False)
         self.manager.schedule()
         GLib.timeout_add(1500, self._withdraw_stale)
@@ -136,7 +138,7 @@ class DDMApp(Adw.Application):
                     self.manager.add(u, kind="video", options=self._video_defaults())
                 else:
                     self.manager.add(u)
-            self.window.toast(f"{len(urls)} link kuyruğa eklendi")
+            self.window.toast(N_("{n} link kuyruğa eklendi", len(urls)).format(n=len(urls)))
         elif urls:
             self.show_add({"url": urls[0], "kind": kind})
         elif opts.get("new"):
@@ -156,8 +158,8 @@ class DDMApp(Adw.Application):
         newly = self.manager.set_hold("metered", hold)
         self.manager.set_metered_limit(self.settings.get("metered_limit_kib") if metered and action == "limit" else 0)
         if newly and hold and self.window is not None:
-            t = Adw.Toast(title="Ölçülü bağlantı: indirmeler bekletiliyor", button_label="Yine de indir", timeout=8)
-            t.connect("button-clicked", lambda *_: self._override_metered())
+            t = Adw.Toast(title=_("Ölçülü bağlantı: indirmeler bekletiliyor"), button_label=_("Yine de indir"), timeout=8)
+            t.connect("button-clicked", lambda *_a: self._override_metered())
             self.window.toasts.add_toast(t)
         return False
 
@@ -170,13 +172,14 @@ class DDMApp(Adw.Application):
         self.after_all = value.get_string()
         if self.window is not None:
             self.window.set_after_indicator(self.after_all)
-            names = {"suspend": "uyku moduna geçilecek", "poweroff": "bilgisayar kapatılacak"}
+            names = {"suspend": _("Tüm indirmeler bitince uyku moduna geçilecek"),
+                     "poweroff": _("Tüm indirmeler bitince bilgisayar kapatılacak")}
             if self.after_all in names:
-                self.window.toast(f"Tüm indirmeler bitince {names[self.after_all]}")
+                self.window.toast(names[self.after_all])
 
     def _power_check(self, active, running):
         if self.settings.get("inhibit_sleep") and running and not self._inhibit:
-            self._inhibit = self.inhibit(None, Gtk.ApplicationInhibitFlags.SUSPEND, "DDM dosya indiriyor")
+            self._inhibit = self.inhibit(None, Gtk.ApplicationInhibitFlags.SUSPEND, _("DDM dosya indiriyor"))
         elif (not running or not self.settings.get("inhibit_sleep")) and self._inhibit:
             self.uninhibit(self._inhibit)
             self._inhibit = 0
@@ -186,10 +189,11 @@ class DDMApp(Adw.Application):
 
     def _start_countdown(self, mode):
         self.present_window()
-        verb = "uyku moduna geçecek" if mode == "suspend" else "kapanacak"
-        dlg = Adw.AlertDialog(heading="Tüm indirmeler bitti", body=f"Bilgisayar 60 saniye içinde {verb}.")
-        dlg.add_response("cancel", "İptal")
-        dlg.add_response("now", "Şimdi")
+        text = (_("Bilgisayar {n} saniye içinde uyku moduna geçecek.") if mode == "suspend"
+                else _("Bilgisayar {n} saniye içinde kapanacak."))
+        dlg = Adw.AlertDialog(heading=_("Tüm indirmeler bitti"), body=text.format(n=60))
+        dlg.add_response("cancel", _("İptal"))
+        dlg.add_response("now", _("Şimdi"))
         dlg.set_response_appearance("now", Adw.ResponseAppearance.DESTRUCTIVE)
         dlg.set_close_response("cancel")
         state = {"left": 60, "dlg": dlg, "mode": mode, "src": 0}
@@ -201,7 +205,7 @@ class DDMApp(Adw.Application):
                 dlg.force_close()
                 self._do_power(mode)
                 return False
-            dlg.set_body(f"Bilgisayar {state['left']} saniye içinde {verb}.")
+            dlg.set_body(text.format(n=state["left"]))
             return True
 
         def resp(d, r):
@@ -212,7 +216,7 @@ class DDMApp(Adw.Application):
             if r == "now":
                 self._do_power(mode)
             elif r == "cancel":
-                self.window.toast("İptal edildi")
+                self.window.toast(_("İptal edildi"))
 
         dlg.connect("response", resp)
         state["src"] = GLib.timeout_add_seconds(1, tick)
@@ -231,7 +235,7 @@ class DDMApp(Adw.Application):
                           method, GLib.Variant("(b)", (True,)), None, Gio.DBusCallFlags.NONE, 10000, None)
         except GLib.Error as e:
             if self.window is not None:
-                self.window.toast(f"İşlem yapılamadı: {e.message}")
+                self.window.toast(_("İşlem yapılamadı: {error}").format(error=e.message))
 
     def _on_setting(self, key, value):
         if key in ("metered_action", "metered_limit_kib"):
@@ -315,15 +319,16 @@ class DDMApp(Adw.Application):
             win.set_visible(False)
             if not self._bg_notice_shown and self.manager.active_count():
                 self._bg_notice_shown = True
-                where = "üst çubuktaki DDM simgesinden" if self.settings.get("tray_icon") else "uygulama menüsünden"
-                self._notify("bg", "DDM arka planda çalışıyor",
-                             f"İndirmeler sürüyor. Pencereyi {where} yeniden açabilirsiniz.")
+                body = (_("İndirmeler sürüyor. Pencereyi üst çubuktaki DDM simgesinden yeniden açabilirsiniz.")
+                        if self.settings.get("tray_icon") else
+                        _("İndirmeler sürüyor. Pencereyi uygulama menüsünden yeniden açabilirsiniz."))
+                self._notify("bg", _("DDM arka planda çalışıyor"), body)
             return True
         if self.manager.active_count():
-            dlg = Adw.AlertDialog(heading="Etkin indirmeler var",
-                                  body="Çıkarsanız indirmeler duraklatılır ve sonraki açılışta sürer.")
-            dlg.add_response("cancel", "Vazgeç")
-            dlg.add_response("quit", "Çık")
+            dlg = Adw.AlertDialog(heading=_("Etkin indirmeler var"),
+                                  body=_("Çıkarsanız indirmeler duraklatılır ve sonraki açılışta sürer."))
+            dlg.add_response("cancel", _("Vazgeç"))
+            dlg.add_response("quit", _("Çık"))
             dlg.set_response_appearance("quit", Adw.ResponseAppearance.DESTRUCTIVE)
             dlg.connect("response", lambda d, r: self.quit_app() if r == "quit" else None)
             dlg.present(win)
@@ -339,16 +344,22 @@ class DDMApp(Adw.Application):
             self._held = False
         self.quit()
 
+    def restart(self):
+        self.restart_requested = True
+        for w in list(self.complete_windows.values()):
+            w.close()
+        self.quit_app()
+
     def _install_actions(self):
         simple = {
-            "add": lambda *_: self.show_add({}),
-            "preferences": lambda *_: self.show_preferences(),
-            "about": lambda *_: self.show_about(),
-            "quit": lambda *_: self.quit_app(),
-            "show-window": lambda *_: self.present_window(),
-            "pause-all": lambda *_: self.manager.pause_all(),
-            "resume-all": lambda *_: self.manager.resume_all(),
-            "clear-finished": lambda *_: self.manager.clear_finished(),
+            "add": lambda *_a: self.show_add({}),
+            "preferences": lambda *_a: self.show_preferences(),
+            "about": lambda *_a: self.show_about(),
+            "quit": lambda *_a: self.quit_app(),
+            "show-window": lambda *_a: self.present_window(),
+            "pause-all": lambda *_a: self.manager.pause_all(),
+            "resume-all": lambda *_a: self.manager.resume_all(),
+            "clear-finished": lambda *_a: self.manager.clear_finished(),
         }
         for name, cb in simple.items():
             a = Gio.SimpleAction.new(name, None)
@@ -428,16 +439,16 @@ class DDMApp(Adw.Application):
             if self.settings.get("finish_popup") and self._show_complete(rec):
                 pass
             elif not win_active:
-                self._notify(f"dl-{rec['id']}", "İndirme tamamlandı", rec.get("filename") or rec["url"],
+                self._notify(f"dl-{rec['id']}", _("İndirme tamamlandı"), rec.get("filename") or rec["url"],
                              default=("app.open-file", rec["id"]),
-                             buttons=[("Klasörü aç", "app.open-folder", rec["id"])])
+                             buttons=[(_("Klasörü aç"), "app.open-folder", rec["id"])])
             elif self.window:
-                t = Adw.Toast(title=f"Tamamlandı: {rec.get('filename') or ''}", button_label="Aç", timeout=4)
-                t.connect("button-clicked", lambda *_: self.open_file(rec["id"]))
+                t = Adw.Toast(title=_("Tamamlandı: {name}").format(name=rec.get("filename") or ""), button_label=_("Aç"), timeout=4)
+                t.connect("button-clicked", lambda *_a: self.open_file(rec["id"]))
                 self.window.toasts.add_toast(t)
         elif kind == "failed":
             if self.window is None or not self.window.is_active():
-                self._notify(f"dl-{rec['id']}", "İndirme başarısız",
+                self._notify(f"dl-{rec['id']}", _("İndirme başarısız"),
                              f"{rec.get('filename') or rec['url']}\n{rec.get('error') or ''}",
                              default=("app.show-details", rec["id"]))
         return False
@@ -446,24 +457,27 @@ class DDMApp(Adw.Application):
         vt = rec.get("vt") or {}
         name = rec.get("filename") or rec["url"]
         if rec.get("_alert") == "checksum":
-            body = f"{name}\n{vt.get('checksum_file') or 'Checksum'} dosyasındaki değerle uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir."
-            self._notify(f"vt-{rec['id']}", "Dosya doğrulanamadı", body, default=("app.show-details", rec["id"]),
+            body = name + "\n" + _("{file} dosyasındaki değerle uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir.").format(
+                file=vt.get("checksum_file") or "Checksum")
+            self._notify(f"vt-{rec['id']}", _("Dosya doğrulanamadı"), body, default=("app.show-details", rec["id"]),
                          force=True)
             if self.window is not None and self.window.get_visible():
-                t = Adw.Toast(title=f"Checksum uyuşmuyor: {name}", button_label="Ayrıntı", timeout=8)
-                t.connect("button-clicked", lambda *_: self.show_details(rec["id"]))
+                t = Adw.Toast(title=_("Checksum uyuşmuyor: {name}").format(name=name), button_label=_("Ayrıntı"), timeout=8)
+                t.connect("button-clicked", lambda *_a: self.show_details(rec["id"]))
                 self.window.toasts.add_toast(t)
             return
         if rec.get("_alert") == "url":
             us = vt.get("url_stats") or {}
             self.present_window()
             dlg = Adw.AlertDialog(
-                heading="Bu link zararlı olarak işaretlenmiş",
-                body=f"{name}\n\nVirusTotal'da {us.get('malicious', 0)}/{us.get('total', 0)} güvenlik motoru bu "
-                     f"{vt.get('url_scope') or 'linki'} zararlı buldu. İndirme duraklatıldı.")
-            dlg.add_response("cancel", "İndirmeyi iptal et")
-            dlg.add_response("show", "VirusTotal'da gör")
-            dlg.add_response("continue", "Yine de indir")
+                heading=_("Bu link zararlı olarak işaretlenmiş"),
+                body=name + "\n\n" + _("VirusTotal'da {n}/{total} güvenlik motoru bu {what} zararlı buldu. "
+                                         "İndirme duraklatıldı.").format(
+                    n=us.get("malicious", 0), total=us.get("total", 0),
+                    what=_("alan adını") if vt.get("url_scope") == "alan adı" else _("linki")))
+            dlg.add_response("cancel", _("İndirmeyi iptal et"))
+            dlg.add_response("show", _("VirusTotal'da gör"))
+            dlg.add_response("continue", _("Yine de indir"))
             dlg.set_response_appearance("cancel", Adw.ResponseAppearance.SUGGESTED)
             dlg.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
             dlg.set_default_response("cancel")
@@ -481,12 +495,13 @@ class DDMApp(Adw.Application):
             dlg.present(self.window)
             return
         stats = vt.get("stats") or {}
-        body = f"{name}\nVirusTotal: {stats.get('malicious', 0)}/{stats.get('total', 0)} motor zararlı buldu."
-        self._notify(f"vt-{rec['id']}", "Zararlı olabilecek dosya", body, default=("app.show-details", rec["id"]),
+        body = name + "\n" + _("VirusTotal: {n}/{total} motor zararlı buldu").format(
+            n=stats.get("malicious", 0), total=stats.get("total", 0)) + "."
+        self._notify(f"vt-{rec['id']}", _("Zararlı olabilecek dosya"), body, default=("app.show-details", rec["id"]),
                      force=True)
         if self.window is not None and self.window.get_visible():
-            t = Adw.Toast(title=f"Zararlı olabilir: {name}", button_label="Ayrıntı", timeout=8)
-            t.connect("button-clicked", lambda *_: self.show_details(rec["id"]))
+            t = Adw.Toast(title=_("Zararlı olabilir: {name}").format(name=name), button_label=_("Ayrıntı"), timeout=8)
+            t.connect("button-clicked", lambda *_a: self.show_details(rec["id"]))
             self.window.toasts.add_toast(t)
 
     def open_uri(self, uri):
@@ -507,14 +522,15 @@ class DDMApp(Adw.Application):
             return
         if not self.manager.vt.enabled():
             if self.window:
-                self.window.toast("Önce Ayarlar ▸ Güvenlik bölümünden VirusTotal API anahtarı girin")
+                self.window.toast(_("Önce Ayarlar ▸ Güvenlik bölümünden VirusTotal API anahtarı girin"))
             return
         dlg = Adw.AlertDialog(
-            heading="Dosya VirusTotal'a yüklensin mi?",
-            body=f"{rec.get('filename')}\n\nYüklenen dosyalar VirusTotal'ın güvenlik ortaklarıyla paylaşılır ve "
-                 "aranabilir hale gelir. Kişisel ya da gizli belgeleri yüklemeyin. 650 MB sınırı vardır.")
-        dlg.add_response("cancel", "Vazgeç")
-        dlg.add_response("upload", "Yükle ve tara")
+            heading=_("Dosya VirusTotal'a yüklensin mi?"),
+            body=f"{rec.get('filename')}\n\n" + _("Yüklenen dosyalar VirusTotal'ın güvenlik ortaklarıyla paylaşılır ve "
+                                                    "aranabilir hale gelir. Kişisel ya da gizli belgeleri yüklemeyin. "
+                                                    "650 MB sınırı vardır."))
+        dlg.add_response("cancel", _("Vazgeç"))
+        dlg.add_response("upload", _("Yükle ve tara"))
         dlg.set_response_appearance("upload", Adw.ResponseAppearance.SUGGESTED)
         dlg.connect("response", lambda d, r: self.manager.vt_upload(did) if r == "upload" else None)
         dlg.present(self.window)
@@ -563,15 +579,16 @@ class DDMApp(Adw.Application):
 
     def _offer_resume(self, cand, req):
         self.present_window()
-        pct = int((cand.get("downloaded") or 0) * 100 / cand["total"]) if cand.get("total") else 0
+        done_pct = int((cand.get("downloaded") or 0) * 100 / cand["total"]) if cand.get("total") else 0
         expired = (cand.get("options") or {}).get("expired")
-        dlg = Adw.AlertDialog(
-            heading="Yarım kalan indirme bulundu",
-            body=f"{cand.get('filename')}\n\n%{pct} indirilmişti ({human_size(cand.get('downloaded'))}"
-                 f"{' / ' + human_size(cand['total']) if cand.get('total') else ''})."
-                 f"{' Eski linkin süresi dolmuştu.' if expired else ''} Bu yeni linkle kaldığı yerden devam edilsin mi?")
-        dlg.add_response("new", "Yeni indirme olarak ekle")
-        dlg.add_response("resume", "Kaldığı yerden sürdür")
+        amount = human_size(cand.get("downloaded")) + (" / " + human_size(cand["total"]) if cand.get("total") else "")
+        body = f"{cand.get('filename')}\n\n" + _("{pct} indirilmişti ({amount}).").format(pct=pct(done_pct), amount=amount)
+        if expired:
+            body += " " + _("Eski linkin süresi dolmuştu.")
+        body += " " + _("Bu yeni linkle kaldığı yerden devam edilsin mi?")
+        dlg = Adw.AlertDialog(heading=_("Yarım kalan indirme bulundu"), body=body)
+        dlg.add_response("new", _("Yeni indirme olarak ekle"))
+        dlg.add_response("resume", _("Kaldığı yerden sürdür"))
         dlg.set_response_appearance("resume", Adw.ResponseAppearance.SUGGESTED)
         dlg.set_default_response("resume")
         dlg.set_close_response("dismiss")
@@ -580,7 +597,7 @@ class DDMApp(Adw.Application):
             if r == "resume":
                 self.manager.refresh_url(cand["id"], req["url"], req.get("headers") or {}, req.get("page_url"))
                 if self.window:
-                    self.window.toast(f"{cand.get('filename')} yeni linkle kaldığı yerden sürüyor")
+                    self.window.toast(_("{name} yeni linkle kaldığı yerden sürüyor").format(name=cand.get("filename")))
             elif r == "new":
                 if self.settings.get("confirm_browser"):
                     self.show_add(req)
@@ -597,14 +614,14 @@ class DDMApp(Adw.Application):
         if not rec:
             return
         self.present_window()
-        entry = Gtk.Entry(placeholder_text="https://… yeni indirme linki", hexpand=True, activates_default=True)
-        body = (f"{rec.get('filename')}\n\nYeni linki yapıştır. Ya da indirme sayfasını yeniden açıp tarayıcıda "
-                "indir'e bas; DDM aynı dosyayı tanıyıp kaldığı yerden sürdürmeyi önerir.")
-        dlg = Adw.AlertDialog(heading="Linki yenile", body=body, extra_child=entry)
-        dlg.add_response("cancel", "Vazgeç")
+        entry = Gtk.Entry(placeholder_text=_("https://… yeni indirme linki"), hexpand=True, activates_default=True)
+        body = f"{rec.get('filename')}\n\n" + _("Yeni linki yapıştır. Ya da indirme sayfasını yeniden açıp tarayıcıda "
+                                                  "indir'e bas; DDM aynı dosyayı tanıyıp kaldığı yerden sürdürmeyi önerir.")
+        dlg = Adw.AlertDialog(heading=_("Linki yenile"), body=body, extra_child=entry)
+        dlg.add_response("cancel", _("Vazgeç"))
         if rec.get("page_url"):
-            dlg.add_response("page", "Sayfayı aç")
-        dlg.add_response("apply", "Sürdür")
+            dlg.add_response("page", _("Sayfayı aç"))
+        dlg.add_response("apply", _("Sürdür"))
         dlg.set_response_appearance("apply", Adw.ResponseAppearance.SUGGESTED)
         dlg.set_default_response("apply")
 
@@ -624,7 +641,7 @@ class DDMApp(Adw.Application):
                 if valid_url(url):
                     self.manager.refresh_url(did, url)
                 elif self.window:
-                    self.window.toast("Geçerli bir link girin")
+                    self.window.toast(_("Geçerli bir link girin"))
             elif r == "page":
                 self.open_uri(rec["page_url"])
 
@@ -662,7 +679,8 @@ class DDMApp(Adw.Application):
     def show_about(self):
         about = Adw.AboutDialog(application_name=APP_NAME, application_icon=APP_ID, version=VERSION,
                                 developer_name="Doğukan",
-                                comments="Çok bağlantılı indirme yöneticisi · Firefox eklentisi · yt-dlp ile video",
+                                comments=_("Çok bağlantılı indirme yöneticisi · Firefox eklentisi · yt-dlp ile video"),
+                                website="https://github.com/ddogukann/DoDownloadManager",
                                 license_type=Gtk.License.MIT_X11)
         about.present(self.window)
 
@@ -675,7 +693,7 @@ class DDMApp(Adw.Application):
                 (l.open_containing_folder_finish if folder else l.launch_finish)(res)
             except GLib.Error as e:
                 if self.window:
-                    self.window.toast(f"Açılamadı: {e.message}")
+                    self.window.toast(_("Açılamadı: {error}").format(error=e.message))
 
         if folder:
             launcher.open_containing_folder(self.window, None, done)
@@ -695,20 +713,20 @@ class DDMApp(Adw.Application):
             return
         if rec["status"] == "done" and path and os.path.exists(path):
             if vt.get("verdict") == "malicious" or vt.get("mismatch"):
-                reason = ("VirusTotal'da {}/{} motor bu dosyayı zararlı buldu.".format(
-                    (vt.get("stats") or {}).get("malicious", 0), (vt.get("stats") or {}).get("total", 0))
+                reason = (_("VirusTotal'da {n}/{total} motor bu dosyayı zararlı buldu.").format(
+                    n=(vt.get("stats") or {}).get("malicious", 0), total=(vt.get("stats") or {}).get("total", 0))
                     if vt.get("verdict") == "malicious" else
-                    "Dosyanın hash değeri sunucunun bildirdiğiyle uyuşmuyor; bozuk ya da değiştirilmiş olabilir.")
-                dlg = Adw.AlertDialog(heading="Dosya yine de açılsın mı?", body=reason)
-                dlg.add_response("cancel", "Vazgeç")
-                dlg.add_response("open", "Yine de aç")
+                    _("Dosyanın hash değeri sunucunun bildirdiğiyle uyuşmuyor; bozuk ya da değiştirilmiş olabilir."))
+                dlg = Adw.AlertDialog(heading=_("Dosya yine de açılsın mı?"), body=reason)
+                dlg.add_response("cancel", _("Vazgeç"))
+                dlg.add_response("open", _("Yine de aç"))
                 dlg.set_response_appearance("open", Adw.ResponseAppearance.DESTRUCTIVE)
                 dlg.connect("response", lambda d, r: self._launch(path) if r == "open" else None)
                 dlg.present(self.window)
                 return
             self._launch(path)
         elif self.window:
-            self.window.toast("Dosya henüz hazır değil")
+            self.window.toast(_("Dosya henüz hazır değil"))
 
     def open_folder(self, did):
         self.withdraw(did)

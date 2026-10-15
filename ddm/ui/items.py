@@ -2,17 +2,18 @@ import time
 
 from gi.repository import GObject
 
+from ..i18n import _, pct
 from ..util import CATEGORIES, human_eta, human_size, human_speed
 
 STATUS_TEXT = {
-    "queued": "Sırada",
-    "running": "İndiriliyor",
-    "paused": "Duraklatıldı",
-    "done": "Tamamlandı",
-    "error": "Hata",
+    "queued": _("Sırada"),
+    "running": _("İndiriliyor"),
+    "paused": _("Duraklatıldı"),
+    "done": _("Tamamlandı"),
+    "error": _("Hata"),
 }
 
-CATEGORY_ICONS = {key: icon for key, _, icon in CATEGORIES}
+CATEGORY_ICONS = {key: icon for key, _label, icon in CATEGORIES}
 
 
 def vt_display(vt, status):
@@ -21,34 +22,35 @@ def vt_display(vt, status):
     stats = vt.get("stats") or {}
     verdict = vt.get("verdict")
     if vt.get("mismatch"):
-        src = vt.get("checksum_file") or "sunucunun bildirdiği değer"
-        return "≠ hash", "bad", f"Dosyanın SHA-256 değeri {src} ile uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir"
+        src = vt.get("checksum_file") or _("sunucunun bildirdiği değer")
+        return "≠ hash", "bad", _("Dosyanın SHA-256 değeri {src} ile uyuşmuyor; dosya bozuk ya da değiştirilmiş olabilir").format(src=src)
     if verdict and state not in ("hashing",):
         n, total = stats.get("malicious", 0), stats.get("total", 0)
         if verdict == "clean":
-            return f"✓ 0/{total}", "ok", f"VirusTotal: {total} motorun hiçbiri zararlı bulmadı"
+            return f"✓ 0/{total}", "ok", _("VirusTotal: {total} motorun hiçbiri zararlı bulmadı").format(total=total)
         if verdict == "suspicious":
             return f"⚠ {n + stats.get('suspicious', 0)}/{total}", "warn", \
-                f"VirusTotal: {n} motor zararlı, {stats.get('suspicious', 0)} motor şüpheli buldu"
+                _("VirusTotal: {n} motor zararlı, {s} motor şüpheli buldu").format(n=n, s=stats.get("suspicious", 0))
         if verdict == "malicious":
-            return f"✕ {n}/{total}", "bad", f"VirusTotal: {n}/{total} motor zararlı buldu"
-    busy = {"hashing": "Hash…", "queued": "Sırada…", "checking": "Sorgu…", "uploading": "Yükleniyor…",
-            "analyzing": "Taranıyor…"}
+            return f"✕ {n}/{total}", "bad", _("VirusTotal: {n}/{total} motor zararlı buldu").format(n=n, total=total)
+    busy = {"hashing": _("Hash…"), "queued": _("Sırada…"), "checking": _("Sorgu…"), "uploading": _("Yükleniyor…"),
+            "analyzing": _("Taranıyor…")}
     if state in busy:
-        return busy[state], "busy", "VirusTotal kontrolü sürüyor"
+        return busy[state], "busy", _("VirusTotal kontrolü sürüyor")
     if state == "unknown":
-        return "? kayıtsız", "unknown", "Bu dosya VirusTotal'da kayıtlı değil. Sağ tık ▸ VirusTotal'a yükle ve tara"
+        return _("? kayıtsız"), "unknown", _("Bu dosya VirusTotal'da kayıtlı değil. Sağ tık ▸ VirusTotal'a yükle ve tara")
     if state == "error":
-        return "! hata", "warn", vt.get("error") or "VirusTotal kontrolü başarısız"
+        return _("! hata"), "warn", vt.get("error") or _("VirusTotal kontrolü başarısız")
     uv = vt.get("url_verdict")
     if uv == "malicious":
-        return "✕ link", "bad", f"Link/alan adı VirusTotal'da zararlı olarak işaretli ({(vt.get('url_stats') or {}).get('malicious', 0)} motor)"
+        return "✕ link", "bad", _("Link/alan adı VirusTotal'da zararlı olarak işaretli ({n} motor)").format(
+            n=(vt.get("url_stats") or {}).get("malicious", 0))
     if uv == "suspicious":
-        return "⚠ link", "warn", "Link/alan adı VirusTotal'da şüpheli olarak işaretli"
+        return "⚠ link", "warn", _("Link/alan adı VirusTotal'da şüpheli olarak işaretli")
     if vt.get("url_state") == "checking":
-        return "Link…", "busy", "Link VirusTotal'da kontrol ediliyor"
+        return _("Link…"), "busy", _("Link VirusTotal'da kontrol ediliyor")
     if uv == "clean":
-        return "✓ link", "ok", "Link/alan adı temiz; dosya inince kontrol edilecek"
+        return "✓ link", "ok", _("Link/alan adı temiz; dosya inince kontrol edilecek")
     return "", "", ""
 
 
@@ -59,7 +61,7 @@ def format_created(ts):
     now = time.localtime()
     if lt.tm_year == now.tm_year and lt.tm_yday == now.tm_yday:
         return time.strftime("%H:%M", lt)
-    return time.strftime("%d.%m.%Y %H:%M", lt)
+    return time.strftime(_("%d.%m.%Y %H:%M"), lt)
 
 
 class DownloadItem(GObject.Object):
@@ -134,7 +136,7 @@ class DownloadItem(GObject.Object):
             frac = 1.0 if status == "done" else 0.0
             self._set("size_text", human_size(done) if done else "—")
         self._set("progress", frac)
-        self._set("progress_text", "%{:.0f}".format(frac * 100) if total or status == "done" else "")
+        self._set("progress_text", pct(f"{frac * 100:.0f}") if total or status == "done" else "")
         speed = float((snap or {}).get("speed") or 0.0) if status == "running" else 0.0
         self._set("speed", speed)
         self._set("speed_text", human_speed(speed) if status == "running" and speed else "")
@@ -146,15 +148,15 @@ class DownloadItem(GObject.Object):
                 eta = (total - done) / speed
         self._set("eta_text", human_eta(eta) if eta is not None else "")
         if status == "running" and snap and snap.get("phase") == "birleştiriliyor":
-            st = "Birleştiriliyor"
+            st = _("Birleştiriliyor")
         elif status == "running" and snap and not snap.get("downloaded") and not speed:
-            st = "Bağlanıyor"
+            st = _("Bağlanıyor")
         elif status == "queued" and (rec.get("options") or {}).get("scheduled"):
-            st = "Zamanlandı"
+            st = _("Zamanlandı")
         elif status == "error" and (rec.get("options") or {}).get("expired"):
-            st = "Link süresi doldu"
+            st = _("Link süresi doldu")
         elif status == "error":
-            st = "Hata: " + (rec.get("error") or "")
+            st = _("Hata: ") + (rec.get("error") or "")
         else:
             st = STATUS_TEXT.get(status, status)
         self._set("status_text", st)

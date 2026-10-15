@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .config import TEMP_DIR
 from .engine import RateLimiter, SegmentedDownloader
+from .i18n import _
 from .store import Store
 from .util import CATEGORY_FOLDERS, category_for, filename_from_url, sanitize_filename, unique_path
 from .video import VideoDownloader
@@ -94,7 +95,7 @@ class DownloadManager:
                 self.holds.add(reason)
                 changed = True
                 jobs = list(self.jobs.items())
-                for did, _ in jobs:
+                for did, _job in jobs:
                     self.items[did]["_wanted"] = "requeue"
             elif not on and reason in self.holds:
                 self.holds.discard(reason)
@@ -102,7 +103,7 @@ class DownloadManager:
                 jobs = []
             else:
                 jobs = []
-        for _, job in jobs:
+        for _did, job in jobs:
             job.stop()
         if changed and not on:
             self.schedule()
@@ -133,9 +134,9 @@ class DownloadManager:
         with self.lock:
             jobs = [(did, job) for did, job in self.jobs.items()
                     if (self.items[did].get("options") or {}).get("scheduled")]
-            for did, _ in jobs:
+            for did, _job in jobs:
                 self.items[did]["_wanted"] = "requeue"
-        for _, job in jobs:
+        for _did, job in jobs:
             job.stop()
         self.schedule()
 
@@ -420,7 +421,7 @@ class DownloadManager:
             opts.pop("expired", None)
         if status == "error" and code == "expired" and job.downloaded() > 0 and getattr(job, "ranges", False):
             opts["expired"] = True
-            detail = f"Link süresi dolmuş olabilir — yeni linkle kaldığı yerden sürdürülebilir ({detail})"
+            detail = _("Link süresi dolmuş olabilir — yeni linkle kaldığı yerden sürdürülebilir ({detail})").format(detail=detail)
         if status == "error" and code == "different":
             opts.pop("refreshed", None)
             opts["expired"] = True
@@ -721,9 +722,9 @@ class DownloadManager:
         self.vt.stop()
         with self.lock:
             jobs = list(self.jobs.items())
-            for did, _ in jobs:
+            for did, _job in jobs:
                 self.items[did]["_wanted"] = "requeue"
-        for _, job in jobs:
+        for _did, job in jobs:
             job.stop()
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
@@ -732,7 +733,7 @@ class DownloadManager:
                     break
             time.sleep(0.1)
         with self.lock:
-            for did, _ in jobs:
+            for did, _job in jobs:
                 rec = self.items.get(did)
                 if rec and rec["status"] in ("running", "paused"):
                     rec["status"] = "queued"

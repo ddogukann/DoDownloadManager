@@ -2,6 +2,7 @@ from urllib.parse import urlsplit
 
 from gi.repository import Adw, Gio, GLib, Gtk, Pango
 
+from ..i18n import N_, _, pct
 from ..util import human_eta, human_size, human_speed
 from ..virustotal import file_link
 from .items import STATUS_TEXT, vt_display
@@ -47,21 +48,21 @@ class DetailWindow(Adw.Window):
         self._conn_rows = []
         self.expanded = bool(app.settings.get("detail_expanded"))
         self.set_default_size(SUMMARY_WIDTH, DETAIL_HEIGHT if self.expanded else -1)
-        self.set_title("İndirme")
+        self.set_title(_("İndirme"))
 
         tv = Adw.ToolbarView()
         header = Adw.HeaderBar()
         switch = Gtk.Box(css_classes=["linked"])
-        self.btn_summary = Gtk.ToggleButton(label="Özet")
-        self.btn_detail = Gtk.ToggleButton(label="Ayrıntı", group=self.btn_summary)
+        self.btn_summary = Gtk.ToggleButton(label=_("Özet"))
+        self.btn_detail = Gtk.ToggleButton(label=_("Ayrıntı"), group=self.btn_summary)
         switch.append(self.btn_summary)
         switch.append(self.btn_detail)
         header.set_title_widget(switch)
         menu = Gio.Menu()
-        menu.append("Linki kopyala", "dw.copy-url")
-        menu.append("SHA-256 kopyala", "dw.copy-hash")
-        menu.append("VirusTotal'da aç", "dw.vt-open")
-        header.pack_end(Gtk.MenuButton(icon_name="view-more-symbolic", menu_model=menu, tooltip_text="Diğer"))
+        menu.append(_("Linki kopyala"), "dw.copy-url")
+        menu.append(_("SHA-256 kopyala"), "dw.copy-hash")
+        menu.append(_("VirusTotal'da aç"), "dw.vt-open")
+        header.pack_end(Gtk.MenuButton(icon_name="view-more-symbolic", menu_model=menu, tooltip_text=_("Diğer seçenekler")))
         tv.add_top_bar(header)
         self._install_actions()
 
@@ -131,7 +132,7 @@ class DetailWindow(Adw.Window):
         graph_card.add_css_class("card")
         graph_card.add_css_class("ddm-card-pad")
         gtitle = Gtk.Box()
-        gl = Gtk.Label(label="Hız", xalign=0, hexpand=True)
+        gl = Gtk.Label(label=_("Hız"), xalign=0, hexpand=True)
         gl.add_css_class("heading")
         self.graph_note = Gtk.Label(xalign=1)
         self.graph_note.add_css_class("caption")
@@ -143,27 +144,27 @@ class DetailWindow(Adw.Window):
         graph_card.append(self.graph)
         detail.append(graph_card)
 
-        info = Adw.PreferencesGroup(title="Dosya")
+        info = Adw.PreferencesGroup(title=_("Dosya"))
         detail.append(info)
-        self.row_path = Adw.ActionRow(title="Konum", subtitle_selectable=True)
-        b = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Klasörü aç")
+        self.row_path = Adw.ActionRow(title=_("Konum"), subtitle_selectable=True)
+        b = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Klasörü aç"))
         b.add_css_class("flat")
-        b.connect("clicked", lambda *_: app.open_folder(self.did))
+        b.connect("clicked", lambda *_a: app.open_folder(self.did))
         self.row_path.add_suffix(b)
-        self.row_url = Adw.ActionRow(title="Adres", subtitle_selectable=True)
-        b = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Kopyala")
+        self.row_url = Adw.ActionRow(title=_("Adres"), subtitle_selectable=True)
+        b = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Kopyala"))
         b.add_css_class("flat")
-        b.connect("clicked", lambda *_: self._copy("url"))
+        b.connect("clicked", lambda *_a: self._copy("url"))
         self.row_url.add_suffix(b)
-        self.row_resume = Adw.ActionRow(title="Bağlantı")
+        self.row_resume = Adw.ActionRow(title=_("Bağlantı"))
         self.row_sha = Adw.ActionRow(title="SHA-256", subtitle_selectable=True)
-        b = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Kopyala")
+        b = Gtk.Button(icon_name="edit-copy-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Kopyala"))
         b.add_css_class("flat")
-        b.connect("clicked", lambda *_: self._copy("sha"))
+        b.connect("clicked", lambda *_a: self._copy("sha"))
         self.row_sha.add_suffix(b)
-        self.row_check = Adw.ActionRow(title="Doğrulama")
-        self.row_post = Adw.ActionRow(title="Otomatik işlem")
-        b = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER, tooltip_text="Açılan klasörü göster")
+        self.row_check = Adw.ActionRow(title=_("Doğrulama"))
+        self.row_post = Adw.ActionRow(title=_("Otomatik işlem"))
+        b = Gtk.Button(icon_name="folder-open-symbolic", valign=Gtk.Align.CENTER, tooltip_text=_("Açılan klasörü göster"))
         b.add_css_class("flat")
         b.connect("clicked", self._open_post_dest)
         self.post_btn = b
@@ -174,25 +175,25 @@ class DetailWindow(Adw.Window):
 
         vt = Adw.PreferencesGroup(title="VirusTotal")
         detail.append(vt)
-        self.row_vt = Adw.ActionRow(title="Sonuç")
+        self.row_vt = Adw.ActionRow(title=_("Sonuç"))
         self.row_vt.add_css_class("property")
         vt_btns = Gtk.Box(spacing=6, valign=Gtk.Align.CENTER)
-        self.vt_open = Gtk.Button(label="Aç")
-        self.vt_open.connect("clicked", lambda *_: app.vt_open(self.did))
-        self.vt_upload = Gtk.Button(label="Yükle ve tara")
-        self.vt_upload.connect("clicked", lambda *_: app.vt_upload(self.did))
-        self.vt_recheck = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text="Yeniden kontrol et")
-        self.vt_recheck.connect("clicked", lambda *_: app.manager.vt_recheck(self.did))
+        self.vt_open = Gtk.Button(label=_("Aç"))
+        self.vt_open.connect("clicked", lambda *_a: app.vt_open(self.did))
+        self.vt_upload = Gtk.Button(label=_("Yükle ve tara"))
+        self.vt_upload.connect("clicked", lambda *_a: app.vt_upload(self.did))
+        self.vt_recheck = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text=_("Yeniden kontrol et"))
+        self.vt_recheck.connect("clicked", lambda *_a: app.manager.vt_recheck(self.did))
         for w in (self.vt_open, self.vt_upload, self.vt_recheck):
             w.add_css_class("flat")
             vt_btns.append(w)
         self.row_vt.add_suffix(vt_btns)
-        self.row_url_vt = Adw.ActionRow(title="Link")
+        self.row_url_vt = Adw.ActionRow(title=_("Link"))
         self.row_url_vt.add_css_class("property")
         vt.add(self.row_vt)
         vt.add(self.row_url_vt)
 
-        self.conn_group = Adw.PreferencesGroup(title="Bağlantılar")
+        self.conn_group = Adw.PreferencesGroup(title=_("Bağlantılar"))
         detail.append(self.conn_group)
         self.conn_list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
         self.conn_list.add_css_class("boxed-list")
@@ -200,9 +201,9 @@ class DetailWindow(Adw.Window):
 
         actions = Gtk.Box(spacing=8, margin_start=18, margin_end=18, margin_top=6, margin_bottom=18)
         root.append(actions)
-        self.folder_btn = Gtk.Button(icon_name="folder-open-symbolic", tooltip_text="Klasörü aç")
+        self.folder_btn = Gtk.Button(icon_name="folder-open-symbolic", tooltip_text=_("Klasörü aç"))
         self.folder_btn.add_css_class("circular")
-        self.folder_btn.connect("clicked", lambda *_: app.open_folder(self.did))
+        self.folder_btn.connect("clicked", lambda *_a: app.open_folder(self.did))
         actions.append(self.folder_btn)
         actions.append(Gtk.Box(hexpand=True))
         self.cancel_btn = Gtk.Button()
@@ -228,8 +229,8 @@ class DetailWindow(Adw.Window):
 
     def _install_actions(self):
         group = Gio.SimpleActionGroup()
-        for name, cb in (("copy-url", lambda *_: self._copy("url")), ("copy-hash", lambda *_: self._copy("sha")),
-                         ("vt-open", lambda *_: self.app.vt_open(self.did))):
+        for name, cb in (("copy-url", lambda *_a: self._copy("url")), ("copy-hash", lambda *_a: self._copy("sha")),
+                         ("vt-open", lambda *_a: self.app.vt_open(self.did))):
             a = Gio.SimpleAction.new(name, None)
             a.connect("activate", cb)
             group.add_action(a)
@@ -256,7 +257,7 @@ class DetailWindow(Adw.Window):
         self.set_default_size(self.get_width(), 1)
         return False
 
-    def _open_post_dest(self, *_):
+    def _open_post_dest(self, *_a):
         rec = self.app.manager.get(self.did)
         dest = ((rec or {}).get("post") or {}).get("dest")
         if dest:
@@ -270,20 +271,20 @@ class DetailWindow(Adw.Window):
         if text:
             self.get_clipboard().set(text)
 
-    def _on_close(self, *_):
+    def _on_close(self, *_a):
         if self._timer:
             GLib.source_remove(self._timer)
             self._timer = None
         self.app.detail_windows.pop(self.did, None)
         return False
 
-    def _cancel(self, *_):
+    def _cancel(self, *_a):
         rec = self.app.manager.get(self.did)
         if rec and rec["status"] != "done":
             self.app.manager.remove(self.did)
         self.close()
 
-    def _toggle(self, *_):
+    def _toggle(self, *_a):
         rec = self.app.manager.get(self.did)
         if not rec:
             return
@@ -335,19 +336,19 @@ class DetailWindow(Adw.Window):
             eta = (total - done) / speed
 
         if total or status == "done":
-            self.pct.set_label(f"%{frac * 100:.0f}" if frac < 0.995 or status == "done" else "%99")
+            self.pct.set_label(pct(f"{frac * 100:.0f}") if frac < 0.995 or status == "done" else pct(99))
         else:
             self.pct.set_label(human_size(done))
         if running and snap.get("phase") == "birleştiriliyor":
-            self.speed.set_label("Birleştiriliyor")
+            self.speed.set_label(_("Birleştiriliyor"))
             self.eta.set_label("ffmpeg")
         elif running:
-            self.speed.set_label(human_speed(speed) if speed else "Bağlanıyor…")
-            self.eta.set_label(f"{human_eta(eta)} kaldı" if eta is not None and speed else "")
+            self.speed.set_label(human_speed(speed) if speed else _("Bağlanıyor…"))
+            self.eta.set_label(_("{t} kaldı").format(t=human_eta(eta)) if eta is not None and speed else "")
         elif status == "done":
             elapsed = rec.get("elapsed") or 0
             self.speed.set_label(human_size(total) if total else "")
-            self.eta.set_label(f"{human_eta(elapsed)} sürdü" if elapsed else "")
+            self.eta.set_label(_("{t} sürdü").format(t=human_eta(elapsed)) if elapsed else "")
         else:
             self.speed.set_label("")
             self.eta.set_label("")
@@ -355,10 +356,10 @@ class DetailWindow(Adw.Window):
 
         parts = [f"{human_size(done)} / {human_size(total)}" if total else human_size(done)]
         if running and rec["kind"] != "video" and snap.get("connections"):
-            parts.append(f"{snap['connections']} bağlantı")
+            parts.append(N_("{n} bağlantı", snap["connections"]).format(n=snap["connections"]))
             live = [l for l in snap.get("lanes") or [] if not l["dead"]]
             if len(live) > 1:
-                parts.append(f"{len(live)} bağdaştırıcı")
+                parts.append(N_("{n} bağdaştırıcı", len(live)).format(n=len(live)))
         self.amount.set_label(" · ".join(parts))
 
         st_text = STATUS_TEXT.get(status, status)
@@ -370,14 +371,14 @@ class DetailWindow(Adw.Window):
         self.chip_vt.set_tooltip_text(vt_tip or None)
 
         if status in ("running", "queued"):
-            self.toggle_btn.set_label("Duraklat")
-            self.cancel_btn.set_label("İptal")
+            self.toggle_btn.set_label(_("Duraklat"))
+            self.cancel_btn.set_label(_("İptal"))
         elif status == "done":
-            self.toggle_btn.set_label("Dosyayı aç")
-            self.cancel_btn.set_label("Kapat")
+            self.toggle_btn.set_label(_("Dosyayı aç"))
+            self.cancel_btn.set_label(_("Kapat"))
         else:
-            self.toggle_btn.set_label("Devam et" if status == "paused" else "Yeniden dene")
-            self.cancel_btn.set_label("İptal")
+            self.toggle_btn.set_label(_("Devam et") if status == "paused" else _("Yeniden dene"))
+            self.cancel_btn.set_label(_("İptal"))
         if status == "done":
             self.cancel_btn.remove_css_class("destructive-action")
         else:
@@ -387,9 +388,9 @@ class DetailWindow(Adw.Window):
         self.graph.set_samples(hist)
         if hist:
             avg = sum(hist) / len(hist)
-            self.graph_note.set_label(f"son {len(hist) // 2} sn · ort. {human_speed(avg)}")
+            self.graph_note.set_label(_("son {n} sn · ort. {avg}").format(n=len(hist) // 2, avg=human_speed(avg)))
         else:
-            self.graph_note.set_label("veri yok")
+            self.graph_note.set_label(_("veri yok"))
 
         if self.expanded:
             self._fill_detail(rec, snap, status)
@@ -403,30 +404,31 @@ class DetailWindow(Adw.Window):
         self.row_path.set_subtitle(GLib.markup_escape_text(rec.get("path") or rec.get("directory") or "—"))
         self.row_url.set_subtitle(GLib.markup_escape_text(rec["url"]))
         if rec["kind"] == "video":
-            self.row_resume.set_subtitle("yt-dlp · kaldığı yerden sürer")
+            self.row_resume.set_subtitle(_("yt-dlp · kaldığı yerden sürer"))
         else:
             resumable = snap.get("resumable") if snap else rec.get("resumable")
-            conn = f"{snap.get('connections', 0)} etkin / sınır {snap.get('allowed')}" if status == "running" and snap.get("allowed") else ""
-            lanes = " · ".join(f"{l['name']} {'kopuk' if l['dead'] else human_speed(l['speed'])}"
+            conn = (_("{n} etkin / sınır {limit}").format(n=snap.get("connections", 0), limit=snap.get("allowed"))
+                    if status == "running" and snap.get("allowed") else "")
+            lanes = " · ".join(f"{l['name']} {_('kopuk') if l['dead'] else human_speed(l['speed'])}"
                                for l in snap.get("lanes") or []) if status == "running" else ""
             self.row_resume.set_subtitle(" · ".join(x for x in (
-                "Parçalı, kaldığı yerden sürer" if resumable else "Tek bağlantı, devam ettirilemez", conn, lanes) if x))
+                _("Parçalı, kaldığı yerden sürer") if resumable else _("Tek bağlantı, devam ettirilemez"), conn, lanes) if x))
         vt = rec.get("vt") or {}
         sha = rec.get("sha256") or ""
         exp = vt.get("expected") or {}
-        sha_text = sha or ("hesaplanıyor…" if vt.get("state") == "hashing" else "—")
+        sha_text = sha or (_("hesaplanıyor…") if vt.get("state") == "hashing" else "—")
         if sha and (exp.get("sha256") or exp.get("md5")):
-            sha_text += "\n" + ("✓ sunucunun bildirdiği değerle aynı" if not vt.get("mismatch")
-                                else "✕ sunucunun bildirdiği değerle uyuşmuyor")
+            sha_text += "\n" + (_("✓ sunucunun bildirdiği değerle aynı") if not vt.get("mismatch")
+                                else _("✕ sunucunun bildirdiği değerle uyuşmuyor"))
         self.row_sha.set_subtitle(GLib.markup_escape_text(sha_text))
         post = rec.get("post") or {}
         ck = post.get("checksum")
         check_text = {
-            "searching": "checksum dosyası aranıyor…",
-            "ok": f"✓ {vt.get('checksum_file') or 'checksum'} ile doğrulandı",
-            "bad": f"✕ {vt.get('checksum_file') or 'checksum'} ile UYUŞMUYOR",
-            "none": "yayımlanmış checksum dosyası bulunamadı",
-            "error": "doğrulanamadı",
+            "searching": _("checksum dosyası aranıyor…"),
+            "ok": _("✓ {file} ile doğrulandı").format(file=vt.get("checksum_file") or "checksum"),
+            "bad": _("✕ {file} ile UYUŞMUYOR").format(file=vt.get("checksum_file") or "checksum"),
+            "none": _("yayımlanmış checksum dosyası bulunamadı"),
+            "error": _("doğrulanamadı"),
         }.get(ck)
         self.row_check.set_visible(bool(check_text))
         self.row_check.set_subtitle(GLib.markup_escape_text(check_text or ""))
@@ -437,9 +439,10 @@ class DetailWindow(Adw.Window):
             self.row_check.add_css_class("success" if ck == "ok" else "error")
         act = post.get("action")
         post_text = {
-            "extracting": f"arşiv açılıyor… ({post.get('rule')})",
-            "extracted": f"arşiv açıldı → {post.get('dest')}" + (" · arşiv silindi" if post.get("archive_deleted") else ""),
-            "opened": f"dosya açıldı ({post.get('rule')})",
+            "extracting": _("arşiv açılıyor… ({rule})").format(rule=post.get("rule")),
+            "extracted": _("arşiv açıldı → {dest}").format(dest=post.get("dest"))
+            + (" · " + _("arşiv silindi") if post.get("archive_deleted") else ""),
+            "opened": _("dosya açıldı ({rule})").format(rule=post.get("rule")),
             "skipped": post.get("reason"),
             "error": post.get("reason"),
         }.get(act)
@@ -448,7 +451,7 @@ class DetailWindow(Adw.Window):
         self.post_btn.set_visible(act == "extracted")
         text, level, tip = vt_display(vt, status)
         if not text:
-            tip = "Ayarlar ▸ Güvenlik bölümünden API anahtarı girin" if vt.get("state") in (None, "disabled") else "—"
+            tip = _("Ayarlar ▸ Güvenlik bölümünden API anahtarı girin") if vt.get("state") in (None, "disabled") else "—"
         self.row_vt.set_subtitle(GLib.markup_escape_text(tip or text))
         for c in ("success", "warning", "error"):
             self.row_vt.remove_css_class(c)
@@ -459,27 +462,28 @@ class DetailWindow(Adw.Window):
         self.vt_recheck.set_visible(status == "done")
         us = vt.get("url_stats") or {}
         if vt.get("url_verdict"):
-            self.row_url_vt.set_subtitle(f"{vt.get('url_scope') or 'link'}: {us.get('malicious', 0)}/{us.get('total', 0)} zararlı")
+            self.row_url_vt.set_subtitle(_("{scope}: {n}/{total} zararlı").format(
+                scope=_(vt.get("url_scope") or "link"), n=us.get("malicious", 0), total=us.get("total", 0)))
         else:
-            self.row_url_vt.set_subtitle({"checking": "kontrol ediliyor…", "unknown": "VirusTotal'da kayıtlı değil",
-                                          "error": vt.get("error") or "hata"}.get(vt.get("url_state"), "—"))
+            self.row_url_vt.set_subtitle({"checking": _("kontrol ediliyor…"), "unknown": _("VirusTotal'da kayıtlı değil"),
+                                          "error": vt.get("error") or _("hata")}.get(vt.get("url_state"), "—"))
         self._actions.lookup_action("copy-hash").set_enabled(bool(sha))
         self._actions.lookup_action("vt-open").set_enabled(bool(sha or vt.get("link") or vt.get("url_link")))
 
         rows = []
         if rec["kind"] == "video":
-            self.conn_group.set_title("Akışlar")
+            self.conn_group.set_title(_("Akışlar"))
             for p in snap.get("parts") or []:
                 t = p.get("total") or 0
                 rows.append((str(p["format"]), p["pos"] / t if t else 0.0,
                              f"{human_size(p['pos'])} / {human_size(t)}" if t else human_size(p["pos"]), ""))
         elif status != "done":
-            self.conn_group.set_title("Bağlantılar")
+            self.conn_group.set_title(_("Bağlantılar"))
             for i, s in enumerate(snap.get("segments") or [], start=1):
                 end = s.get("end")
                 size = (end - s["start"] + 1) if end is not None else None
                 got = max(0, (min(s["pos"], end + 1) if end is not None else s["pos"]) - s["start"])
-                st = s.get("state") or ""
+                st = _(s.get("state") or "")
                 if s.get("lane") and s.get("active"):
                     st = f"{st} · {s['lane']}"
                 rows.append((str(i), got / size if size else 0.0,
